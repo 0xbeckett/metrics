@@ -69,6 +69,53 @@ export function HeroStat({
   );
 }
 
+/**
+ * Static headline figure: an oversized value over a raw-caps label, matching
+ * {@link HeroStat}'s frame but taking a pre-formatted string (scores like "0.97"
+ * or a winner name like "luna") instead of a count-up number.
+ */
+export function Stat({
+  label,
+  value,
+  sub,
+  accent = false,
+  className,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+  accent?: boolean;
+  className?: string;
+}) {
+  return (
+    <Panel
+      className={cn(
+        "flex flex-col justify-between gap-3 p-4 shadow-brutal-sm transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5 sm:gap-4 sm:p-5",
+        className,
+      )}
+    >
+      <div className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground sm:text-[11px]">
+        {label}
+      </div>
+      <div className="flex flex-col gap-1">
+        <div
+          className={cn(
+            "font-mono text-[1.75rem] font-extrabold leading-[0.85] tabular-nums tracking-tight sm:text-4xl",
+            accent ? "text-primary" : "text-foreground",
+          )}
+        >
+          {value}
+        </div>
+        {sub ? (
+          <div className="font-mono text-[11px] font-medium tabular-nums text-muted-foreground">
+            {sub}
+          </div>
+        ) : null}
+      </div>
+    </Panel>
+  );
+}
+
 /** One figure in the derived-ratio ticker: big number, tiny caps label, inline. */
 export function StatChip({
   value,
