@@ -12,6 +12,6 @@ const run = (command, args) => {
 };
 
 run(process.execPath, ["scripts/prepare-data.mjs"]);
-run(resolve(root, "node_modules/.bin/vite"), ["build"]);
+run("bun", ["x", "--no-install", "vite", "build"]);
 mkdirSync(resolve(root, "dist"), { recursive: true });
 cpSync(resolve(root, "src/generated/metrics.json"), resolve(root, "dist/metrics.json"));

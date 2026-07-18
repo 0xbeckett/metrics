@@ -1,60 +1,61 @@
 {
   "schema_version": 1,
-  "source_generated_at": "2026-07-17T02:21:59.895Z",
+  "refreshed_at": "2026-07-18T13:15:37.590Z",
+  "source_generated_at": "2026-07-18T13:15:19.878Z",
   "rate_table_effective_date": "2026-07-16",
   "headline": {
-    "totalRuns": 1593,
-    "totalSpend": 1100.74,
-    "totalWallHours": 679.2,
+    "totalRuns": 1658,
+    "totalSpend": 1183.48,
+    "totalWallHours": 781,
     "modelsUsed": 6,
     "firstRun": "2026-06-28",
-    "lastRun": "2026-07-17",
-    "tasksTracked": 172
+    "lastRun": "2026-07-18",
+    "tasksTracked": 187
   },
   "models": [
     {
       "model": "claude-opus-4-8",
       "label": "opus-4.8",
       "color": "red",
-      "runs": 945,
-      "cost": 870.55,
-      "wallHours": 654.35,
+      "runs": 976,
+      "cost": 925.37,
+      "wallHours": 753.87,
       "estimate": true
     },
     {
       "model": "gpt-5.6-terra",
       "label": "terra",
       "color": "orange",
-      "runs": 47,
-      "cost": 100.82,
-      "wallHours": 4.4,
+      "runs": 59,
+      "cost": 115.9,
+      "wallHours": 5.5,
       "estimate": false
     },
     {
       "model": "claude-sonnet-5",
       "label": "sonnet-5",
       "color": "blue",
-      "runs": 103,
-      "cost": 74.26,
-      "wallHours": 5.2,
+      "runs": 117,
+      "cost": 84.41,
+      "wallHours": 5.78,
       "estimate": true
     },
     {
       "model": "claude-fable-5",
       "label": "fable-5",
       "color": "purple",
-      "runs": 94,
-      "cost": 41.65,
-      "wallHours": 13.02,
+      "runs": 97,
+      "cost": 43.56,
+      "wallHours": 13.52,
       "estimate": true
     },
     {
       "model": "claude-haiku-4-5-20251001",
       "label": "haiku-4.5",
       "color": "green",
-      "runs": 403,
-      "cost": 13.45,
-      "wallHours": 2.24,
+      "runs": 408,
+      "cost": 14.23,
+      "wallHours": 2.37,
       "estimate": true
     },
     {
@@ -71,17 +72,22 @@
     {
       "cycles": 0,
       "label": "0",
-      "count": 1581
+      "count": 1615
     },
     {
       "cycles": 1,
       "label": "1",
-      "count": 7
+      "count": 29
     },
     {
       "cycles": 2,
       "label": "2",
-      "count": 5
+      "count": 8
+    },
+    {
+      "cycles": 3,
+      "label": "3",
+      "count": 6
     }
   ],
   "runsOverTime": [
@@ -178,22 +184,27 @@
     {
       "date": "2026-07-16",
       "runs": 85,
-      "cost": 86.04
+      "cost": 86.75
     },
     {
       "date": "2026-07-17",
-      "runs": 12,
-      "cost": 22.28
+      "runs": 32,
+      "cost": 49.41
+    },
+    {
+      "date": "2026-07-18",
+      "runs": 45,
+      "cost": 54.91
     }
   ],
   "harnesses": [
     {
       "harness": "claude-code",
-      "count": 1545
+      "count": 1598
     },
     {
       "harness": "pi",
-      "count": 46
+      "count": 58
     },
     {
       "harness": "codex",
@@ -201,14 +212,14 @@
     }
   ],
   "codeStats": {
-    "source_generated_at": "2026-07-17T22:03:42.679Z",
+    "source_generated_at": "2026-07-18T13:15:20.711Z",
     "headline": {
-      "commits": 521,
-      "files": 628,
-      "projects": 31,
-      "additions": 199883,
-      "deletions": 62880,
-      "net": 137003
+      "commits": 534,
+      "files": 702,
+      "projects": 36,
+      "additions": 210744,
+      "deletions": 63144,
+      "net": 147600
     },
     "projects": [
       {
@@ -250,6 +261,16 @@
         "net": 1294,
         "first_commit": "2026-07-12T09:33:24-07:00",
         "last_commit": "2026-07-12T10:41:14-07:00"
+      },
+      {
+        "repo": "callie",
+        "commits": 12,
+        "files": 24,
+        "additions": 2928,
+        "deletions": 264,
+        "net": 2664,
+        "first_commit": "2026-07-17T19:13:45-07:00",
+        "last_commit": "2026-07-17T19:36:47-07:00"
       },
       {
         "repo": "bored-hardening",
@@ -452,6 +473,16 @@
         "last_commit": "2026-07-14T15:57:07-07:00"
       },
       {
+        "repo": "metrics",
+        "commits": 1,
+        "files": 50,
+        "additions": 7933,
+        "deletions": 0,
+        "net": 7933,
+        "first_commit": "2026-07-18T06:05:00-07:00",
+        "last_commit": "2026-07-18T06:05:00-07:00"
+      },
+      {
         "repo": "multiplayer",
         "commits": 1,
         "files": 0,
@@ -520,19 +551,47 @@
         "net": 98,
         "first_commit": "2026-07-01T13:40:37-07:00",
         "last_commit": "2026-07-01T13:40:37-07:00"
+      },
+      {
+        "repo": "blackhole",
+        "commits": 0,
+        "files": 0,
+        "additions": 0,
+        "deletions": 0,
+        "net": 0,
+        "first_commit": null,
+        "last_commit": null
+      },
+      {
+        "repo": "ivig",
+        "commits": 0,
+        "files": 0,
+        "additions": 0,
+        "deletions": 0,
+        "net": 0,
+        "first_commit": null,
+        "last_commit": null
+      },
+      {
+        "repo": "plasticity-lab",
+        "commits": 0,
+        "files": 0,
+        "additions": 0,
+        "deletions": 0,
+        "net": 0,
+        "first_commit": null,
+        "last_commit": null
       }
     ],
     "authors": [
       {
-        "author": "Beckett",
         "name": "Beckett",
-        "commits": 198,
-        "additions": 58569,
-        "deletions": 26072,
-        "net": 32497
+        "commits": 277,
+        "additions": 82688,
+        "deletions": 32613,
+        "net": 50075
       },
       {
-        "author": "frgmt0",
         "name": "frgmt0",
         "commits": 83,
         "additions": 51085,
@@ -540,7 +599,6 @@
         "net": 49013
       },
       {
-        "author": "ProCreations-Official",
         "name": "ProCreations-Official",
         "commits": 82,
         "additions": 5974,
@@ -548,15 +606,6 @@
         "net": 4661
       },
       {
-        "author": "Beckett",
-        "name": "Beckett",
-        "commits": 51,
-        "additions": 7509,
-        "deletions": 2711,
-        "net": 4798
-      },
-      {
-        "author": "ro_frgmt",
         "name": "ro_frgmt",
         "commits": 43,
         "additions": 9928,
@@ -564,7 +613,6 @@
         "net": -7120
       },
       {
-        "author": "ProCreations",
         "name": "ProCreations",
         "commits": 18,
         "additions": 9544,
@@ -572,23 +620,13 @@
         "net": 1146
       },
       {
-        "author": "Beckett",
-        "name": "Beckett",
-        "commits": 8,
-        "additions": 3045,
-        "deletions": 319,
-        "net": 2726
-      },
-      {
-        "author": "CuriosityOS",
         "name": "CuriosityOS",
-        "commits": 8,
-        "additions": 18830,
-        "deletions": 1189,
-        "net": 17641
+        "commits": 10,
+        "additions": 21458,
+        "deletions": 1371,
+        "net": 20087
       },
       {
-        "author": "Claude",
         "name": "Claude",
         "commits": 6,
         "additions": 26310,
@@ -596,7 +634,6 @@
         "net": 26266
       },
       {
-        "author": "kcodes0",
         "name": "kcodes0",
         "commits": 5,
         "additions": 2718,
@@ -604,7 +641,6 @@
         "net": 2532
       },
       {
-        "author": "arathald",
         "name": "arathald",
         "commits": 4,
         "additions": 16,
@@ -612,23 +648,6 @@
         "net": 0
       },
       {
-        "author": "Beckett",
-        "name": "Beckett",
-        "commits": 4,
-        "additions": 414,
-        "deletions": 3148,
-        "net": -2734
-      },
-      {
-        "author": "Beckett",
-        "name": "Beckett",
-        "commits": 2,
-        "additions": 1096,
-        "deletions": 8,
-        "net": 1088
-      },
-      {
-        "author": "claude[bot]",
         "name": "claude[bot]",
         "commits": 2,
         "additions": 159,
@@ -636,15 +655,6 @@
         "net": 141
       },
       {
-        "author": "CuriosityOS",
-        "name": "CuriosityOS",
-        "commits": 2,
-        "additions": 2628,
-        "deletions": 182,
-        "net": 2446
-      },
-      {
-        "author": "0xbeckett",
         "name": "0xbeckett",
         "commits": 1,
         "additions": 279,
@@ -652,15 +662,6 @@
         "net": 279
       },
       {
-        "author": "Beckett",
-        "name": "Beckett",
-        "commits": 1,
-        "additions": 1194,
-        "deletions": 91,
-        "net": 1103
-      },
-      {
-        "author": "CORE",
         "name": "CORE",
         "commits": 1,
         "additions": 538,
@@ -668,7 +669,6 @@
         "net": 475
       },
       {
-        "author": "google-labs-jules[bot]",
         "name": "google-labs-jules[bot]",
         "commits": 1,
         "additions": 43,
@@ -676,7 +676,6 @@
         "net": 41
       },
       {
-        "author": "SSH",
         "name": "SSH",
         "commits": 1,
         "additions": 4,
@@ -836,6 +835,14 @@
       {
         "date": "2026-07-16",
         "commits": 3
+      },
+      {
+        "date": "2026-07-17",
+        "commits": 12
+      },
+      {
+        "date": "2026-07-18",
+        "commits": 1
       }
     ]
   },
