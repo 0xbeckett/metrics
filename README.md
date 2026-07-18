@@ -103,6 +103,7 @@ cp -a dist/. ~/.local/share/beckett-metrics/dist/
 cp deploy/beckett-metrics.service deploy/beckett-metrics-refresh.{service,timer} ~/.config/systemd/user/
 systemctl --user daemon-reload
 systemctl --user enable --now beckett-metrics.service beckett-metrics-refresh.timer
+loginctl enable-linger beckett  # keep the user timer running across reboot/login absence
 
 # 3. Tunnel + DNS (creates both) and verify
 beckett deploy metrics --port 8971
