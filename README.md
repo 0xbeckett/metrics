@@ -3,13 +3,15 @@
 Neo-brutalist, static **marketing** dashboard for Beckett — an autonomous coding agent — told
 entirely in numbers and charts. Live at **https://metrics.0xbeckett.me**.
 
-The page is the **front half** of the `metrics.0xbeckett.me` project. The **back half** is two
-harvesters, each the single source of truth for its numbers:
+The page and its **back half** live together in this repository. The two vendored harvesters
+originated in the Beckett tickets #8 and #26.3, but are deliberately ported here under
+`scripts/harvest/`: scheduled refreshes do **not** depend on a hand-run command or checkout in
+another repository.
 
-- **Telemetry** (ticket #8, `../src/telemetry/harvest.ts`) — per-session model / cost / wall-clock
-  / review-cycle rows.
-- **Code stats** (ticket #26.3, `../src/code-stats/harvest.ts`) — git-history aggregates: lines,
-  commits, files, per-project rollups, authorship, and daily velocity.
+- **Telemetry** (`scripts/harvest/telemetry.ts`) reads `~/.claude`, `~/.pi`, `~/.codex`, and the
+  bored tracker to produce per-session model / cost / wall-clock / review-cycle rows.
+- **Code stats** (`scripts/harvest/code-stats.ts`) reads `~/Projects/*` git history to produce
+  LOC, commits, per-project rollups, authorship display names, and daily velocity.
 
 This app never recomputes cost, cycle counts, or LOC — it only reads, aggregates (sum/count),
 and draws.
@@ -25,17 +27,19 @@ data/telemetry-runs.json  (~1.6k run rows)          data/code-stats.json  (per-r
                             │  (scripts/prepare-data.mjs — build-time rollup, sum/count only)
                             ▼
              src/generated/metrics.json   telemetry aggregates + `codeStats` block (committed)
-                            │  (vite build)
+                            │  (initial vite build)
                             ▼
-             dist/                          static site → metrics.0xbeckett.me
+             dist/ + metrics.json           static shell → metrics.0xbeckett.me
+                            ▲
+                            │  (15-minute refresh atomically replaces only metrics.json)
 ```
 
 `prepare-data.mjs` reads both datasets, rolls them into the chart shapes plus the headline
 totals, and writes `src/generated/metrics.json`. It **does not** re-derive any metric — cost
 (`cost_usd`), wall-clock (`wall_clock_seconds`), review bounces (`review_cycles`) and every
-code-stats figure come straight from the harvesters' rows and are only summed/counted. The
-code-stats projection additionally strips local paths before publishing. Missing datasets degrade
-to empty aggregates (never a crash), mirroring the harvesters' own fail-soft contract.
+code-stats figure come straight from the harvesters' rows and are only summed/counted. It strips
+emails and local paths, and refuses to write a public document if either remains. The refresh
+also runs `scripts/verify-public-metrics.mjs` against the staged served JSON.
 
 Point it at different datasets with `TELEMETRY_DATASET=/path/to/runs.json` and
 `CODE_STATS_DATASET=/path/to/code-stats.json`.
@@ -70,15 +74,17 @@ stay legible:
 
 ```sh
 bun install
-bun run prepare-data   # regenerate src/generated/metrics.json from the harvester dataset
+bun run refresh        # harvest both sources, roll up, privacy-check, atomically publish JSON
 bun run dev            # local dev server
-bun run build          # → dist/ (runs prepare-data first)
+bun run build          # → dist/ + dist/metrics.json (runs prepare-data first)
 bun run typecheck
 ```
 
-To refresh the whole picture: re-run both harvesters in the repo root — `bun run
-telemetry:refresh` (→ `data/telemetry-runs.json`) and `bun run code-stats:refresh` (→
-`data/code-stats.json`) — then `bun run build` here.
+`bun run refresh` is the single end-to-end command. It invokes both vendored harvesters,
+regenerates `src/generated/metrics.json`, verifies that no email or absolute local path is
+public, then atomically renames the result into the served `metrics.json`. The React shell fetches
+that file with `cache: "no-store"` on page load, so routine refreshes do not need a Vite rebuild.
+The footer's **updated** stamp is the rollup timestamp in that file.
 
 ## Deploy
 
@@ -86,22 +92,30 @@ Static build, served on `127.0.0.1:8971` by a durable `systemd --user` unit and 
 Beckett's Cloudflare tunnel.
 
 ```sh
-# 1. build + stage
+# 1. Initial shell deployment (the refresh below places its live JSON in this directory).
+bun run refresh
 bun run build
-cp -r dist /home/beckett/.local/share/beckett-metrics/dist
+mkdir -p ~/.local/share/beckett-metrics/dist
+cp -a dist/. ~/.local/share/beckett-metrics/dist/
 
-# 2. durable server (unit source: deploy/beckett-metrics.service)
-cp deploy/beckett-metrics.service ~/.config/systemd/user/
+# 2. Durable static server and automatic data refresh.
+# The units assume this checkout is /home/beckett/Projects/metrics; edit both paths if moved.
+cp deploy/beckett-metrics.service deploy/beckett-metrics-refresh.{service,timer} ~/.config/systemd/user/
 systemctl --user daemon-reload
-systemctl --user enable --now beckett-metrics.service
+systemctl --user enable --now beckett-metrics.service beckett-metrics-refresh.timer
 
-# 3. tunnel + DNS (creates both) and verify
+# 3. Tunnel + DNS (creates both) and verify
 beckett deploy metrics --port 8971
-curl -fsS -o /dev/null -w '%{http_code}\n' https://metrics.0xbeckett.me   # → 200
+curl -fsS http://127.0.0.1:8971/metrics.json | node scripts/verify-public-metrics.mjs /dev/stdin
+systemctl --user list-timers beckett-metrics-refresh.timer
 ```
 
-To redeploy after a data/code change: rebuild, re-copy `dist` into the staged dir, then
-`systemctl --user restart beckett-metrics.service` (the tunnel rule is unchanged).
+The timer is persistent, so after reboot systemd runs a missed cycle shortly after the user
+manager starts, then every 15 minutes. `refresh-metrics.sh` writes a temporary file beside the
+served file and `mv`s it into place only after both harvesters, rollup, and privacy checks pass.
+A failure is logged to the service journal (`journalctl --user -u beckett-metrics-refresh.service`)
+and leaves the last-good site untouched. For a shell/style deployment, run `bun run build` and
+stage the new `dist` as above; ordinary data refreshes never restart the static server.
 
 ## Known data notes (flagged, not patched — see #8, out of scope here)
 

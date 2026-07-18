@@ -4,9 +4,12 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "telemetry:refresh": "bun scripts/harvest-telemetry.ts",
+    "code-stats:refresh": "bun scripts/harvest-code-stats.ts",
     "prepare-data": "node scripts/prepare-data.mjs",
+    "refresh": "bash scripts/refresh-metrics.sh",
     "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/build.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },

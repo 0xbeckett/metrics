@@ -3,23 +3,8 @@ import { Moon, Sun } from "lucide-react";
 import { BarViz, AreaViz, Spark } from "@/components/charts";
 import { ChartCard, HeroStat, StatChip } from "@/components/ui";
 import { Reveal } from "@/motion";
-import { metrics, usd, usdPrecise, shortDate } from "@/metrics";
-import {
-  authorSeries,
-  beckettShare,
-  commitsPerDay,
-  costPerCommit,
-  costSeries,
-  cycleSeries,
-  firstTryRate,
-  int,
-  linesPerDollar,
-  pct,
-  projectSeries,
-  runsSeries,
-  velocitySeries,
-  wallSeries,
-} from "@/derived";
+import { fallbackMetrics, fetchMetrics, shortDate, usd, usdPrecise } from "@/metrics";
+import { deriveMetrics, int, pct } from "@/derived";
 
 function useTheme(): [boolean, () => void] {
   const [dark, setDark] = useState(() => {
@@ -34,27 +19,30 @@ function useTheme(): [boolean, () => void] {
   return [dark, () => setDark((d) => !d)];
 }
 
-const h = metrics.headline;
-const cs = metrics.codeStats;
-
-// Daily series feeding the hero sparklines.
-const dailyCommits = cs.velocity.map((v) => v.commits);
-const dailyRuns = metrics.runsOverTime.map((d) => d.runs);
-const dailyCost = metrics.runsOverTime.map((d) => d.cost);
-
 const usdFull = (n: number) => `$${int(n)}`;
-
-// Estimated-SKU footnote for the cost chart — keeps the dollar figures honest.
-function estimateNote() {
-  const est = metrics.models.filter((m) => m.estimate).map((m) => m.label);
-  return est.length ? ` · est: ${est.join(", ")}` : "";
-}
-
-const runWindow =
-  h.firstRun && h.lastRun ? `${shortDate(h.firstRun)} – ${shortDate(h.lastRun)}` : "—";
 
 export function App() {
   const [dark, toggle] = useTheme();
+  const [metrics, setMetrics] = useState(fallbackMetrics);
+
+  // Refreshes only the data document. A failed request intentionally leaves the committed
+  // fallback visible, while the system timer can update a live page without a Vite rebuild.
+  useEffect(() => {
+    void fetchMetrics().then(setMetrics).catch((error: unknown) => {
+      console.warn("using bundled metrics fallback", error);
+    });
+  }, []);
+
+  const h = metrics.headline;
+  const cs = metrics.codeStats;
+  const { authorSeries, beckettShare, commitsPerDay, costPerCommit, costSeries, cycleSeries,
+    firstTryRate, linesPerDollar, projectSeries, runsSeries, velocitySeries, wallSeries } = deriveMetrics(metrics);
+  const dailyCommits = cs.velocity.map((v) => v.commits);
+  const dailyRuns = metrics.runsOverTime.map((d) => d.runs);
+  const dailyCost = metrics.runsOverTime.map((d) => d.cost);
+  const estimatedModels = metrics.models.filter((m) => m.estimate).map((m) => m.label);
+  const estimateNote = estimatedModels.length ? ` · est: ${estimatedModels.join(", ")}` : "";
+  const runWindow = h.firstRun && h.lastRun ? `${shortDate(h.firstRun)} – ${shortDate(h.lastRun)}` : "—";
 
   return (
     <div className="min-h-screen">
@@ -194,7 +182,7 @@ export function App() {
                   {metrics.rate_table_effective_date
                     ? ` (${metrics.rate_table_effective_date})`
                     : ""}
-                  {estimateNote()}.
+                  {estimateNote}.
                 </>
               }
             >
@@ -264,7 +252,13 @@ export function App() {
             </div>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
               <span>
-                git{" "}
+                updated {" "}
+                <span className="text-foreground" title={metrics.refreshed_at ?? undefined}>
+                  {metrics.refreshed_at ? new Date(metrics.refreshed_at).toLocaleString() : "—"}
+                </span>
+              </span>
+              <span>
+                git {" "}
                 <span className="text-foreground">
                   {cs.source_generated_at ? cs.source_generated_at.slice(0, 10) : "—"}
                 </span>

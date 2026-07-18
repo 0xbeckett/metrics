@@ -1,0 +1,9 @@
+[Unit]
+Description=Harvest and atomically refresh Beckett public metrics data
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/beckett/Projects/metrics
+Environment=METRICS_SERVE_DIR=/home/beckett/.local/share/beckett-metrics/dist
+ExecStart=/home/beckett/Projects/metrics/scripts/refresh-metrics.sh
