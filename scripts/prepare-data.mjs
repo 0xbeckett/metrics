@@ -11,12 +11,12 @@
  * Output: src/generated/metrics.json  (tiny, committed alongside the build so the
  * static site never ships the ~800KB raw dataset to the browser).
  */
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { readFileSync, writeFileSync, mkdirSync, renameSync } from "node:fs";
+import { basename, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = resolve(__dirname, "..", "..");
+const REPO_ROOT = resolve(__dirname, "..");
 const SRC = process.env.TELEMETRY_DATASET
   ? resolve(process.env.TELEMETRY_DATASET)
   : resolve(REPO_ROOT, "data", "telemetry-runs.json");
@@ -47,6 +47,26 @@ function metaFor(model, idx) {
 const num = (v) => (typeof v === "number" && Number.isFinite(v) ? v : null);
 const text = (v) => (typeof v === "string" ? v : null);
 const nonNegative = (v) => Math.max(0, num(v) ?? 0);
+const EMAIL = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi;
+
+// This is public data. Git author names occasionally carry "Name <email>" and a malformed
+// source must not be able to put a home-directory path into the deployed document either.
+function publicLabel(value, fallback = "unknown") {
+  const cleaned = (text(value) ?? "").replace(/\s*<[^>]*>/g, "").replace(EMAIL, "").trim();
+  return cleaned || fallback;
+}
+
+function publicRepo(value) {
+  const label = publicLabel(value);
+  return basename(label.replace(/\\/g, "/")) || "unknown";
+}
+
+function assertPublicJson(value) {
+  const serialized = JSON.stringify(value);
+  if (EMAIL.test(serialized) || /(?:\/home\/|\/Users\/|[A-Za-z]:[\\/])/.test(serialized)) {
+    throw new Error("refusing to publish metrics containing an email address or absolute local path");
+  }
+}
 
 // The code-stats harvester owns these aggregates. This projection only removes local paths
 // before publishing the same static JSON document the dashboard already imports.
@@ -65,14 +85,14 @@ function codeStatsForDashboard(raw) {
       additions: nonNegative(headline.additions), deletions: nonNegative(headline.deletions), net: num(headline.net) ?? 0,
     },
     projects: Array.isArray(raw.projects) ? raw.projects.filter((p) => p && typeof p === "object").map((p) => ({
-      repo: text(p.repo) ?? "unknown", commits: nonNegative(p.commits), files: nonNegative(p.files),
+      repo: publicRepo(p.repo), commits: nonNegative(p.commits), files: nonNegative(p.files),
       additions: nonNegative(p.additions), deletions: nonNegative(p.deletions), net: num(p.net) ?? 0,
       first_commit: text(p.first_commit), last_commit: text(p.last_commit),
     })) : [],
-    // Personal emails never ship — this is a public marketing site. Keep the display name only,
-    // stripping any "<email>" the harvester carried on the author string.
+    // Personal emails never ship — this is a public marketing site. Keep display names and
+    // counts only; both historical author shapes are scrubbed before choosing a label.
     authors: Array.isArray(raw.authors) ? raw.authors.filter((a) => a && typeof a === "object").map((a) => ({
-      author: (text(a.author) ?? "unknown").replace(/\s*<[^>]*>/, "").trim(), name: text(a.name) ?? "unknown",
+      name: publicLabel(a.name ?? a.author),
       commits: nonNegative(a.commits), additions: nonNegative(a.additions), deletions: nonNegative(a.deletions), net: num(a.net) ?? 0,
     })) : [],
     velocity: Array.isArray(raw.velocity) ? raw.velocity.filter((v) => v && typeof v === "object" && text(v.date)).map((v) => ({
@@ -196,6 +216,9 @@ function main() {
 
   const out = {
     schema_version: 1,
+    // This timestamp belongs to the refresh/rollup, not to either source harvester. It lets
+    // the runtime-fetched document state exactly how fresh the public view is.
+    refreshed_at: process.env.METRICS_REFRESHED_AT ?? new Date().toISOString(),
     source_generated_at: raw.generated_at ?? null,
     rate_table_effective_date: raw.rate_table_effective_date ?? null,
     headline: {
@@ -224,8 +247,11 @@ function main() {
   for (const r of runs) if (r && r.task_id) taskIds.add(r.task_id);
   out.headline.tasksTracked = taskIds.size;
 
+  assertPublicJson(out);
   mkdirSync(dirname(OUT), { recursive: true });
-  writeFileSync(OUT, `${JSON.stringify(out, null, 2)}\n`);
+  const temporaryOut = `${OUT}.${process.pid}.tmp`;
+  writeFileSync(temporaryOut, `${JSON.stringify(out, null, 2)}\n`);
+  renameSync(temporaryOut, OUT);
   console.error(
     `[prepare-data] ${out.headline.totalRuns} runs · $${out.headline.totalSpend} · ` +
       `${models.length} models · ${runsOverTime.length} days · ${skippedRows} skipped → ${OUT}`
