@@ -4,6 +4,14 @@
   "currency": "USD",
   "unit": "USD per million tokens",
   "models": {
+    "gpt-5.5": {
+      "input": 5,
+      "output": 30,
+      "cache_read": 2,
+      "cache_write": 5,
+      "estimate": true,
+      "source": "Estimate: no published price sheet exists for gpt-5.5; priced at twice its roughly half-price gpt-5.6-terra successor ($5/$30 per Mtok). Cache rates use the observed pi/Codex ratio."
+    },
     "gpt-5.6-terra": {
       "input": 2.5,
       "output": 15,

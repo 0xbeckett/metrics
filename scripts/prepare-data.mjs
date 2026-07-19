@@ -119,6 +119,9 @@ function main() {
   catch (err) { console.error(`[prepare-data] code-stats dataset unavailable at ${CODE_STATS_SRC}: ${err.message}; emitting empty code stats`); }
 
   const runs = Array.isArray(raw.runs) ? raw.runs : [];
+  // The harvester excludes sessions it cannot price, but makes that exclusion explicit.
+  // Carry the count into the public rollup so cost totals can never look complete by default.
+  const unratedModelSessions = nonNegative(raw.unrated_model_sessions?.count);
   if (runs.length === 0) {
     console.error("[prepare-data] dataset has no runs — emitting empty aggregates");
   }
@@ -242,6 +245,7 @@ function main() {
     codeStats: codeStatsForDashboard(rawCodeStats),
     notes: {
       skippedRows,
+      unratedModelSessions,
       anyEstimated: models.some((m) => m.estimate),
     },
   };
@@ -258,7 +262,8 @@ function main() {
   renameSync(temporaryOut, OUT);
   console.error(
     `[prepare-data] ${out.headline.totalRuns} runs · $${out.headline.totalSpend} · ` +
-      `${models.length} models · ${runsOverTime.length} days · ${skippedRows} skipped → ${OUT}`
+      `${models.length} models · ${runsOverTime.length} days · ${skippedRows} malformed · ` +
+      `${unratedModelSessions} unrated → ${OUT}`
   );
 }
 

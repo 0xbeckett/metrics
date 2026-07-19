@@ -38,10 +38,19 @@ export interface TelemetryRun {
   rate_estimate: boolean;
 }
 
+export interface UnratedModelSessions {
+  /** Sessions excluded from cost totals because their model has no configured rate. */
+  count: number;
+  /** Per-model session counts, retained so missing rate-table entries are auditable. */
+  models: Record<string, number>;
+}
+
 export interface TelemetryDataset {
   schema_version: 1;
   generated_at: string;
   rate_table_effective_date: string;
+  /** Explicit accounting for sessions omitted from `runs` due to missing rates. */
+  unrated_model_sessions: UnratedModelSessions;
   runs: TelemetryRun[];
 }
 
@@ -309,9 +318,21 @@ function rateForModel(model: string, rates: RateTable): ModelRate | null {
   return rates.models[normalized] ?? rates.models[normalized.replace(/-\d{8}$/, "")] ?? null;
 }
 
-function runFromSession(session: ParsedSession, harness: TelemetryRun["harness"], rates: RateTable, cycles: Map<string, number>, note: (message: string) => void): TelemetryRun | null {
+function runFromSession(
+  session: ParsedSession,
+  harness: TelemetryRun["harness"],
+  rates: RateTable,
+  cycles: Map<string, number>,
+  unratedModels: Map<string, number>,
+  note: (message: string) => void,
+): TelemetryRun | null {
   const rate = rateForModel(session.model, rates);
-  if (!rate) { note(`${harness}: skipped ${session.sessionId}; model ${session.model} has no rate in table`); return null; }
+  if (!rate) {
+    const model = session.model.toLowerCase();
+    unratedModels.set(model, (unratedModels.get(model) ?? 0) + 1);
+    note(`${harness}: skipped ${session.sessionId}; model ${session.model} has no rate in table`);
+    return null;
+  }
   const wall = Math.max(0, (Date.parse(session.endTimestamp) - Date.parse(session.timestamp)) / 1000);
   return {
     run_id: `${harness}:${session.sessionId}`,
@@ -339,12 +360,23 @@ export async function harvest(options: HarvestOptions): Promise<TelemetryDataset
     parseSource(join(options.piDir, "agent", "sessions"), "pi", parsePiSession, note),
     parseSource(join(options.codexDir, "sessions"), "codex", parseCodexSession, note),
   ]);
+  const unratedModels = new Map<string, number>();
   const runs = [
-    ...claude.map((s) => runFromSession(s, "claude-code", rates, cycles, note)),
-    ...pi.map((s) => runFromSession(s, "pi", rates, cycles, note)),
-    ...codex.map((s) => runFromSession(s, "codex", rates, cycles, note)),
+    ...claude.map((s) => runFromSession(s, "claude-code", rates, cycles, unratedModels, note)),
+    ...pi.map((s) => runFromSession(s, "pi", rates, cycles, unratedModels, note)),
+    ...codex.map((s) => runFromSession(s, "codex", rates, cycles, unratedModels, note)),
   ].filter((run): run is TelemetryRun => run !== null).sort((a, b) => a.timestamp.localeCompare(b.timestamp) || a.run_id.localeCompare(b.run_id));
-  const dataset: TelemetryDataset = { schema_version: 1, generated_at: new Date().toISOString(), rate_table_effective_date: rates.effective_date, runs };
+  const unrated_model_sessions: UnratedModelSessions = {
+    count: [...unratedModels.values()].reduce((total, count) => total + count, 0),
+    models: Object.fromEntries([...unratedModels.entries()].sort(([a], [b]) => a.localeCompare(b))),
+  };
+  const dataset: TelemetryDataset = {
+    schema_version: 1,
+    generated_at: new Date().toISOString(),
+    rate_table_effective_date: rates.effective_date,
+    unrated_model_sessions,
+    runs,
+  };
   await mkdir(dirname(options.output), { recursive: true });
   const temporaryOutput = `${options.output}.${process.pid}.tmp`;
   await writeFile(temporaryOutput, `${JSON.stringify(dataset, null, 2)}\n`);
