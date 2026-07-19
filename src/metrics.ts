@@ -39,7 +39,7 @@ export type Metrics = {
     authors: { name: string; commits: number; additions: number; deletions: number; net: number }[];
     velocity: { date: string; commits: number }[];
   };
-  notes: { skippedRows: number; anyEstimated: boolean };
+  notes: { skippedRows: number; unratedModelSessions: number; anyEstimated: boolean };
 };
 
 // The committed rollup is a resilient first-paint fallback. The deployed page then requests

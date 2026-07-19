@@ -174,7 +174,10 @@ function CodeStatsView({ metrics }: { metrics: Metrics }) {
                 {metrics.rate_table_effective_date
                   ? ` (${metrics.rate_table_effective_date})`
                   : ""}
-                {estimateNote}.
+                {estimateNote}
+                {metrics.notes.unratedModelSessions > 0
+                  ? ` · ${metrics.notes.unratedModelSessions} sessions excluded pending model rates`
+                  : ""}.
               </>
             }
           >

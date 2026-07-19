@@ -1,43 +1,52 @@
 {
   "schema_version": 1,
-  "refreshed_at": "2026-07-18T17:04:58.063Z",
-  "source_generated_at": "2026-07-18T17:00:18.944Z",
+  "refreshed_at": "2026-07-19T19:32:01.147Z",
+  "source_generated_at": "2026-07-19T19:31:44.072Z",
   "rate_table_effective_date": "2026-07-16",
   "headline": {
-    "totalRuns": 1893,
-    "totalSpend": 1221.79,
-    "totalWallHours": 786.6,
-    "modelsUsed": 6,
+    "totalRuns": 2171,
+    "totalSpend": 1545.55,
+    "totalWallHours": 875.5,
+    "modelsUsed": 7,
     "firstRun": "2026-06-28",
-    "lastRun": "2026-07-18",
-    "tasksTracked": 191
+    "lastRun": "2026-07-19",
+    "tasksTracked": 219
   },
   "models": [
     {
       "model": "claude-opus-4-8",
       "label": "opus-4.8",
       "color": "red",
-      "runs": 996,
-      "cost": 953.41,
-      "wallHours": 758.68,
+      "runs": 1062,
+      "cost": 1033.21,
+      "wallHours": 836.71,
+      "estimate": true
+    },
+    {
+      "model": "gpt-5.5",
+      "label": "gpt-5.5",
+      "color": "green",
+      "runs": 169,
+      "cost": 190.54,
+      "wallHours": 6.84,
       "estimate": true
     },
     {
       "model": "gpt-5.6-terra",
       "label": "terra",
       "color": "orange",
-      "runs": 60,
-      "cost": 118.81,
-      "wallHours": 5.68,
+      "runs": 80,
+      "cost": 153.01,
+      "wallHours": 7.77,
       "estimate": false
     },
     {
       "model": "claude-sonnet-5",
       "label": "sonnet-5",
       "color": "blue",
-      "runs": 122,
-      "cost": 90.49,
-      "wallHours": 6.14,
+      "runs": 141,
+      "cost": 109.56,
+      "wallHours": 8.06,
       "estimate": true
     },
     {
@@ -53,9 +62,9 @@
       "model": "claude-haiku-4-5-20251001",
       "label": "haiku-4.5",
       "color": "green",
-      "runs": 410,
-      "cost": 14.29,
-      "wallHours": 2.38,
+      "runs": 414,
+      "cost": 14.45,
+      "wallHours": 2.41,
       "estimate": true
     },
     {
@@ -72,22 +81,22 @@
     {
       "cycles": 0,
       "label": "0",
-      "count": 1734
+      "count": 1969
     },
     {
       "cycles": 1,
       "label": "1",
-      "count": 138
+      "count": 163
     },
     {
       "cycles": 2,
       "label": "2",
-      "count": 6
+      "count": 17
     },
     {
       "cycles": 3,
       "label": "3",
-      "count": 6
+      "count": 10
     },
     {
       "cycles": 4,
@@ -102,39 +111,39 @@
     {
       "cycles": 6,
       "label": "6",
-      "count": 9
+      "count": 12
     }
   ],
   "runsOverTime": [
     {
       "date": "2026-06-28",
-      "runs": 71,
-      "cost": 3.38
+      "runs": 73,
+      "cost": 3.65
     },
     {
       "date": "2026-06-29",
-      "runs": 45,
-      "cost": 57.6
+      "runs": 63,
+      "cost": 64.93
     },
     {
       "date": "2026-06-30",
-      "runs": 350,
-      "cost": 133.62
+      "runs": 359,
+      "cost": 146.54
     },
     {
       "date": "2026-07-01",
-      "runs": 116,
-      "cost": 158.3
+      "runs": 171,
+      "cost": 230.23
     },
     {
       "date": "2026-07-02",
-      "runs": 35,
-      "cost": 54.76
+      "runs": 43,
+      "cost": 60.39
     },
     {
       "date": "2026-07-03",
-      "runs": 13,
-      "cost": 16.07
+      "runs": 15,
+      "cost": 23.46
     },
     {
       "date": "2026-07-04",
@@ -148,23 +157,23 @@
     },
     {
       "date": "2026-07-06",
-      "runs": 313,
-      "cost": 70.51
+      "runs": 324,
+      "cost": 71.72
     },
     {
       "date": "2026-07-07",
-      "runs": 109,
-      "cost": 41.15
+      "runs": 140,
+      "cost": 59.78
     },
     {
       "date": "2026-07-08",
-      "runs": 62,
-      "cost": 62.7
+      "runs": 93,
+      "cost": 121.36
     },
     {
       "date": "2026-07-09",
-      "runs": 44,
-      "cost": 43.21
+      "runs": 46,
+      "cost": 49.79
     },
     {
       "date": "2026-07-10",
@@ -199,7 +208,7 @@
     {
       "date": "2026-07-16",
       "runs": 85,
-      "cost": 86.75
+      "cost": 87.03
     },
     {
       "date": "2026-07-17",
@@ -208,33 +217,38 @@
     },
     {
       "date": "2026-07-18",
-      "runs": 280,
-      "cost": 93.21
+      "runs": 295,
+      "cost": 107.09
+    },
+    {
+      "date": "2026-07-19",
+      "runs": 94,
+      "cost": 119.07
     }
   ],
   "harnesses": [
     {
       "harness": "claude-code",
-      "count": 1625
+      "count": 1714
     },
     {
       "harness": "pi",
-      "count": 266
+      "count": 383
     },
     {
       "harness": "codex",
-      "count": 2
+      "count": 74
     }
   ],
   "codeStats": {
-    "source_generated_at": "2026-07-18T17:01:00.997Z",
+    "source_generated_at": "2026-07-19T19:31:58.818Z",
     "headline": {
-      "commits": 534,
-      "files": 702,
+      "commits": 539,
+      "files": 724,
       "projects": 36,
-      "additions": 210744,
-      "deletions": 63144,
-      "net": 147600
+      "additions": 220372,
+      "deletions": 67810,
+      "net": 152562
     },
     "projects": [
       {
@@ -278,14 +292,24 @@
         "last_commit": "2026-07-12T10:41:14-07:00"
       },
       {
-        "repo": "callie",
-        "commits": 12,
-        "files": 24,
-        "additions": 2928,
-        "deletions": 264,
-        "net": 2664,
-        "first_commit": "2026-07-17T19:13:45-07:00",
-        "last_commit": "2026-07-17T19:36:47-07:00"
+        "repo": "metrics",
+        "commits": 11,
+        "files": 63,
+        "additions": 14377,
+        "deletions": 4765,
+        "net": 9612,
+        "first_commit": "2026-07-18T06:05:00-07:00",
+        "last_commit": "2026-07-18T10:05:19-07:00"
+      },
+      {
+        "repo": "v6-vision",
+        "commits": 7,
+        "files": 33,
+        "additions": 6112,
+        "deletions": 165,
+        "net": 5947,
+        "first_commit": "2026-07-19T06:58:00-07:00",
+        "last_commit": "2026-07-19T08:41:41-07:00"
       },
       {
         "repo": "bored-hardening",
@@ -488,16 +512,6 @@
         "last_commit": "2026-07-14T15:57:07-07:00"
       },
       {
-        "repo": "metrics",
-        "commits": 1,
-        "files": 50,
-        "additions": 7933,
-        "deletions": 0,
-        "net": 7933,
-        "first_commit": "2026-07-18T06:05:00-07:00",
-        "last_commit": "2026-07-18T06:05:00-07:00"
-      },
-      {
         "repo": "multiplayer",
         "commits": 1,
         "files": 0,
@@ -601,10 +615,10 @@
     "authors": [
       {
         "name": "Beckett",
-        "commits": 277,
-        "additions": 82688,
-        "deletions": 32613,
-        "net": 50075
+        "commits": 282,
+        "additions": 92316,
+        "deletions": 37279,
+        "net": 55037
       },
       {
         "name": "frgmt0",
@@ -852,17 +866,18 @@
         "commits": 3
       },
       {
-        "date": "2026-07-17",
-        "commits": 12
+        "date": "2026-07-18",
+        "commits": 11
       },
       {
-        "date": "2026-07-18",
-        "commits": 1
+        "date": "2026-07-19",
+        "commits": 7
       }
     ]
   },
   "notes": {
     "skippedRows": 0,
+    "unratedModelSessions": 69,
     "anyEstimated": true
   }
 }
