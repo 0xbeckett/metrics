@@ -1,25 +1,25 @@
 {
   "schema_version": 1,
-  "refreshed_at": "2026-07-19T19:32:01.147Z",
-  "source_generated_at": "2026-07-19T19:31:44.072Z",
+  "refreshed_at": "2026-07-19T19:36:29.656Z",
+  "source_generated_at": "2026-07-19T19:36:29.147Z",
   "rate_table_effective_date": "2026-07-16",
   "headline": {
-    "totalRuns": 2171,
-    "totalSpend": 1545.55,
-    "totalWallHours": 875.5,
+    "totalRuns": 2173,
+    "totalSpend": 1546.55,
+    "totalWallHours": 875.6,
     "modelsUsed": 7,
     "firstRun": "2026-06-28",
     "lastRun": "2026-07-19",
-    "tasksTracked": 219
+    "tasksTracked": 220
   },
   "models": [
     {
       "model": "claude-opus-4-8",
       "label": "opus-4.8",
       "color": "red",
-      "runs": 1062,
-      "cost": 1033.21,
-      "wallHours": 836.71,
+      "runs": 1063,
+      "cost": 1033.53,
+      "wallHours": 836.79,
       "estimate": true
     },
     {
@@ -35,9 +35,9 @@
       "model": "gpt-5.6-terra",
       "label": "terra",
       "color": "orange",
-      "runs": 80,
-      "cost": 153.01,
-      "wallHours": 7.77,
+      "runs": 81,
+      "cost": 153.68,
+      "wallHours": 7.82,
       "estimate": false
     },
     {
@@ -81,7 +81,7 @@
     {
       "cycles": 0,
       "label": "0",
-      "count": 1969
+      "count": 1971
     },
     {
       "cycles": 1,
@@ -222,18 +222,18 @@
     },
     {
       "date": "2026-07-19",
-      "runs": 94,
-      "cost": 119.07
+      "runs": 96,
+      "cost": 120.07
     }
   ],
   "harnesses": [
     {
       "harness": "claude-code",
-      "count": 1714
+      "count": 1715
     },
     {
       "harness": "pi",
-      "count": 383
+      "count": 384
     },
     {
       "harness": "codex",
@@ -241,7 +241,7 @@
     }
   ],
   "codeStats": {
-    "source_generated_at": "2026-07-19T19:31:58.818Z",
+    "source_generated_at": "2026-07-19T19:36:22.230Z",
     "headline": {
       "commits": 539,
       "files": 724,
@@ -614,11 +614,11 @@
     ],
     "authors": [
       {
-        "name": "Beckett",
-        "commits": 282,
-        "additions": 92316,
-        "deletions": 37279,
-        "net": 55037
+        "name": "beckett",
+        "commits": 291,
+        "additions": 119064,
+        "deletions": 37341,
+        "net": 81723
       },
       {
         "name": "frgmt0",
@@ -656,13 +656,6 @@
         "net": 20087
       },
       {
-        "name": "Claude",
-        "commits": 6,
-        "additions": 26310,
-        "deletions": 44,
-        "net": 26266
-      },
-      {
         "name": "kcodes0",
         "commits": 5,
         "additions": 2718,
@@ -675,20 +668,6 @@
         "additions": 16,
         "deletions": 16,
         "net": 0
-      },
-      {
-        "name": "claude[bot]",
-        "commits": 2,
-        "additions": 159,
-        "deletions": 18,
-        "net": 141
-      },
-      {
-        "name": "0xbeckett",
-        "commits": 1,
-        "additions": 279,
-        "deletions": 0,
-        "net": 279
       },
       {
         "name": "CORE",

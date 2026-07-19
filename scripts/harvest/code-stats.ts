@@ -1,4 +1,4 @@
-import { mkdir, readdir, rename, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rename, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 
 /** A cached, git-history-derived view of the projects Beckett has locally. */
@@ -62,7 +62,43 @@ type Commit = {
   deletions: number;
 };
 
+type AuthorAlias = {
+  canonical: string;
+  names?: string[];
+  emails?: string[];
+};
+
 const number = (value: string): number => /^\d+$/.test(value) ? Number(value) : 0;
+const normalizeIdentity = (value: string): string => value.trim().toLocaleLowerCase();
+
+/** Load identities from config so author corrections remain reviewable data, not harvest logic. */
+async function authorAliases(): Promise<Map<string, string>> {
+  const path = new URL("../../config/author-aliases.json", import.meta.url);
+  const raw: unknown = JSON.parse(await readFile(path, "utf8"));
+  if (!raw || typeof raw !== "object" || !Array.isArray((raw as { aliases?: unknown }).aliases)) {
+    throw new Error(`invalid author alias configuration: ${path.pathname}`);
+  }
+
+  const aliases = new Map<string, string>();
+  for (const alias of (raw as { aliases: AuthorAlias[] }).aliases) {
+    if (!alias || typeof alias.canonical !== "string" || !alias.canonical.trim()) {
+      throw new Error(`invalid author alias configuration: ${path.pathname}`);
+    }
+    for (const identity of [...(alias.names ?? []), ...(alias.emails ?? [])]) {
+      if (typeof identity !== "string" || !identity.trim()) {
+        throw new Error(`invalid author alias configuration: ${path.pathname}`);
+      }
+      aliases.set(normalizeIdentity(identity), alias.canonical);
+    }
+  }
+  return aliases;
+}
+
+function canonicalAuthor(commit: Commit, aliases: Map<string, string>): string {
+  return aliases.get(normalizeIdentity(commit.email))
+    ?? aliases.get(normalizeIdentity(commit.name))
+    ?? commit.name;
+}
 
 async function git(cwd: string, args: string[]): Promise<string | null> {
   try {
@@ -146,6 +182,7 @@ export async function harvestCodeStats(options: CodeStatsHarvestOptions): Promis
   const projects: CodeStatsProject[] = [];
   const authors = new Map<string, CodeStatsAuthor>();
   const velocity = new Map<string, number>();
+  const aliases = await authorAliases();
 
   for (const repo of await projectNames(options.projectsDir, note)) {
     const path = join(options.projectsDir, repo);
@@ -153,11 +190,12 @@ export async function harvestCodeStats(options: CodeStatsHarvestOptions): Promis
     if (!result) continue;
     projects.push(result.project);
     for (const commit of result.commits) {
-      // Match git shortlog's useful human-level grouping: a worker named Beckett should
-      // remain one author even when it has committed with more than one noreply address.
-      const author = commit.name;
+      // Git trailers are intentionally not parsed: a Co-authored-by line is not an author
+      // record, so Claude app trailers cannot create a contributor bucket. Author identities
+      // from %an/%ae are canonicalized through config before aggregation.
+      const author = canonicalAuthor(commit, aliases);
       const current = authors.get(author) ?? {
-        author, name: commit.name, commits: 0, additions: 0, deletions: 0, net: 0,
+        author, name: author, commits: 0, additions: 0, deletions: 0, net: 0,
       };
       current.commits += 1;
       current.additions += commit.additions;

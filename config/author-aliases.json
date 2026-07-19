@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "aliases": [
+    {
+      "canonical": "beckett",
+      "names": [
+        "Beckett",
+        "0xbeckett",
+        "Claude",
+        "claude[bot]",
+        "Claude Code",
+        "Claude Opus 4.8",
+        "Claude Opus 4.8 (1M context)",
+        "Claude Fable 5"
+      ],
+      "emails": [
+        "0xbeckett@users.noreply.github.com",
+        "297532813+0xbeckett@users.noreply.github.com",
+        "jw@kcodes.me",
+        "jason.awz2005@gmail.com",
+        "beckett@0xbeckett.me",
+        "beckett@localhost",
+        "noreply@anthropic.com",
+        "209825114+claude[bot]@users.noreply.github.com"
+      ]
+    }
+  ]
+}

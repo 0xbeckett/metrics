@@ -11,7 +11,9 @@ another repository.
 - **Telemetry** (`scripts/harvest/telemetry.ts`) reads `~/.claude`, `~/.pi`, `~/.codex`, and the
   bored tracker to produce per-session model / cost / wall-clock / review-cycle rows.
 - **Code stats** (`scripts/harvest/code-stats.ts`) reads `~/Projects/*` git history to produce
-  LOC, commits, per-project rollups, authorship display names, and daily velocity.
+  LOC, commits, per-project rollups, authorship display names, and daily velocity. Known author
+  identities are canonicalized through `config/author-aliases.json` before contributor buckets
+  are aggregated.
 
 This app never recomputes cost, cycle counts, or LOC — it only reads, aggregates (sum/count),
 and draws.
