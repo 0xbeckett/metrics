@@ -14,6 +14,17 @@
 import { readFileSync, writeFileSync, mkdirSync, renameSync, existsSync, statSync } from "node:fs";
 import { basename, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { assertPublicText } from "./lib/privacy-scan.mjs";
+import { harvestTasks } from "./harvest/tasks.mjs";
+import { harvestWorkers } from "./harvest/workers.mjs";
+import { harvestSpend } from "./harvest/spend.mjs";
+import { harvestBrowser } from "./harvest/browser.mjs";
+import { harvestQuick } from "./harvest/quick.mjs";
+import { harvestMemory } from "./harvest/memory.mjs";
+import { harvestRoutines } from "./harvest/routines.mjs";
+import { harvestLogs } from "./harvest/logs.mjs";
+import { harvestDaemon } from "./harvest/daemon.mjs";
+import { harvestActivity } from "./harvest/activity.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(__dirname, "..");
@@ -65,11 +76,11 @@ function publicRepo(value) {
   return basename(label.replace(/\\/g, "/")) || "unknown";
 }
 
+// Publish-time gate: the shared privacy scanner is the single source of truth for what may not
+// appear in a public document (emails, paths, Discord ids/usernames/content, memory bodies,
+// secrets). The runtime verify-public-metrics.mjs re-runs the identical check on the copied file.
 function assertPublicJson(value) {
-  const serialized = JSON.stringify(value);
-  if (EMAIL.test(serialized) || /(?:\/home\/|\/Users\/|[A-Za-z]:[\\/])/.test(serialized)) {
-    throw new Error("refusing to publish metrics containing an email address or absolute local path");
-  }
+  assertPublicText(JSON.stringify(value), "generated metrics");
 }
 
 // The code-stats harvester owns these aggregates. This projection only removes local paths
@@ -222,7 +233,10 @@ function main() {
     .map(([harness, count]) => ({ harness, count }));
 
   const out = {
-    schema_version: 1,
+    // v2 (#100): widened data layer — tickets, workers, spend, browser, quick, memory graph,
+    // routines, logs, daemon health, and recentActivity added alongside the v1 telemetry keys,
+    // all of which stay byte-compatible so the live UI keeps rendering.
+    schema_version: 2,
     // This timestamp belongs to the refresh/rollup, not to either source harvester. It lets
     // the runtime-fetched document state exactly how fresh the public view is.
     refreshed_at: process.env.METRICS_REFRESHED_AT ?? new Date().toISOString(),
@@ -255,7 +269,36 @@ function main() {
   for (const r of runs) if (r && r.task_id) taskIds.add(r.task_id);
   out.headline.tasksTracked = taskIds.size;
 
+  // ── Widened data layer (#100) ─────────────────────────────────────────────
+  // Each harvester reads a live beckett state source and is individually fail-soft: a missing or
+  // unreadable source yields an { available:false, ... } section rather than aborting the refresh.
+  // Wrapped again here so an unexpected harvester bug can never sink the whole publish.
+  const section = (name, fn, fallback) => {
+    try {
+      return fn();
+    } catch (err) {
+      console.error(`[prepare-data] ${name} harvest failed: ${err.message}; emitting empty section`);
+      return fallback;
+    }
+  };
+  out.tickets = section("tickets", harvestTasks, { available: false });
+  out.workers = section("workers", harvestWorkers, { available: false });
+  out.spend = section("spend", harvestSpend, { available: false });
+  out.browserRuns = section("browserRuns", harvestBrowser, { available: false });
+  out.quickRuns = section("quickRuns", harvestQuick, { available: false });
+  out.memory = section("memory", harvestMemory, { available: false });
+  out.routines = section("routines", harvestRoutines, { available: false });
+  out.logs = section("logs", harvestLogs, { available: false });
+  out.daemon = section("daemon", harvestDaemon, { available: false });
+  out.recentActivity = section("recentActivity", () => harvestActivity(undefined, 50), []);
+
   assertPublicJson(out);
+  // Size budget: the whole public document must stay small enough to swap atomically and fetch
+  // on first paint. Roll up harder rather than shipping raw rows if this ever trips.
+  const bytes = Buffer.byteLength(`${JSON.stringify(out, null, 2)}\n`);
+  if (bytes > 250 * 1024) {
+    throw new Error(`refusing to publish: metrics document is ${(bytes / 1024).toFixed(1)}KB, over the 250KB budget`);
+  }
   mkdirSync(dirname(OUT), { recursive: true });
   const temporaryOut = `${OUT}.${process.pid}.tmp`;
   writeFileSync(temporaryOut, `${JSON.stringify(out, null, 2)}\n`);
