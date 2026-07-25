@@ -2,86 +2,147 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ── Self-hosted display + grotesque faces ──────────────────────────────────
+   datacurve.ai pairs `exposure` (serif display) with Suisse Intl (grotesque);
+   neither is licensable here, so we self-host Instrument Serif for display and
+   Inter for the grotesque. Latin subsets only — the dashboard is English. */
+@font-face {
+  font-family: "Instrument Serif";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/instrument-serif-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Instrument Serif";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/instrument-serif-italic-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter-latin.woff2") format("woff2");
+}
+
 /*
-  Neo-brutalist theme for Beckett's model-metrics dashboard.
-  Honest structure: paper canvas, ink borders, hard offset shadows, one hot accent.
-  Tokens drive everything so dark mode + dither-kit chart colors stay coherent.
+  datacurve.ai direction — warm light paper, warm ink, hairline surfaces, one
+  restrained accent reserved for live/delta states. One token system: dark mode
+  is the same roles inverted (warm-black paper / warm-off-white ink), and both
+  chart kits (dither-kit + the plain hairline set) read their colours from these
+  tokens, so a token change moves everything at once.
 */
 :root {
-  --radius: 0px;
+  /* Radii — 4px on small elements, 8px on panels. No pills. */
+  --radius-small: 4px;
+  --radius-panel: 8px;
 
-  /* Canvas + ink */
-  --background: oklch(0.96 0.01 95);      /* warm paper */
-  --foreground: oklch(0.16 0.02 275);     /* near-black ink */
+  /* Canvas + ink (warm) */
+  --background: #f8f6f2;        /* warm paper */
+  --foreground: #1c1612;        /* warm near-black ink — headings + body */
 
-  --card: oklch(0.99 0.005 95);
-  --card-foreground: oklch(0.16 0.02 275);
-  --popover: oklch(0.99 0.005 95);
-  --popover-foreground: oklch(0.16 0.02 275);
+  /* Surfaces sit on the page plane; borders do the separating (no elevation). */
+  --card: #f8f6f2;
+  --card-foreground: #1c1612;
+  --popover: #fbf9f5;
+  --popover-foreground: #1c1612;
 
-  /* One accent: hot signal red-orange */
-  --primary: oklch(0.62 0.24 27);
-  --primary-foreground: oklch(0.98 0.01 95);
+  /* Secondary + muted ink are the SAME ink at lower opacity, never a grey hue.
+     Tuned to clear AA (4.5:1) on the paper plane rather than a literal 50%. */
+  --secondary: #efece5;
+  --secondary-foreground: #1c1612;
+  --muted: #f1eee7;
+  --muted-foreground: rgba(28, 22, 18, 0.66);   /* body-secondary, ~5.4:1 */
+  --label: rgba(28, 22, 18, 0.60);              /* small caps labels, ~4.6:1 */
 
-  --secondary: oklch(0.9 0.02 95);
-  --secondary-foreground: oklch(0.16 0.02 275);
+  /* The one accent — a warm burnt orange, live/delta only (AA 5.0:1 on paper) */
+  --primary: #b8431f;
+  --primary-foreground: #f8f6f2;
+  --accent: #b8431f;
+  --accent-foreground: #f8f6f2;
+  --destructive: #b8431f;
+  --destructive-foreground: #f8f6f2;
 
-  --muted: oklch(0.92 0.01 95);
-  --muted-foreground: oklch(0.42 0.02 275);
+  /* Hairlines — ~8–10% ink, no shadows anywhere */
+  --border: rgba(28, 22, 18, 0.10);
+  --border-strong: rgba(28, 22, 18, 0.16);
+  --input: rgba(28, 22, 18, 0.16);
+  --ring: #b8431f;
 
-  --accent: oklch(0.62 0.24 27);
-  --accent-foreground: oklch(0.98 0.01 95);
+  /* Chart chrome (shared by both kits) */
+  --ink: #1c1612;              /* 1px data strokes on the plain set */
+  --ink-soft: rgba(28, 22, 18, 0.55);
+  --grid: rgba(28, 22, 18, 0.08);     /* hairline gridlines */
+  --axis: rgba(28, 22, 18, 0.16);     /* baseline / axis */
+  --tint: rgba(28, 22, 18, 0.06);     /* single flat area tint */
+  --surface: #f8f6f2;                 /* the plane a mark sits on */
 
-  --destructive: oklch(0.58 0.22 27);
-  --destructive-foreground: oklch(0.98 0.01 95);
+  /* dither-kit seeds, read at paint time (see palette.ts). "r g b" triplets. */
+  --dk-ink: 28 22 18;
+  --dk-accent: 184 67 31;
+  --dk-muted: 120 110 100;
+  /* Legacy category names remap onto the warm system so any stray use stays
+     on-theme; the redesign only paints dither showpieces in ink/accent. */
+  --dk-red: 184 67 31;
+  --dk-orange: 158 96 44;
+  --dk-blue: 74 82 96;
+  --dk-green: 90 104 74;
+  --dk-purple: 96 82 110;
+  --dk-pink: 150 84 96;
+  --dk-grey: 120 110 100;
 
-  --border: oklch(0.16 0.02 275);         /* heavy ink border */
-  --input: oklch(0.16 0.02 275);
-  --ring: oklch(0.62 0.24 27);
-
-  /* Chart ramp — distinct, high-contrast, works dithered */
-  --chart-1: oklch(0.62 0.24 27);         /* signal red-orange */
-  --chart-2: oklch(0.55 0.16 255);        /* electric blue */
-  --chart-3: oklch(0.72 0.18 140);        /* acid green */
-  --chart-4: oklch(0.70 0.19 85);         /* amber */
-  --chart-5: oklch(0.55 0.20 320);        /* magenta */
-  --chart-6: oklch(0.45 0.02 275);        /* graphite */
+  color-scheme: light;
 }
 
 .dark {
-  --background: oklch(0.17 0.01 275);      /* ink canvas */
-  --foreground: oklch(0.95 0.01 95);
+  --background: #161311;        /* warm near-black paper */
+  --foreground: #f2eee7;        /* warm off-white ink */
 
-  --card: oklch(0.21 0.012 275);
-  --card-foreground: oklch(0.95 0.01 95);
-  --popover: oklch(0.21 0.012 275);
-  --popover-foreground: oklch(0.95 0.01 95);
+  --card: #161311;
+  --card-foreground: #f2eee7;
+  --popover: #1d1916;
+  --popover-foreground: #f2eee7;
 
-  --primary: oklch(0.68 0.22 27);
-  --primary-foreground: oklch(0.14 0.01 275);
+  --secondary: #23201c;
+  --secondary-foreground: #f2eee7;
+  --muted: #211d1a;
+  --muted-foreground: rgba(242, 238, 231, 0.70);
+  --label: rgba(242, 238, 231, 0.58);
 
-  --secondary: oklch(0.28 0.02 275);
-  --secondary-foreground: oklch(0.95 0.01 95);
+  --primary: #e07850;
+  --primary-foreground: #161311;
+  --accent: #e07850;
+  --accent-foreground: #161311;
+  --destructive: #e07850;
+  --destructive-foreground: #161311;
 
-  --muted: oklch(0.26 0.015 275);
-  --muted-foreground: oklch(0.68 0.02 275);
+  --border: rgba(242, 238, 231, 0.12);
+  --border-strong: rgba(242, 238, 231, 0.20);
+  --input: rgba(242, 238, 231, 0.20);
+  --ring: #e07850;
 
-  --accent: oklch(0.68 0.22 27);
-  --accent-foreground: oklch(0.14 0.01 275);
+  --ink: #f2eee7;
+  --ink-soft: rgba(242, 238, 231, 0.55);
+  --grid: rgba(242, 238, 231, 0.10);
+  --axis: rgba(242, 238, 231, 0.18);
+  --tint: rgba(242, 238, 231, 0.07);
+  --surface: #161311;
 
-  --destructive: oklch(0.65 0.2 27);
-  --destructive-foreground: oklch(0.14 0.01 275);
+  --dk-ink: 242 238 231;
+  --dk-accent: 224 120 80;
+  --dk-muted: 150 140 130;
+  --dk-red: 224 120 80;
+  --dk-orange: 214 150 96;
+  --dk-blue: 150 165 190;
+  --dk-green: 160 180 140;
+  --dk-purple: 180 160 200;
+  --dk-pink: 214 150 170;
+  --dk-grey: 150 140 130;
 
-  --border: oklch(0.92 0.01 95);          /* paper border on ink */
-  --input: oklch(0.92 0.01 95);
-  --ring: oklch(0.68 0.22 27);
-
-  --chart-1: oklch(0.70 0.22 27);
-  --chart-2: oklch(0.68 0.16 255);
-  --chart-3: oklch(0.78 0.18 140);
-  --chart-4: oklch(0.80 0.18 85);
-  --chart-5: oklch(0.68 0.20 320);
-  --chart-6: oklch(0.80 0.02 275);
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -97,26 +158,25 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  --color-label: var(--label);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-chart-6: var(--chart-6);
-  --radius-sm: var(--radius);
-  --radius-md: var(--radius);
-  --radius-lg: var(--radius);
-  --radius-xl: var(--radius);
+  --color-ink: var(--ink);
 
-  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+  --radius-sm: var(--radius-small);
+  --radius-md: var(--radius-small);
+  --radius-lg: var(--radius-panel);
+  --radius-xl: var(--radius-panel);
+
+  --font-serif: "Instrument Serif", "Newsreader", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
@@ -130,39 +190,60 @@
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans);
-    font-feature-settings: "tnum" 1;
+    font-feature-settings: "cv05" 1, "ss01" 1;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  /* Neo-brutalist grain: faint dotted lattice on the canvas */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background-image: radial-gradient(var(--border) 0.5px, transparent 0.5px);
-    background-size: 22px 22px;
-    opacity: 0.06;
+  ::selection {
+    background: color-mix(in srgb, var(--primary) 22%, transparent);
   }
 }
 
-/* Keep dither-kit's axis tick labels from colliding on narrow viewports:
-   6 model labels under one chart overrun at phone widths, so shrink the tick
-   text there. Direct `text` rule beats the inherited 10px on the axis <g>. */
+/* Serif display — headings and large metric values. Weight 400, tight negative
+   tracking. Instrument Serif already runs light; -0.03em keeps it composed. */
+@utility font-display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+}
+
+/* Small uppercase grotesque label — the quiet caption voice. */
+@utility label-caps {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--label);
+}
+
+/* Plain-chart tick text — small grotesque, muted, tabular. */
+.plain-plot text {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  fill: var(--label);
+}
+
+/* dither-kit tick labels: small grotesque, muted. Shrink on phones so a row of
+   axis labels never collides. */
+.dk-plot text {
+  font-family: var(--font-sans);
+}
 @media (max-width: 640px) {
-  .dk-plot text {
-    font-size: 8.5px;
+  .dk-plot text,
+  .plain-plot text {
+    font-size: 9px;
   }
 }
 
-/* Hard offset shadow — the signature brutalist depth cue */
-@utility shadow-brutal {
-  box-shadow: 6px 6px 0 0 var(--border);
-}
-@utility shadow-brutal-sm {
-  box-shadow: 4px 4px 0 0 var(--border);
-}
-@utility shadow-brutal-accent {
-  box-shadow: 6px 6px 0 0 var(--primary);
+/* Reduced motion: the animated grain and any lingering transitions go quiet. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

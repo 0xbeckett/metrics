@@ -2,61 +2,67 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { animate, motion, useInView, useReducedMotion } from "motion/react";
 
 /*
- * Motion primitives for the dashboard: a count-up hook for the hero figures and a
- * scroll-reveal wrapper for the chart cards. Both collapse to an instant, static
- * result under `prefers-reduced-motion` — the numbers just appear at their final value.
+ * Motion primitives. Number figures tween on first reveal (0 → value) and then,
+ * on a live poll, from their *previous* value to the new one — so a changed
+ * figure counts up in place rather than resetting. A fade/rise reveal wraps
+ * panels. Everything collapses to an instant, static result under
+ * `prefers-reduced-motion`: no counters, no slide-ins.
  */
 
-/** Ease-out-expo — a fast, decisive settle that suits big counters. */
 const EASE_OUT_EXPO: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 /**
- * Animate a number from 0 → `target` once it scrolls into view. Returns the ref to
- * attach and the live value to render. Reduced-motion jumps straight to the target.
+ * A figure that tweens to `value`. First time it scrolls into view it counts up
+ * from 0; whenever `value` later changes it tweens from the last shown number to
+ * the new one (the live-update path). Tabular figures keep it from jittering.
  */
-export function useCountUp(
-  target: number,
-  opts: { duration?: number; delay?: number } = {},
-): { ref: React.RefObject<HTMLSpanElement | null>; value: number } {
-  const ref = useRef<HTMLSpanElement | null>(null);
-  const inView = useInView(ref, { once: true, amount: 0.4 });
-  const reduce = useReducedMotion();
-  const [value, setValue] = useState(0);
-
-  useEffect(() => {
-    if (!inView) return;
-    if (reduce) {
-      setValue(target);
-      return;
-    }
-    const controls = animate(0, target, {
-      duration: opts.duration ?? 1.2,
-      delay: opts.delay ?? 0,
-      ease: EASE_OUT_EXPO,
-      onUpdate: (v) => setValue(v),
-    });
-    return () => controls.stop();
-  }, [inView, reduce, target, opts.duration, opts.delay]);
-
-  return { ref, value };
-}
-
-/** A count-up number formatted through `format`, with tabular figures so it never jitters. */
 export function CountUp({
   value,
   format,
   className,
-  delay,
+  delay = 0,
 }: {
   value: number;
   format: (n: number) => string;
   className?: string;
   delay?: number;
 }) {
-  const { ref, value: v } = useCountUp(value, { delay });
+  const ref = useRef<HTMLSpanElement | null>(null);
+  const inView = useInView(ref, { once: true, amount: 0.4 });
+  const reduce = useReducedMotion();
+  const [disp, setDisp] = useState(reduce ? value : 0);
+  const shown = useRef(reduce ? value : 0);
+  const started = useRef(false);
+
+  useEffect(() => {
+    if (!inView) return;
+    if (reduce) {
+      setDisp(value);
+      shown.current = value;
+      return;
+    }
+    const from = started.current ? shown.current : 0;
+    const firstRun = !started.current;
+    started.current = true;
+    if (from === value) {
+      setDisp(value);
+      return;
+    }
+    const controls = animate(from, value, {
+      duration: firstRun ? 1.1 : 0.7,
+      delay: firstRun ? delay : 0,
+      ease: EASE_OUT_EXPO,
+      onUpdate: (v) => {
+        setDisp(v);
+        shown.current = v;
+      },
+    });
+    return () => controls.stop();
+  }, [inView, reduce, value, delay]);
+
   return (
     <span ref={ref} className={className}>
-      {format(v)}
+      {format(disp)}
     </span>
   );
 }
@@ -76,10 +82,10 @@ export function Reveal({
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 14 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.45, delay, ease: "easeOut" }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.4, delay, ease: "easeOut" }}
     >
       {children}
     </motion.div>

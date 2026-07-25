@@ -3,17 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BECKETT // PROOF OF WORK</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <meta name="color-scheme" content="light dark" />
+    <title>Beckett — Proof of Work</title>
     <meta
       name="description"
-      content="Beckett in numbers: lines shipped, commits, projects, spend and model usage — an autonomous coding agent's real output, harvested from git and session logs."
+      content="Beckett in numbers: a live dashboard of an autonomous coding agent's real output — tickets, worker economics, spend, memory and system health, harvested from git and session logs."
     />
+    <script>
+      // Set the theme class before first paint so there is no light/dark flash.
+      (function () {
+        try {
+          var saved = localStorage.getItem("bkt-theme");
+          var dark = saved ? saved === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+          if (dark) document.documentElement.classList.add("dark");
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
