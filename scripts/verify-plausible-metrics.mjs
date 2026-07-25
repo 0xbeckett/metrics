@@ -19,6 +19,7 @@
  * Usage: verify-plausible-metrics.mjs CANDIDATE_PATH [SERVED_PATH]
  */
 import { readFileSync, existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 
 // A totalRuns drop of more than this fraction below the served document fails the gate.
 export const COLLAPSE_THRESHOLD = 0.2;
@@ -99,6 +100,6 @@ function main(argv, env) {
   console.error(`[verify-plausible-metrics] plausible public JSON (${note}): ${candidatePath}`);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   main(process.argv, process.env);
 }
