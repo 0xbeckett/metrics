@@ -4,6 +4,12 @@ After=network.target
 
 [Service]
 Type=oneshot
+# Run as beckett with an explicit HOME: the harvest resolves every source off homedir()
+# (~/.claude, ~/.codex, ~/.pi, ~/.beckett, ~/Projects). A system unit has no HOME, so
+# running as root harvests zero runs and publishes an empty document.
+User=beckett
+Group=beckett
 WorkingDirectory=/home/beckett/Projects/metrics
+Environment=HOME=/home/beckett
 Environment=METRICS_SERVE_DIR=/home/beckett/.local/share/beckett-metrics/dist
 ExecStart=/home/beckett/Projects/metrics/scripts/refresh-metrics.sh

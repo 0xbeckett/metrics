@@ -5,7 +5,11 @@ After=beckett-metrics-refresh.service
 
 [Service]
 Type=oneshot
+# Same as the timer-driven unit: harvest sources hang off HOME, which a system unit lacks.
+User=beckett
+Group=beckett
 WorkingDirectory=/home/beckett/Projects/metrics
+Environment=HOME=/home/beckett
 Environment=METRICS_SERVE_DIR=/home/beckett/.local/share/beckett-metrics/dist
 # Coalesce bursts and rate-limit to at most one refresh per 15s (METRICS_DEBOUNCE_SECONDS).
 ExecStart=/home/beckett/Projects/metrics/scripts/watch-refresh.sh
