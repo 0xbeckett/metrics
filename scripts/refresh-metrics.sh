@@ -30,6 +30,9 @@ mkdir -p "$serve_dir"
 temporary_file=$(mktemp "${serve_dir}/.metrics.json.XXXXXX")
 cp -- src/generated/metrics.json "$temporary_file"
 node scripts/verify-public-metrics.mjs "$temporary_file"
+# Plausibility gate: reject an implausible collapse (zero runs/spend/models, or totalRuns
+# dropping far below the live document) before it can overwrite the last-good metrics.json.
+node scripts/verify-plausible-metrics.mjs "$temporary_file" "${serve_dir}/metrics.json"
 chmod 0644 "$temporary_file"
 mv -f -- "$temporary_file" "${serve_dir}/metrics.json"
 temporary_file=""
