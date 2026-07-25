@@ -1,0 +1,11 @@
+[Unit]
+Description=Debounced, event-driven Beckett metrics refresh
+# Serialise against the timer-driven refresh so the two never harvest concurrently.
+After=beckett-metrics-refresh.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/beckett/Projects/metrics
+Environment=METRICS_SERVE_DIR=/home/beckett/.local/share/beckett-metrics/dist
+# Coalesce bursts and rate-limit to at most one refresh per 15s (METRICS_DEBOUNCE_SECONDS).
+ExecStart=/home/beckett/Projects/metrics/scripts/watch-refresh.sh

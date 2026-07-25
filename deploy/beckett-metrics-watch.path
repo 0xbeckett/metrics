@@ -1,0 +1,14 @@
+[Unit]
+Description=Watch Beckett task/event data and trigger a debounced metrics refresh
+
+[Path]
+# Fire whenever the task ledger or the event stream changes. tasks.json is rewritten
+# in place; the events/ directory gets new per-day .jsonl files and appends. PathModified
+# on the directory catches file creation/removal; in-file appends are still swept up by
+# the 60s timer, so this path unit is a best-effort freshener layered on top of it.
+PathModified=/home/beckett/.beckett/tasks.json
+PathModified=/home/beckett/.beckett/events
+Unit=beckett-metrics-watch.service
+
+[Install]
+WantedBy=paths.target
