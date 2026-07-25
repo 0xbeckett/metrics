@@ -17,13 +17,11 @@ function seatBy(pick: (m: RecallModel) => number) {
 function EmptyState() {
   return (
     <Panel className="p-6 sm:p-8">
-      <h2 className="font-mono text-lg font-bold uppercase tracking-wide text-foreground">
-        No recall eval data
-      </h2>
-      <p className="mt-2 max-w-prose font-sans text-sm leading-relaxed text-muted-foreground">
+      <h2 className="font-display text-2xl text-foreground">No recall eval data</h2>
+      <p className="mt-2 max-w-prose text-sm leading-relaxed text-muted-foreground">
         Run the benchmark and refresh the build:
       </p>
-      <pre className="mt-3 overflow-x-auto border-2 border-border bg-muted p-3 font-mono text-[11px] leading-relaxed text-foreground">
+      <pre className="mt-3 overflow-x-auto rounded-md border border-border bg-muted p-3 text-[11px] leading-relaxed text-foreground">
         bun run recall:agent-bench -- --json &gt; data/recall-eval.json{"\n"}
         npm run build --prefix metrics-dashboard
       </pre>
@@ -49,11 +47,10 @@ export function RecallView() {
             key={m.seat}
             label={`${m.label} · MRR`}
             value={score(m.mrr)}
-            accent={m.seat === mrrLeader.seat}
             sub={m.seat === mrrLeader.seat ? "lead" : undefined}
           />
         ))}
-        <Stat label="Winner" value={mrrLeader.label} sub="by MRR" accent />
+        <Stat label="Winner" value={mrrLeader.label} sub="by MRR" />
       </div>
 
       {/* ── Charts ───────────────────────────────────────────────── */}
@@ -133,9 +130,9 @@ export function RecallView() {
       </div>
 
       {/* ── Colophon ─────────────────────────────────────────────── */}
-      <Panel className="flex flex-col gap-3 p-4 font-mono text-[11px] leading-relaxed text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:p-5">
+      <Panel className="flex flex-col gap-3 p-4 text-[11px] leading-relaxed text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:p-5">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span className="font-bold uppercase tracking-wide text-foreground">Path</span>
+          <span className="label-caps text-foreground">Path</span>
           <span className="whitespace-nowrap">moss retrieve → visibility gate → LLM agent</span>
         </div>
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">

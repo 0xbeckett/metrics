@@ -1,7 +1,10 @@
 import raw from "./generated/metrics.json";
 
-// dither-kit's fixed palette identifiers.
-export type DitherColor = "green" | "blue" | "purple" | "pink" | "orange" | "red" | "grey";
+// dither-kit's palette identifiers. The named hues remain for legacy data, and
+// ink / accent / muted are the token-driven roles the retheme paints with.
+export type DitherColor =
+  | "green" | "blue" | "purple" | "pink" | "orange" | "red" | "grey"
+  | "ink" | "accent" | "muted";
 
 export type ModelRow = {
   model: string;
