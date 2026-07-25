@@ -1,10 +1,10 @@
 [Unit]
-Description=Keep Beckett public metrics fresh every 15 minutes
+Description=Keep Beckett public metrics fresh every 60 seconds
 
 [Timer]
-OnBootSec=2min
-OnUnitActiveSec=15min
-AccuracySec=1min
+OnBootSec=30s
+OnUnitActiveSec=60s
+AccuracySec=5s
 Persistent=true
 Unit=beckett-metrics-refresh.service
 
