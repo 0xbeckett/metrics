@@ -270,7 +270,7 @@ function applyEntry(state: FileState, entry: Record<string, unknown>): void {
         if (name) state.toolCalls[name] = (state.toolCalls[name] ?? 0) + 1;
       }
     }
-    const model = text(message.model);
+    const model = text(message.model)?.toLowerCase();
     const usage = asObject(message.usage);
     if (model && usage) {
       const bucket = state.tokensByModel[model] ?? { ...ZERO_TOKENS };

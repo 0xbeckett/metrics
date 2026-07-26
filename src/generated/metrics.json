@@ -1,12 +1,12 @@
 {
   "schema_version": 2,
-  "refreshed_at": "2026-07-26T06:10:46Z",
-  "source_generated_at": "2026-07-26T06:10:44.146Z",
+  "refreshed_at": "2026-07-26T06:15:03Z",
+  "source_generated_at": "2026-07-26T06:15:02.668Z",
   "rate_table_effective_date": "2026-07-16",
   "headline": {
     "totalRuns": 2585,
-    "totalSpend": 1995.62,
-    "totalWallHours": 1059.8,
+    "totalSpend": 2000.49,
+    "totalWallHours": 1059.9,
     "modelsUsed": 7,
     "firstRun": "2026-06-28",
     "lastRun": "2026-07-26",
@@ -36,8 +36,8 @@
       "label": "sonnet-5",
       "color": "blue",
       "runs": 252,
-      "cost": 177.2,
-      "wallHours": 14.45,
+      "cost": 182.07,
+      "wallHours": 14.62,
       "estimate": true
     },
     {
@@ -228,7 +228,7 @@
     {
       "date": "2026-07-26",
       "runs": 13,
-      "cost": 23.99
+      "cost": 28.86
     }
   ],
   "harnesses": [
@@ -246,7 +246,7 @@
     }
   ],
   "codeStats": {
-    "source_generated_at": "2026-07-26T06:10:45.528Z",
+    "source_generated_at": "2026-07-26T06:15:03.424Z",
     "headline": {
       "commits": 572,
       "files": 760,
@@ -1728,13 +1728,13 @@
   "logs": {
     "available": true,
     "files": 1,
-    "totalLines": 150684,
+    "totalLines": 150701,
     "errorLines": 0,
     "errorRate": 0,
     "perDay": [
       {
         "date": "2026-07-26",
-        "lines": 150684,
+        "lines": 150701,
         "errors": 0
       }
     ]
@@ -1771,25 +1771,25 @@
         "name": "beckett-metrics",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 2528148
+        "uptimeSeconds": 2528405
       },
       {
         "name": "beckett-rpc",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 4200351
+        "uptimeSeconds": 4200607
       },
       {
         "name": "beckett-secret",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 2942650
+        "uptimeSeconds": 2942907
       },
       {
         "name": "beckett-v4",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 2455205
+        "uptimeSeconds": 2455462
       }
     ]
   },
@@ -1961,15 +1961,15 @@
     "toolCallMix": [
       {
         "tool": "Bash",
-        "count": 19901
+        "count": 19945
       },
       {
         "tool": "Read",
-        "count": 4646
+        "count": 4656
       },
       {
         "tool": "Edit",
-        "count": 2464
+        "count": 2469
       },
       {
         "tool": "StructuredOutput",
@@ -2041,11 +2041,11 @@
     "turnBuckets": [
       {
         "label": "1",
-        "count": 1545
+        "count": 1544
       },
       {
         "label": "2-5",
-        "count": 518
+        "count": 519
       },
       {
         "label": "6-15",
@@ -2066,9 +2066,9 @@
     ],
     "duration": {
       "count": 2321,
-      "mean": 1686.3,
+      "mean": 1686.6,
       "p50": 89.6,
-      "p90": 1430,
+      "p90": 1434.6,
       "max": 295409.4
     },
     "turns": {
@@ -2098,7 +2098,7 @@
         "label": "sonnet-5",
         "color": "blue",
         "sessions": 252,
-        "tokens": 625973029
+        "tokens": 653987596
       },
       {
         "model": "claude-opus-5",
@@ -2136,8 +2136,8 @@
         "tokens": 15331094
       }
     ],
-    "totalCost": 3794.41,
-    "errorCount": 1749,
+    "totalCost": 3804.07,
+    "errorCount": 1753,
     "permissionDenials": 40
   }
 }
