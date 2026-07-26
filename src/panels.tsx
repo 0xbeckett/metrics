@@ -4,6 +4,7 @@ import { ChartCard, Label, Metric, Panel, SectionHeader, StatusDot } from "@/com
 import { BarsPlain, ColumnsPlain, LinePlain, ProportionBar } from "@/components/charts-plain";
 import { AreaViz } from "@/components/charts";
 import { MemoryGraph } from "@/components/memory-graph";
+import { cn } from "@/lib/utils";
 import { compact, days, duration, int, pct, untilFire } from "@/derived";
 import { metricColor, metricDither } from "@/palette";
 import { shortDate, usd, type ActivityEvent, type Metrics } from "@/metrics";
@@ -255,15 +256,35 @@ function RoutinesPanel({ metrics }: { metrics: Metrics }) {
   return (
     <ChartCard title="Routines" kicker={`${r.enabled} enabled · next fire`}>
       <ul className="flex flex-col divide-y divide-border">
-        {rows.map((item) => (
-          <li key={item.id ?? item.name} className="flex items-center justify-between gap-3 py-2 text-[13px]">
-            <span className="min-w-0 flex-1 truncate text-foreground">{item.name}</span>
-            <span className="shrink-0 label-caps">{item.kind}</span>
-            <span className="w-16 shrink-0 text-right tabular-nums text-muted-foreground">
-              {untilFire(item.nextFireAt, Date.now())}
-            </span>
-          </li>
-        ))}
+        {rows.map((item) => {
+          const fires = untilFire(item.nextFireAt, Date.now());
+          return (
+            <li
+              key={item.id ?? item.name}
+              className="flex items-center justify-between gap-3 py-2 text-[13px] transition-colors duration-150 hover:bg-secondary/60"
+            >
+              <span className="flex min-w-0 flex-1 items-center gap-2">
+                <span
+                  aria-hidden
+                  className={cn(
+                    "size-1.5 shrink-0 rounded-full",
+                    item.enabled ? "bg-good" : "border border-muted-foreground bg-transparent",
+                  )}
+                />
+                <span className="truncate text-foreground">{item.name}</span>
+              </span>
+              <span className="shrink-0 label-caps">{item.kind}</span>
+              <span
+                className={cn(
+                  "w-16 shrink-0 text-right tabular-nums",
+                  fires === "due" ? "font-medium text-warn" : "text-muted-foreground",
+                )}
+              >
+                {fires}
+              </span>
+            </li>
+          );
+        })}
       </ul>
     </ChartCard>
   );
@@ -311,6 +332,7 @@ function ClaudeSessionsPanels({ metrics }: { metrics: Metrics }) {
       <ChartCard
         title="Sessions over time"
         kicker={`${int(c.total)} transcripts · worker vs. concierge vs. quick`}
+        hue={metricColor("sessions")}
         footnote="Every Claude Code transcript on the host, split by which project directory it ran in — worker ticket worktrees, the concierge checkout, or a short quick/browser dispatch."
       >
         <Figures>
@@ -323,7 +345,7 @@ function ClaudeSessionsPanels({ metrics }: { metrics: Metrics }) {
           <LinePlain
             data={c.sessionsOverTime as unknown as Record<string, string | number>[]}
             xKey="date"
-            series={[{ key: "count", label: "Sessions", shade: 1 }]}
+            series={[{ key: "count", label: "Sessions", color: metricColor("sessions") }]}
             xFormat={(s) => shortDate(s)}
             yFormat={int}
             tipFormat={(n) => `${int(n)} sessions`}
@@ -340,20 +362,20 @@ function ClaudeSessionsPanels({ metrics }: { metrics: Metrics }) {
         </div>
       </ChartCard>
 
-      <ChartCard title="Tool-call mix" kicker="calls · by tool name, top 12" footnote="Tool name and a count only — arguments and results are never read past a same-pass error/permission check.">
-        <BarsPlain data={toolBars} valueFormat={int} labelWidth={110} />
+      <ChartCard title="Tool-call mix" kicker="calls · by tool name, top 12" hue={metricColor("sessions")} footnote="Tool name and a count only — arguments and results are never read past a same-pass error/permission check.">
+        <BarsPlain data={toolBars} color={metricColor("sessions")} valueFormat={int} labelWidth={110} />
       </ChartCard>
 
       <ChartCard title="Session duration" kicker={`median ${duration(c.duration.p50)} · p90 ${duration(c.duration.p90 ?? 0)}`}>
-        <ColumnsPlain data={c.durationBuckets.map((d) => ({ label: d.label, value: d.count }))} height={200} yFormat={int} tipFormat={(n) => `${int(n)} sessions`} />
+        <ColumnsPlain data={c.durationBuckets.map((d) => ({ label: d.label, value: d.count }))} ramp height={200} yFormat={int} tipFormat={(n) => `${int(n)} sessions`} />
       </ChartCard>
 
       <ChartCard title="Turns per session" kicker={`median ${int(c.turns.p50)} · p90 ${int(c.turns.p90 ?? 0)}`}>
-        <ColumnsPlain data={c.turnBuckets.map((t) => ({ label: t.label, value: t.count }))} height={200} yFormat={int} tipFormat={(n) => `${int(n)} sessions`} />
+        <ColumnsPlain data={c.turnBuckets.map((t) => ({ label: t.label, value: t.count }))} ramp height={200} yFormat={int} tipFormat={(n) => `${int(n)} sessions`} />
       </ChartCard>
 
-      <ChartCard title="Model split" kicker="sessions · primary model per transcript" className="lg:col-span-2">
-        <BarsPlain data={modelBars} valueFormat={int} labelWidth={80} />
+      <ChartCard title="Model split" kicker="sessions · primary model per transcript" hue={metricColor("sessions")} className="lg:col-span-2">
+        <BarsPlain data={modelBars} color={metricColor("sessions")} valueFormat={int} labelWidth={80} />
       </ChartCard>
     </div>
   );
@@ -367,6 +389,16 @@ function ago(ts: string, now: number): string {
   if (delta < 3600) return `${Math.floor(delta / 60)}m`;
   if (delta < 86_400) return `${Math.floor(delta / 3600)}h`;
   return `${Math.floor(delta / 86_400)}d`;
+}
+
+/** An event kind → the hue of the thing it happened to, so the stream keys into
+ *  the same map as the panels above it. Unknown kinds stay neutral. */
+function kindColor(kind: string): string {
+  if (/worker|run|session/i.test(kind)) return metricColor("sessions");
+  if (/commit|push/i.test(kind)) return metricColor("commits");
+  if (/done|closed|shipped/i.test(kind)) return metricColor("closed");
+  if (/start|open|ticket|task/i.test(kind)) return metricColor("opened");
+  return "var(--ink-soft)";
 }
 
 export function ActivityStream({ activity }: { activity: ActivityEvent[] }) {
@@ -387,7 +419,14 @@ export function ActivityStream({ activity }: { activity: ActivityEvent[] }) {
             const body = (
               <div className="flex items-baseline gap-3 py-2 text-[13px]">
                 <span className="w-10 shrink-0 text-right tabular-nums text-label">{ago(e.ts, now)}</span>
-                <span className="w-16 shrink-0 label-caps">{e.kind}</span>
+                <span className="flex w-16 shrink-0 items-center gap-1.5 label-caps">
+                  <span
+                    aria-hidden
+                    className="size-1.5 shrink-0 rounded-full"
+                    style={{ background: kindColor(e.kind) }}
+                  />
+                  {e.kind}
+                </span>
                 {e.ref ? <span className="shrink-0 font-medium tabular-nums text-foreground">{e.ref}</span> : null}
                 <span className="min-w-0 flex-1 truncate text-muted-foreground">{e.title}</span>
               </div>
@@ -423,10 +462,10 @@ export const OperationsView = memo(function OperationsView({ metrics }: { metric
         <SectionHeader kicker="Runtime" title="System &amp; throughput" />
         <SystemStrip metrics={metrics} />
         {hasTrend ? (
-          <ChartCard title="Delivery trend" kicker="tickets closed · per day">
+          <ChartCard title="Delivery trend" kicker="tickets closed · per day" hue={metricColor("closed")}>
             <AreaViz
               data={(metrics.tickets?.openedClosedPerDay ?? []).map((d) => ({ date: d.date, value: d.closed }))}
-              color="ink"
+              color={metricDither("closed")}
               seriesLabel="Closed"
               xFormatter={(v) => shortDate(String(v))}
               yFormatter={(v) => int(v)}

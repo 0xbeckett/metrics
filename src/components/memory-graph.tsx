@@ -1,13 +1,18 @@
 import { useMemo, useState } from "react";
+import { rampValue } from "@/palette";
 import type { MemorySection } from "@/metrics";
 
 /*
  * The memory knowledge graph — the one showpiece allowed to be bespoke. A real
  * node-link graph laid out with a small deterministic Fruchterman-Reingold
- * simulation (no d3-force dependency), drawn as ink line-work on paper: hairline
- * edges, nodes sized by degree, hubs filled and leaves hollow, labels only on
- * the connected nodes so it never turns to noise. Colour stays out of it — the
- * whole panel is ink on the surface, so it reads in both themes.
+ * simulation (no d3-force dependency): hairline ink edges, labels only on the
+ * connected nodes so it never turns to noise.
+ *
+ * Colour here encodes MAGNITUDE, not identity — link count runs up the one-hue
+ * `--seq-*` ramp, so hubs sit dark and leaves sit pale, doubling the radius
+ * channel that already reads degree. A node-link graph is an all-pairs form
+ * (any two nodes can end up neighbours), where a categorical palette could not
+ * be validated past three series — a sequential ramp is the honest encoding.
  */
 
 const VW = 640;
@@ -101,13 +106,11 @@ function layout(mem: MemorySection): { nodes: P[]; edges: [number, number][] } {
   return { nodes, edges };
 }
 
-// Hubs (self/person/project — the anchors) render filled; leaves render hollow.
-const FILLED = new Set(["self", "person", "project"]);
-
 export function MemoryGraph({ mem }: { mem: MemorySection }) {
   const { nodes, edges } = useMemo(() => layout(mem), [mem]);
   const [active, setActive] = useState<number | null>(null);
   const radius = (deg: number) => 4 + Math.sqrt(deg) * 3.2;
+  const maxDegree = Math.max(1, ...nodes.map((n) => n.degree));
 
   const neighbors = useMemo(() => {
     const s = new Set<number>();
@@ -120,6 +123,7 @@ export function MemoryGraph({ mem }: { mem: MemorySection }) {
   }, [active, edges]);
 
   return (
+    <div className="flex flex-col gap-3">
     <svg
       viewBox={`0 0 ${VW} ${VH}`}
       className="block h-auto w-full"
@@ -145,7 +149,6 @@ export function MemoryGraph({ mem }: { mem: MemorySection }) {
       </g>
       <g>
         {nodes.map((node, i) => {
-          const filled = FILLED.has(node.type);
           const lit = active === null || i === active || neighbors.has(i);
           const showLabel = node.degree >= 3 || i === active || neighbors.has(i);
           const r = radius(node.degree);
@@ -155,15 +158,15 @@ export function MemoryGraph({ mem }: { mem: MemorySection }) {
               opacity={lit ? 1 : 0.28}
               onMouseEnter={() => setActive(i)}
               onMouseLeave={() => setActive(null)}
-              style={{ cursor: "default" }}
+              style={{ cursor: "default", transition: "opacity 180ms ease-out" }}
             >
               <circle
                 cx={node.x}
                 cy={node.y}
                 r={r}
-                fill={filled ? "var(--ink)" : "var(--surface)"}
-                stroke="var(--ink)"
-                strokeWidth={1.5}
+                fill={node.degree > 0 ? rampValue(node.degree, maxDegree) : "var(--surface)"}
+                stroke={node.degree > 0 ? "var(--surface)" : "var(--ink-soft)"}
+                strokeWidth={node.degree > 0 ? 2 : 1.5}
               />
               {showLabel ? (
                 <text
@@ -182,5 +185,21 @@ export function MemoryGraph({ mem }: { mem: MemorySection }) {
         })}
       </g>
     </svg>
+      <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+        <span className="label-caps">Links</span>
+        <span className="tabular-nums">0</span>
+        <span className="flex" style={{ gap: 2 }}>
+          {[1, 2, 3, 4, 5].map((step) => (
+            <span
+              key={step}
+              aria-hidden
+              className="inline-block size-2.5 rounded-[2px]"
+              style={{ background: `var(--seq-${step})` }}
+            />
+          ))}
+        </span>
+        <span className="tabular-nums">{maxDegree}</span>
+      </div>
+    </div>
   );
 }

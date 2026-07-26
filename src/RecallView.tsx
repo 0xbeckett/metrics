@@ -1,12 +1,17 @@
 import { GroupedBarViz, type Series } from "@/components/charts";
 import { ChartCard, Panel, Stat } from "@/components/ui";
+import { SLOT_DITHER, type Slot } from "@/palette";
 import { recall, score, pct, ms, type RecallModel } from "@/recall";
 
-// luna vs haiku, in the fixed presentation order the projector emits.
-const series: Series[] = recall.models.map((m) => ({
+// luna vs haiku, in the fixed presentation order the projector emits. The seats
+// are two series inside one grouped chart, so they take the categorical slots in
+// sequence — never skipping, because only neighbouring slots are validated
+// against each other. The same array feeds all five charts, so a seat is the
+// same hue everywhere on this tab.
+const series: Series[] = recall.models.map((m, i) => ({
   key: m.seat,
   label: m.label,
-  color: m.color,
+  color: SLOT_DITHER[(Math.min(i, 5) + 1) as Slot],
 }));
 
 function seatBy(pick: (m: RecallModel) => number) {

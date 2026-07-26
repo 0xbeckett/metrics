@@ -49,7 +49,7 @@ export function CountUp({
       return;
     }
     const controls = animate(from, value, {
-      duration: firstRun ? 1.1 : 0.7,
+      duration: firstRun ? 0.9 : 0.4,
       delay: firstRun ? delay : 0,
       ease: EASE_OUT_EXPO,
       onUpdate: (v) => {
@@ -82,10 +82,10 @@ export function Reveal({
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 14 }}
+      initial={{ opacity: 0, y: 10 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.4, delay, ease: "easeOut" }}
+      transition={{ duration: 0.22, delay, ease: "easeOut" }}
     >
       {children}
     </motion.div>
