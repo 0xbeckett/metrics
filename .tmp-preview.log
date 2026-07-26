@@ -1,0 +1,3 @@
+The project root contains the "#" character (/home/beckett/Projects/metrics/.beckett/worktrees/#2), which may not work when running Vite. Consider renaming the directory without the characters.
+  ➜  Local:   http://localhost:4599/
+  ➜  Network: use --host to expose

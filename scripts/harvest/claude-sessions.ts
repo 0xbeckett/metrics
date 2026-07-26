@@ -183,7 +183,7 @@ async function filesUnder(root: string, note: (message: string) => void): Promis
  */
 async function* streamLinesFrom(path: string, start: number): AsyncGenerator<{ line: string; consumedTo: number }> {
   let pos = start;
-  let carry = Buffer.alloc(0);
+  let carry: Buffer<ArrayBufferLike> = Buffer.alloc(0);
   const stream = createReadStream(path, { start });
   for await (const chunk of stream as AsyncIterable<Buffer>) {
     carry = carry.length ? Buffer.concat([carry, chunk]) : chunk;

@@ -1,25 +1,25 @@
 {
   "schema_version": 2,
-  "refreshed_at": "2026-07-25T08:59:33Z",
-  "source_generated_at": "2026-07-25T08:59:32.337Z",
+  "refreshed_at": "2026-07-26T06:10:46Z",
+  "source_generated_at": "2026-07-26T06:10:44.146Z",
   "rate_table_effective_date": "2026-07-16",
   "headline": {
-    "totalRuns": 2549,
-    "totalSpend": 1920.32,
-    "totalWallHours": 1054.4,
+    "totalRuns": 2585,
+    "totalSpend": 1995.62,
+    "totalWallHours": 1059.8,
     "modelsUsed": 7,
     "firstRun": "2026-06-28",
-    "lastRun": "2026-07-25",
-    "tasksTracked": 263
+    "lastRun": "2026-07-26",
+    "tasksTracked": 272
   },
   "models": [
     {
       "model": "claude-opus-4-8",
       "label": "opus-4.8",
       "color": "red",
-      "runs": 1267,
-      "cost": 1360.65,
-      "wallHours": 1009.09,
+      "runs": 1277,
+      "cost": 1408.92,
+      "wallHours": 1012.91,
       "estimate": true
     },
     {
@@ -32,22 +32,22 @@
       "estimate": true
     },
     {
-      "model": "gpt-5.6-terra",
-      "label": "terra",
-      "color": "orange",
-      "runs": 107,
-      "cost": 153.88,
-      "wallHours": 7.83,
-      "estimate": false
-    },
-    {
       "model": "claude-sonnet-5",
       "label": "sonnet-5",
       "color": "blue",
-      "runs": 235,
-      "cost": 150.38,
-      "wallHours": 12.89,
+      "runs": 252,
+      "cost": 177.2,
+      "wallHours": 14.45,
       "estimate": true
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "label": "terra",
+      "color": "orange",
+      "runs": 110,
+      "cost": 153.88,
+      "wallHours": 7.83,
+      "estimate": false
     },
     {
       "model": "claude-fable-5",
@@ -62,9 +62,9 @@
       "model": "claude-haiku-4-5-20251001",
       "label": "haiku-4.5",
       "color": "green",
-      "runs": 459,
-      "cost": 16.14,
-      "wallHours": 2.7,
+      "runs": 465,
+      "cost": 16.36,
+      "wallHours": 2.73,
       "estimate": true
     },
     {
@@ -81,37 +81,7 @@
     {
       "cycles": 0,
       "label": "0",
-      "count": 2247
-    },
-    {
-      "cycles": 1,
-      "label": "1",
-      "count": 214
-    },
-    {
-      "cycles": 2,
-      "label": "2",
-      "count": 66
-    },
-    {
-      "cycles": 3,
-      "label": "3",
-      "count": 10
-    },
-    {
-      "cycles": 4,
-      "label": "4",
-      "count": 0
-    },
-    {
-      "cycles": 5,
-      "label": "5",
-      "count": 0
-    },
-    {
-      "cycles": 6,
-      "label": "6",
-      "count": 12
+      "count": 2585
     }
   ],
   "runsOverTime": [
@@ -252,18 +222,23 @@
     },
     {
       "date": "2026-07-25",
-      "runs": 58,
-      "cost": 85.66
+      "runs": 81,
+      "cost": 136.97
+    },
+    {
+      "date": "2026-07-26",
+      "runs": 13,
+      "cost": 23.99
     }
   ],
   "harnesses": [
     {
       "harness": "claude-code",
-      "count": 2065
+      "count": 2098
     },
     {
       "harness": "pi",
-      "count": 410
+      "count": 413
     },
     {
       "harness": "codex",
@@ -271,14 +246,14 @@
     }
   ],
   "codeStats": {
-    "source_generated_at": "2026-07-25T08:59:33.042Z",
+    "source_generated_at": "2026-07-26T06:10:45.528Z",
     "headline": {
-      "commits": 562,
-      "files": 727,
-      "projects": 37,
-      "additions": 223010,
-      "deletions": 68320,
-      "net": 154690
+      "commits": 572,
+      "files": 760,
+      "projects": 38,
+      "additions": 228439,
+      "deletions": 69199,
+      "net": 159240
     },
     "projects": [
       {
@@ -322,6 +297,16 @@
         "last_commit": "2026-07-21T12:22:28-07:00"
       },
       {
+        "repo": "metrics",
+        "commits": 20,
+        "files": 96,
+        "additions": 19806,
+        "deletions": 5644,
+        "net": 14162,
+        "first_commit": "2026-07-18T06:05:00-07:00",
+        "last_commit": "2026-07-25T02:27:13-07:00"
+      },
+      {
         "repo": "andc",
         "commits": 15,
         "files": 25,
@@ -330,16 +315,6 @@
         "net": 1294,
         "first_commit": "2026-07-12T09:33:24-07:00",
         "last_commit": "2026-07-12T10:41:14-07:00"
-      },
-      {
-        "repo": "metrics",
-        "commits": 11,
-        "files": 63,
-        "additions": 14377,
-        "deletions": 4765,
-        "net": 9612,
-        "first_commit": "2026-07-18T06:05:00-07:00",
-        "last_commit": "2026-07-18T10:05:19-07:00"
       },
       {
         "repo": "bored-hardening",
@@ -450,6 +425,16 @@
         "net": 688,
         "first_commit": "2026-07-07T21:43:46-07:00",
         "last_commit": "2026-07-07T21:48:23-07:00"
+      },
+      {
+        "repo": "aliasing-forest",
+        "commits": 1,
+        "files": 0,
+        "additions": 0,
+        "deletions": 0,
+        "net": 0,
+        "first_commit": "2026-07-25T15:00:35-07:00",
+        "last_commit": "2026-07-25T15:00:35-07:00"
       },
       {
         "repo": "arcade",
@@ -655,10 +640,10 @@
     "authors": [
       {
         "name": "beckett",
-        "commits": 312,
-        "additions": 121702,
-        "deletions": 37851,
-        "net": 83851
+        "commits": 322,
+        "additions": 127131,
+        "deletions": 38730,
+        "net": 88401
       },
       {
         "name": "frgmt0",
@@ -890,7 +875,7 @@
       },
       {
         "date": "2026-07-19",
-        "commits": 7
+        "commits": 10
       },
       {
         "date": "2026-07-20",
@@ -903,251 +888,141 @@
       {
         "date": "2026-07-24",
         "commits": 1
+      },
+      {
+        "date": "2026-07-25",
+        "commits": 7
       }
     ]
   },
   "notes": {
     "skippedRows": 0,
-    "unratedModelSessions": 185,
+    "unratedModelSessions": 216,
     "anyEstimated": true
   },
   "tickets": {
     "available": true,
-    "total": 80,
+    "total": 2,
     "byStatus": [
       {
-        "status": "done",
-        "count": 63
-      },
-      {
-        "status": "cancelled",
-        "count": 10
-      },
-      {
         "status": "active",
-        "count": 7
+        "count": 2
       }
     ],
     "openedClosedPerDay": [
       {
-        "date": "2026-07-12",
-        "opened": 7,
+        "date": "2026-07-26",
+        "opened": 2,
         "closed": 0
-      },
-      {
-        "date": "2026-07-13",
-        "opened": 4,
-        "closed": 2
-      },
-      {
-        "date": "2026-07-14",
-        "opened": 5,
-        "closed": 5
-      },
-      {
-        "date": "2026-07-15",
-        "opened": 4,
-        "closed": 4
-      },
-      {
-        "date": "2026-07-16",
-        "opened": 5,
-        "closed": 4
-      },
-      {
-        "date": "2026-07-17",
-        "opened": 3,
-        "closed": 3
-      },
-      {
-        "date": "2026-07-18",
-        "opened": 9,
-        "closed": 6
-      },
-      {
-        "date": "2026-07-19",
-        "opened": 10,
-        "closed": 8
-      },
-      {
-        "date": "2026-07-20",
-        "opened": 13,
-        "closed": 9
-      },
-      {
-        "date": "2026-07-21",
-        "opened": 1,
-        "closed": 1
-      },
-      {
-        "date": "2026-07-22",
-        "opened": 0,
-        "closed": 0
-      },
-      {
-        "date": "2026-07-23",
-        "opened": 5,
-        "closed": 3
-      },
-      {
-        "date": "2026-07-24",
-        "opened": 4,
-        "closed": 2
-      },
-      {
-        "date": "2026-07-25",
-        "opened": 10,
-        "closed": 26
       }
     ],
     "leadTimeDays": {
-      "count": 63,
-      "mean": 1.46,
-      "p50": 0.02,
-      "p90": 9.93,
-      "max": 13.2
+      "count": 0,
+      "mean": 0,
+      "p50": 0,
+      "p90": 0,
+      "max": 0
     },
     "branchesPerTask": {
-      "mean": 1.8,
-      "max": 10,
+      "mean": 1.5,
+      "max": 2,
       "distribution": [
         {
           "branches": 1,
-          "count": 53
+          "count": 1
         },
         {
           "branches": 2,
-          "count": 14
-        },
-        {
-          "branches": 3,
-          "count": 5
-        },
-        {
-          "branches": 5,
-          "count": 5
-        },
-        {
-          "branches": 6,
-          "count": 1
-        },
-        {
-          "branches": 7,
-          "count": 1
-        },
-        {
-          "branches": 10,
           "count": 1
         }
       ]
     },
-    "reworkShare": 0.238
+    "reworkShare": null
   },
   "workers": {
     "available": true,
-    "totalRuns": 361,
+    "totalRuns": 380,
     "byStage": [
       {
         "stage": "implement",
-        "count": 232
+        "count": 249
       },
       {
         "stage": "review",
-        "count": 129
+        "count": 131
       }
     ],
     "byOutcome": [
       {
         "outcome": "done",
-        "count": 265
+        "count": 275
       },
       {
         "outcome": "failed",
-        "count": 52
+        "count": 60
       },
       {
         "outcome": "rework",
-        "count": 35
+        "count": 36
       },
       {
         "outcome": "cancelled",
         "count": 9
       }
     ],
-    "firstTryPassRate": 0.747,
+    "firstTryPassRate": 0.731,
     "reworkCycles": {
-      "count": 19,
-      "mean": 1.79,
-      "max": 6,
-      "distribution": [
-        {
-          "cycles": 1,
-          "count": 12
-        },
-        {
-          "cycles": 2,
-          "count": 3
-        },
-        {
-          "cycles": 3,
-          "count": 2
-        },
-        {
-          "cycles": 4,
-          "count": 1
-        },
-        {
-          "cycles": 6,
-          "count": 1
-        }
-      ]
+      "count": 0,
+      "mean": 0,
+      "max": 0,
+      "distribution": []
     },
-    "stalls": 9,
-    "restarts": 14,
+    "stalls": 0,
+    "restarts": 1,
     "totals": {
-      "turns": 14217,
-      "toolCalls": 16393,
-      "tokensIn": 1179322767,
-      "tokensOut": 876758,
-      "wallHours": 52.5
+      "turns": 15006,
+      "toolCalls": 17150,
+      "tokensIn": 1250743881,
+      "tokensOut": 888496,
+      "wallHours": 56.9
     },
     "perRun": {
       "turns": {
-        "count": 361,
-        "mean": 39.4,
-        "p50": 31,
-        "p90": 80,
+        "count": 380,
+        "mean": 39.5,
+        "p50": 31.5,
+        "p90": 81,
         "max": 289
       },
       "toolCalls": {
-        "count": 361,
-        "mean": 45.4,
+        "count": 380,
+        "mean": 45.1,
         "p50": 34,
-        "p90": 93,
+        "p90": 93.1,
         "max": 393
       },
       "tokens": {
-        "count": 361,
-        "mean": 3269251,
-        "p50": 1516201,
-        "p90": 8037108,
+        "count": 380,
+        "mean": 3293769,
+        "p50": 1497131,
+        "p90": 8556597,
         "max": 61185687
       },
       "wallMinutes": {
-        "count": 361,
-        "mean": 8.7,
-        "p50": 5.7,
-        "p90": 20.5,
+        "count": 380,
+        "mean": 9,
+        "p50": 5.9,
+        "p90": 20.8,
         "max": 60.1
       }
     },
-    "journalFiles": 156,
+    "journalFiles": 2,
     "workerDirs": 9
   },
   "spend": {
     "available": true,
-    "totalSpend": 1306,
-    "runsPriced": 361,
+    "totalSpend": 1368.66,
+    "runsPriced": 380,
     "overTime": [
       {
         "date": "2026-07-11",
@@ -1221,8 +1096,13 @@
       },
       {
         "date": "2026-07-25",
-        "cost": 253.01,
-        "runs": 52
+        "cost": 296.65,
+        "runs": 66
+      },
+      {
+        "date": "2026-07-26",
+        "cost": 19.02,
+        "runs": 5
       }
     ],
     "byModel": [
@@ -1230,8 +1110,8 @@
         "model": "claude-opus-4-8",
         "label": "opus-4.8",
         "color": "red",
-        "cost": 444.84,
-        "runs": 105
+        "cost": 498.4,
+        "runs": 117
       },
       {
         "model": "claude-fable-5",
@@ -1244,8 +1124,8 @@
         "model": "claude-sonnet-5",
         "label": "sonnet-5",
         "color": "blue",
-        "cost": 179.66,
-        "runs": 101
+        "cost": 188.76,
+        "runs": 105
       },
       {
         "model": "claude-opus-5",
@@ -1259,25 +1139,25 @@
         "label": "terra",
         "color": "orange",
         "cost": 104.06,
-        "runs": 96
+        "runs": 99
       }
     ],
     "byStage": [
       {
         "stage": "implement",
-        "cost": 1057.12,
-        "runs": 232
+        "cost": 1114.42,
+        "runs": 249
       },
       {
         "stage": "review",
-        "cost": 248.88,
-        "runs": 129
+        "cost": 254.25,
+        "runs": 131
       }
     ],
     "costPerTicket": {
-      "count": 149,
-      "mean": 8.77,
-      "p50": 5.53,
+      "count": 158,
+      "mean": 8.66,
+      "p50": 5.51,
       "max": 109.3,
       "top": [
         {
@@ -1349,7 +1229,7 @@
     "byOutcome": [
       {
         "outcome": "done",
-        "count": 43
+        "count": 42
       },
       {
         "outcome": "error",
@@ -1357,24 +1237,24 @@
       },
       {
         "outcome": "cancelled",
-        "count": 3
+        "count": 4
       }
     ],
     "durationSeconds": {
       "count": 50,
-      "mean": 88.1,
-      "p50": 68.7,
-      "p90": 198.8,
+      "mean": 106,
+      "p50": 75.7,
+      "p90": 252.7,
       "max": 364.5
     },
     "durationBuckets": [
       {
         "label": "<15s",
-        "count": 7
+        "count": 8
       },
       {
         "label": "15–60s",
-        "count": 17
+        "count": 13
       },
       {
         "label": "1–3m",
@@ -1382,7 +1262,7 @@
       },
       {
         "label": "3–6m",
-        "count": 5
+        "count": 8
       },
       {
         "label": ">6m",
@@ -1412,20 +1292,24 @@
   },
   "memory": {
     "available": true,
-    "nodeCount": 19,
-    "edgeCount": 22,
-    "orphanCount": 5,
+    "nodeCount": 25,
+    "edgeCount": 28,
+    "orphanCount": 7,
     "byType": [
       {
         "type": "reference",
-        "count": 8
+        "count": 11
       },
       {
         "type": "feedback",
-        "count": 5
+        "count": 7
       },
       {
         "type": "self",
+        "count": 2
+      },
+      {
+        "type": "decision",
         "count": 2
       },
       {
@@ -1439,21 +1323,17 @@
       {
         "type": "env",
         "count": 1
-      },
-      {
-        "type": "decision",
-        "count": 1
       }
     ],
     "ageDays": {
-      "count": 10,
-      "mean": 14.8,
-      "p50": 19.1,
-      "max": 26.3,
+      "count": 19,
+      "mean": 8.3,
+      "p50": 1,
+      "max": 27.2,
       "distribution": [
         {
           "bucket": "<1w",
-          "count": 4
+          "count": 13
         },
         {
           "bucket": "1–4w",
@@ -1486,9 +1366,19 @@
         "degree": 0
       },
       {
-        "name": "pi-login-expired",
+        "name": "config-is-versioned",
         "type": "reference",
         "degree": 0
+      },
+      {
+        "name": "thread-workspaces",
+        "type": "reference",
+        "degree": 3
+      },
+      {
+        "name": "waves-and-pinning",
+        "type": "reference",
+        "degree": 1
       },
       {
         "name": "website-deploy-apex-blocked",
@@ -1498,7 +1388,7 @@
       {
         "name": "discord",
         "type": "reference",
-        "degree": 2
+        "degree": 3
       },
       {
         "name": "github-identity",
@@ -1528,12 +1418,17 @@
       {
         "name": "jason",
         "type": "person",
-        "degree": 7
+        "degree": 9
       },
       {
         "name": "commits-no-claude-trailer",
         "type": "feedback",
         "degree": 1
+      },
+      {
+        "name": "filing-etiquette",
+        "type": "feedback",
+        "degree": 2
       },
       {
         "name": "jason-design-taste",
@@ -1561,8 +1456,23 @@
         "degree": 4
       },
       {
+        "name": "board-reset-2026-07-26",
+        "type": "decision",
+        "degree": 3
+      },
+      {
         "name": "ops80-deploy-doc-as-site",
         "type": "decision",
+        "degree": 0
+      },
+      {
+        "name": "pi-login-expired",
+        "type": "reference",
+        "degree": 0
+      },
+      {
+        "name": "ticket-freeze-pending-big-change",
+        "type": "feedback",
         "degree": 0
       }
     ],
@@ -1600,24 +1510,40 @@
         "to": "how-to-use-memory"
       },
       {
+        "from": "operating-principles",
+        "to": "discord"
+      },
+      {
+        "from": "operating-principles",
+        "to": "github-identity"
+      },
+      {
+        "from": "operating-principles",
+        "to": "jason"
+      },
+      {
+        "from": "thread-workspaces",
+        "to": "discord"
+      },
+      {
+        "from": "thread-workspaces",
+        "to": "waves-and-pinning"
+      },
+      {
+        "from": "thread-workspaces",
+        "to": "board-reset-2026-07-26"
+      },
+      {
         "from": "website-deploy-apex-blocked",
         "to": "github-identity"
       },
       {
         "from": "discord",
-        "to": "operating-principles"
-      },
-      {
-        "from": "discord",
         "to": "jason"
       },
       {
         "from": "github-identity",
         "to": "jason"
-      },
-      {
-        "from": "github-identity",
-        "to": "operating-principles"
       },
       {
         "from": "github-identity",
@@ -1645,7 +1571,11 @@
       },
       {
         "from": "jason",
-        "to": "operating-principles"
+        "to": "board-reset-2026-07-26"
+      },
+      {
+        "from": "jason",
+        "to": "filing-etiquette"
       },
       {
         "from": "jason",
@@ -1654,6 +1584,10 @@
       {
         "from": "jason",
         "to": "owner-lockout-guard"
+      },
+      {
+        "from": "filing-etiquette",
+        "to": "board-reset-2026-07-26"
       }
     ]
   },
@@ -1683,7 +1617,7 @@
         "kind": "x-shitpost",
         "enabled": true,
         "nextFireAt": "2026-07-25T19:14:00.000Z",
-        "lastFiredAt": "2026-07-24T19:36:08.144Z"
+        "lastFiredAt": "2026-07-25T19:14:18.748Z"
       },
       {
         "id": "x-post-evening",
@@ -1691,7 +1625,7 @@
         "kind": "browser",
         "enabled": true,
         "nextFireAt": "2026-07-26T00:43:00.000Z",
-        "lastFiredAt": "2026-07-25T00:18:19.041Z"
+        "lastFiredAt": "2026-07-26T00:43:29.358Z"
       },
       {
         "id": "x-mentions-morning",
@@ -1699,7 +1633,7 @@
         "kind": "browser",
         "enabled": true,
         "nextFireAt": "2026-07-25T16:49:00.000Z",
-        "lastFiredAt": "2026-07-24T16:17:04.145Z"
+        "lastFiredAt": "2026-07-25T16:49:00.690Z"
       },
       {
         "id": "x-mentions-midday",
@@ -1707,7 +1641,7 @@
         "kind": "browser",
         "enabled": true,
         "nextFireAt": "2026-07-25T21:06:00.000Z",
-        "lastFiredAt": "2026-07-24T21:18:08.681Z"
+        "lastFiredAt": "2026-07-25T21:06:17.103Z"
       },
       {
         "id": "x-mentions-evening",
@@ -1715,7 +1649,7 @@
         "kind": "browser",
         "enabled": true,
         "nextFireAt": "2026-07-26T03:07:00.000Z",
-        "lastFiredAt": "2026-07-25T03:23:15.878Z"
+        "lastFiredAt": "2026-07-26T05:18:53.676Z"
       },
       {
         "id": "x-post-early",
@@ -1723,7 +1657,7 @@
         "kind": "browser",
         "enabled": true,
         "nextFireAt": "2026-07-25T15:41:00.000Z",
-        "lastFiredAt": "2026-07-24T15:29:03.892Z"
+        "lastFiredAt": "2026-07-25T15:41:00.472Z"
       },
       {
         "id": "x-post-morning",
@@ -1731,7 +1665,7 @@
         "kind": "browser",
         "enabled": true,
         "nextFireAt": "2026-07-25T17:21:00.000Z",
-        "lastFiredAt": "2026-07-24T17:54:04.618Z"
+        "lastFiredAt": "2026-07-25T17:21:18.582Z"
       },
       {
         "id": "x-post-midday",
@@ -1739,7 +1673,7 @@
         "kind": "browser",
         "enabled": true,
         "nextFireAt": "2026-07-25T20:40:00.000Z",
-        "lastFiredAt": "2026-07-24T20:31:08.353Z"
+        "lastFiredAt": "2026-07-25T20:40:18.986Z"
       },
       {
         "id": "x-post-afternoon",
@@ -1747,7 +1681,7 @@
         "kind": "browser",
         "enabled": true,
         "nextFireAt": "2026-07-25T22:48:00.000Z",
-        "lastFiredAt": "2026-07-24T22:48:09.049Z"
+        "lastFiredAt": "2026-07-25T22:48:29.068Z"
       },
       {
         "id": "x-post-night",
@@ -1755,7 +1689,7 @@
         "kind": "browser",
         "enabled": true,
         "nextFireAt": "2026-07-26T02:41:00.000Z",
-        "lastFiredAt": "2026-07-25T02:25:15.619Z"
+        "lastFiredAt": "2026-07-26T05:18:55.449Z"
       },
       {
         "id": "x-post-latenight",
@@ -1763,7 +1697,7 @@
         "kind": "browser",
         "enabled": true,
         "nextFireAt": "2026-07-26T04:45:00.000Z",
-        "lastFiredAt": "2026-07-25T04:06:16.080Z"
+        "lastFiredAt": "2026-07-26T05:18:55.434Z"
       },
       {
         "id": "x-post-midnight",
@@ -1794,20 +1728,20 @@
   "logs": {
     "available": true,
     "files": 1,
-    "totalLines": 145599,
+    "totalLines": 150684,
     "errorLines": 0,
     "errorRate": 0,
     "perDay": [
       {
-        "date": "2026-07-25",
-        "lines": 145599,
+        "date": "2026-07-26",
+        "lines": 150684,
         "errors": 0
       }
     ]
   },
   "daemon": {
     "available": true,
-    "version": "6.2.0",
+    "version": "6.2.4",
     "services": [
       {
         "name": "beckett-alert@beckett-rpc",
@@ -1822,6 +1756,12 @@
         "uptimeSeconds": null
       },
       {
+        "name": "beckett-config-snapshot",
+        "active": "inactive",
+        "subState": "dead",
+        "uptimeSeconds": null
+      },
+      {
         "name": "beckett-heartbeat",
         "active": "inactive",
         "subState": "dead",
@@ -1831,328 +1771,373 @@
         "name": "beckett-metrics",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 3029089
+        "uptimeSeconds": 2528148
       },
       {
         "name": "beckett-rpc",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 4124078
+        "uptimeSeconds": 4200351
       },
       {
         "name": "beckett-secret",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 2866377
+        "uptimeSeconds": 2942650
       },
       {
         "name": "beckett-v4",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 2457583
+        "uptimeSeconds": 2455205
       }
     ]
   },
   "recentActivity": [
     {
-      "ts": "2026-07-25T08:59:05.113Z",
-      "kind": "worker",
-      "ref": "#80.3",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
-    },
-    {
-      "ts": "2026-07-25T08:43:38.843Z",
-      "kind": "opened",
-      "ref": "#80.5",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
-    },
-    {
-      "ts": "2026-07-25T08:43:38.842Z",
-      "kind": "opened",
-      "ref": "#80.3",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
-    },
-    {
-      "ts": "2026-07-25T08:43:38.599Z",
+      "ts": "2026-07-26T05:54:19.184Z",
       "kind": "started",
-      "ref": "#80.5",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
+      "ref": "#2.1",
+      "title": "Metrics site: session analytics + a real colour pass"
     },
     {
-      "ts": "2026-07-25T08:43:38.370Z",
+      "ts": "2026-07-26T05:45:29.602Z",
       "kind": "started",
-      "ref": "#80.5",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
+      "ref": "#1.1",
+      "title": "Model-release watcher: post when a genuinely new model ships"
     },
     {
-      "ts": "2026-07-25T08:43:36.510Z",
+      "ts": "2026-07-26T05:45:05.822Z",
+      "kind": "worker",
+      "ref": "#1.1",
+      "title": "Model-release watcher: post when a genuinely new model ships"
+    },
+    {
+      "ts": "2026-07-26T05:44:40.695Z",
       "kind": "started",
-      "ref": "#80.3",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
-    },
-    {
-      "ts": "2026-07-25T08:43:36.271Z",
-      "kind": "started",
-      "ref": "#80.3",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
-    },
-    {
-      "ts": "2026-07-25T08:43:36.251Z",
-      "kind": "done",
-      "ref": "#80.1",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
-    },
-    {
-      "ts": "2026-07-25T08:42:38.613Z",
-      "kind": "in-review",
-      "ref": "#80.1",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
-    },
-    {
-      "ts": "2026-07-25T08:42:38.222Z",
-      "kind": "in-review",
-      "ref": "#80.1",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
-    },
-    {
-      "ts": "2026-07-25T08:42:36.491Z",
-      "kind": "deploy",
-      "ref": "#80.1",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
-    },
-    {
-      "ts": "2026-07-25T08:42:36.423Z",
-      "kind": "worker",
-      "ref": "#80.1",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
-    },
-    {
-      "ts": "2026-07-25T08:38:19.776Z",
-      "kind": "in-review",
-      "ref": "#80.1",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
-    },
-    {
-      "ts": "2026-07-25T08:38:19.354Z",
-      "kind": "in-review",
-      "ref": "#80.1",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
-    },
-    {
-      "ts": "2026-07-25T08:38:19.291Z",
-      "kind": "worker",
-      "ref": "#80.1",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
-    },
-    {
-      "ts": "2026-07-25T08:30:11.037Z",
-      "kind": "cancelled",
-      "ref": "#80.4",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
-    },
-    {
-      "ts": "2026-07-25T08:27:30.947Z",
-      "kind": "cancelled",
-      "ref": "#80.2",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
-    },
-    {
-      "ts": "2026-07-25T08:18:10.053Z",
-      "kind": "worker",
-      "ref": "#80.1",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
-    },
-    {
-      "ts": "2026-07-25T08:18:02.949Z",
-      "kind": "started",
-      "ref": "#80.1",
-      "title": "Live metrics dashboard: more signals, near-realtime refresh"
-    },
-    {
-      "ts": "2026-07-25T07:54:58.317Z",
-      "kind": "in-review",
-      "ref": "#59.1",
-      "title": "Audit and fix agent-service routing issues"
-    },
-    {
-      "ts": "2026-07-25T07:54:58.317Z",
-      "kind": "in-review",
-      "ref": "#74.1",
-      "title": "CPU pass on Beckett's own runtime (loom-desk)"
-    },
-    {
-      "ts": "2026-07-25T07:42:42.400Z",
-      "kind": "cancelled",
-      "ref": "#75.2",
-      "title": "Prompt diet: cut explanatory bulk from doctrine and worker briefs"
-    },
-    {
-      "ts": "2026-07-25T07:42:13.124Z",
-      "kind": "opened",
-      "ref": "#75.2",
-      "title": "Prompt diet: cut explanatory bulk from doctrine and worker briefs"
-    },
-    {
-      "ts": "2026-07-25T07:42:12.961Z",
-      "kind": "started",
-      "ref": "#75.2",
-      "title": "Prompt diet: cut explanatory bulk from doctrine and worker briefs"
-    },
-    {
-      "ts": "2026-07-25T07:42:12.760Z",
-      "kind": "started",
-      "ref": "#75.2",
-      "title": "Prompt diet: cut explanatory bulk from doctrine and worker briefs"
-    },
-    {
-      "ts": "2026-07-25T07:42:12.520Z",
-      "kind": "worker",
-      "ref": "#75.1",
-      "title": "Prompt diet: cut explanatory bulk from doctrine and worker briefs"
-    },
-    {
-      "ts": "2026-07-25T07:42:12.434Z",
-      "kind": "done",
-      "ref": "#75.1",
-      "title": "Prompt diet: cut explanatory bulk from doctrine and worker briefs"
-    },
-    {
-      "ts": "2026-07-25T07:28:32.698Z",
-      "kind": "worker",
-      "ref": "#75.1",
-      "title": "Prompt diet: cut explanatory bulk from doctrine and worker briefs"
-    },
-    {
-      "ts": "2026-07-25T07:06:34.151Z",
-      "kind": "started",
-      "ref": "#75.1",
-      "title": "Prompt diet: cut explanatory bulk from doctrine and worker briefs"
-    },
-    {
-      "ts": "2026-07-25T07:06:33.901Z",
-      "kind": "started",
-      "ref": "#75.1",
-      "title": "Prompt diet: cut explanatory bulk from doctrine and worker briefs"
-    },
-    {
-      "ts": "2026-07-25T07:06:33.859Z",
-      "kind": "worker",
-      "ref": "#75.1",
-      "title": "Prompt diet: cut explanatory bulk from doctrine and worker briefs"
-    },
-    {
-      "ts": "2026-07-25T07:05:11.855Z",
-      "kind": "done",
-      "ref": "#79.1",
-      "title": "advance-outbox retries permanently-409 entries forever (97% of daemon log volume)"
-    },
-    {
-      "ts": "2026-07-25T07:05:10.660Z",
-      "kind": "done",
-      "ref": "#79.1",
-      "title": "advance-outbox retries permanently-409 entries forever (97% of daemon log volume)"
-    },
-    {
-      "ts": "2026-07-25T07:05:10.653Z",
-      "kind": "done",
-      "ref": "#79.1",
-      "title": "advance-outbox retries permanently-409 entries forever (97% of daemon log volume)"
-    },
-    {
-      "ts": "2026-07-25T07:05:10.317Z",
-      "kind": "done",
-      "ref": "#79.1",
-      "title": "advance-outbox retries permanently-409 entries forever (97% of daemon log volume)"
-    },
-    {
-      "ts": "2026-07-25T07:05:07.263Z",
-      "kind": "deploy",
-      "ref": "#79.1",
-      "title": "advance-outbox retries permanently-409 entries forever (97% of daemon log volume)"
-    },
-    {
-      "ts": "2026-07-25T07:05:07.095Z",
-      "kind": "worker",
-      "ref": "#79.1",
-      "title": "advance-outbox retries permanently-409 entries forever (97% of daemon log volume)"
-    },
-    {
-      "ts": "2026-07-25T06:57:55.169Z",
-      "kind": "worker",
-      "ref": "#79.1",
-      "title": "advance-outbox retries permanently-409 entries forever (97% of daemon log volume)"
-    },
-    {
-      "ts": "2026-07-25T06:57:51.692Z",
-      "kind": "done",
-      "ref": "#78.1",
-      "title": "Dropped turns: a failed session resume eats the user's message"
-    },
-    {
-      "ts": "2026-07-25T06:57:49.311Z",
-      "kind": "done",
-      "ref": "#78.1",
-      "title": "Dropped turns: a failed session resume eats the user's message"
-    },
-    {
-      "ts": "2026-07-25T06:57:49.302Z",
-      "kind": "done",
-      "ref": "#78.1",
-      "title": "Dropped turns: a failed session resume eats the user's message"
-    },
-    {
-      "ts": "2026-07-25T06:57:49.044Z",
-      "kind": "done",
-      "ref": "#78.1",
-      "title": "Dropped turns: a failed session resume eats the user's message"
-    },
-    {
-      "ts": "2026-07-25T06:57:45.827Z",
-      "kind": "deploy",
-      "ref": "#78.1",
-      "title": "Dropped turns: a failed session resume eats the user's message"
-    },
-    {
-      "ts": "2026-07-25T06:57:45.755Z",
-      "kind": "worker",
-      "ref": "#78.1",
-      "title": "Dropped turns: a failed session resume eats the user's message"
-    },
-    {
-      "ts": "2026-07-25T06:56:39.118Z",
-      "kind": "in-review",
-      "ref": "#75.1",
-      "title": "Prompt diet: cut explanatory bulk from doctrine and worker briefs"
-    },
-    {
-      "ts": "2026-07-25T06:56:38.845Z",
-      "kind": "in-review",
-      "ref": "#75.1",
-      "title": "Prompt diet: cut explanatory bulk from doctrine and worker briefs"
-    },
-    {
-      "ts": "2026-07-25T06:56:38.676Z",
-      "kind": "worker",
-      "ref": "#75.1",
-      "title": "Prompt diet: cut explanatory bulk from doctrine and worker briefs"
-    },
-    {
-      "ts": "2026-07-25T06:46:50.331Z",
-      "kind": "worker",
-      "ref": "#78.1",
-      "title": "Dropped turns: a failed session resume eats the user's message"
-    },
-    {
-      "ts": "2026-07-25T06:46:49.387Z",
-      "kind": "done",
-      "ref": "#77.1",
-      "title": "Fix memory maintain scanning only part of the store"
-    },
-    {
-      "ts": "2026-07-25T06:46:44.770Z",
-      "kind": "done",
-      "ref": "#77.1",
-      "title": "Fix memory maintain scanning only part of the store"
+      "ref": "#1.1",
+      "title": "Model-release watcher: post when a genuinely new model ships"
     }
-  ]
+  ],
+  "claudeSessions": {
+    "available": true,
+    "total": 2321,
+    "byClassification": [
+      {
+        "classification": "concierge",
+        "count": 1322
+      },
+      {
+        "classification": "worker",
+        "count": 794
+      },
+      {
+        "classification": "other",
+        "count": 111
+      },
+      {
+        "classification": "quick",
+        "count": 94
+      }
+    ],
+    "sessionsOverTime": [
+      {
+        "date": "2026-06-28",
+        "count": 91
+      },
+      {
+        "date": "2026-06-29",
+        "count": 55
+      },
+      {
+        "date": "2026-06-30",
+        "count": 370
+      },
+      {
+        "date": "2026-07-01",
+        "count": 119
+      },
+      {
+        "date": "2026-07-02",
+        "count": 36
+      },
+      {
+        "date": "2026-07-03",
+        "count": 19
+      },
+      {
+        "date": "2026-07-04",
+        "count": 0
+      },
+      {
+        "date": "2026-07-05",
+        "count": 0
+      },
+      {
+        "date": "2026-07-06",
+        "count": 313
+      },
+      {
+        "date": "2026-07-07",
+        "count": 110
+      },
+      {
+        "date": "2026-07-08",
+        "count": 62
+      },
+      {
+        "date": "2026-07-09",
+        "count": 38
+      },
+      {
+        "date": "2026-07-10",
+        "count": 56
+      },
+      {
+        "date": "2026-07-11",
+        "count": 55
+      },
+      {
+        "date": "2026-07-12",
+        "count": 63
+      },
+      {
+        "date": "2026-07-13",
+        "count": 51
+      },
+      {
+        "date": "2026-07-14",
+        "count": 19
+      },
+      {
+        "date": "2026-07-15",
+        "count": 69
+      },
+      {
+        "date": "2026-07-16",
+        "count": 80
+      },
+      {
+        "date": "2026-07-17",
+        "count": 27
+      },
+      {
+        "date": "2026-07-18",
+        "count": 76
+      },
+      {
+        "date": "2026-07-19",
+        "count": 89
+      },
+      {
+        "date": "2026-07-20",
+        "count": 145
+      },
+      {
+        "date": "2026-07-21",
+        "count": 50
+      },
+      {
+        "date": "2026-07-22",
+        "count": 27
+      },
+      {
+        "date": "2026-07-23",
+        "count": 51
+      },
+      {
+        "date": "2026-07-24",
+        "count": 32
+      },
+      {
+        "date": "2026-07-25",
+        "count": 199
+      },
+      {
+        "date": "2026-07-26",
+        "count": 19
+      }
+    ],
+    "toolCallMix": [
+      {
+        "tool": "Bash",
+        "count": 19901
+      },
+      {
+        "tool": "Read",
+        "count": 4646
+      },
+      {
+        "tool": "Edit",
+        "count": 2464
+      },
+      {
+        "tool": "StructuredOutput",
+        "count": 2114
+      },
+      {
+        "tool": "WebFetch",
+        "count": 1046
+      },
+      {
+        "tool": "mcp__browser__betterwright_browser",
+        "count": 1029
+      },
+      {
+        "tool": "Write",
+        "count": 980
+      },
+      {
+        "tool": "WebSearch",
+        "count": 737
+      },
+      {
+        "tool": "ToolSearch",
+        "count": 557
+      },
+      {
+        "tool": "Agent",
+        "count": 173
+      },
+      {
+        "tool": "Skill",
+        "count": 154
+      },
+      {
+        "tool": "mcp__browser__playwright_eval",
+        "count": 115
+      }
+    ],
+    "durationBuckets": [
+      {
+        "label": "<1m",
+        "count": 1005
+      },
+      {
+        "label": "1-5m",
+        "count": 636
+      },
+      {
+        "label": "5-15m",
+        "count": 341
+      },
+      {
+        "label": "15-30m",
+        "count": 150
+      },
+      {
+        "label": "30-60m",
+        "count": 61
+      },
+      {
+        "label": "1-3h",
+        "count": 65
+      },
+      {
+        "label": "3h+",
+        "count": 63
+      }
+    ],
+    "turnBuckets": [
+      {
+        "label": "1",
+        "count": 1545
+      },
+      {
+        "label": "2-5",
+        "count": 518
+      },
+      {
+        "label": "6-15",
+        "count": 215
+      },
+      {
+        "label": "16-40",
+        "count": 40
+      },
+      {
+        "label": "41-100",
+        "count": 2
+      },
+      {
+        "label": "100+",
+        "count": 1
+      }
+    ],
+    "duration": {
+      "count": 2321,
+      "mean": 1686.3,
+      "p50": 89.6,
+      "p90": 1430,
+      "max": 295409.4
+    },
+    "turns": {
+      "count": 2321,
+      "mean": 2.6,
+      "p50": 1,
+      "p90": 6,
+      "max": 103
+    },
+    "byModel": [
+      {
+        "model": "claude-opus-4-8",
+        "label": "opus-4.8",
+        "color": "red",
+        "sessions": 1277,
+        "tokens": 3148284851
+      },
+      {
+        "model": "claude-haiku-4-5-20251001",
+        "label": "haiku-4.5",
+        "color": "green",
+        "sessions": 465,
+        "tokens": 100958599
+      },
+      {
+        "model": "claude-sonnet-5",
+        "label": "sonnet-5",
+        "color": "blue",
+        "sessions": 252,
+        "tokens": 625973029
+      },
+      {
+        "model": "claude-opus-5",
+        "label": "opus-5",
+        "color": "orange",
+        "sessions": 147,
+        "tokens": 491081484
+      },
+      {
+        "model": "claude-fable-5",
+        "label": "fable-5",
+        "color": "purple",
+        "sessions": 104,
+        "tokens": 604571035
+      },
+      {
+        "model": "<synthetic>",
+        "label": "<synthetic>",
+        "color": "red",
+        "sessions": 28,
+        "tokens": 0
+      },
+      {
+        "model": "claude-sonnet-4-6",
+        "label": "sonnet-4-6",
+        "color": "blue",
+        "sessions": 19,
+        "tokens": 15237171
+      },
+      {
+        "model": "claude-sonnet-4-5-20250929",
+        "label": "sonnet-4-5-20250929",
+        "color": "green",
+        "sessions": 16,
+        "tokens": 15331094
+      }
+    ],
+    "totalCost": 3794.41,
+    "errorCount": 1749,
+    "permissionDenials": 40
+  }
 }
