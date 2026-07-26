@@ -70,7 +70,7 @@ holds the count-up hook and reveal wrapper.
 ## Charts
 
 Two kits share one token system. The textured showpieces (commit velocity, the delivery trend,
-the hero sparklines, the recall head-to-head) render with
+the hero sparklines) render with
 [**dither-kit**](https://www.tripwire.sh/dither-kit) (`@dither-kit/*`, installed into
 `src/components/dither-kit/`); the dense panels use the plain hairline SVG set in
 `src/components/charts-plain.tsx`. Both read their colours from the same CSS custom properties,
@@ -80,7 +80,6 @@ so a token change moves the canvas kit and the SVG kit together.
 |------|--------|-----|
 | Commit velocity (daily, hero) | code stats | dither `AreaChart` |
 | Delivery trend (tickets closed) | tickets | dither `AreaChart` |
-| Recall head-to-head (luna vs haiku) | recall eval | dither `BarChart` |
 | Hero-stat sparklines | both | dither `Sparkline` |
 | Rankings (projects, authors, models, tools) | all | plain `BarsPlain` |
 | Time series (runs, spend, sessions, tickets) | all | plain `LinePlain` |
