@@ -56,16 +56,21 @@ Point it at different datasets with `TELEMETRY_DATASET=/path/to/runs.json`,
 
 ## The page
 
-![Proof of Work, light](docs/screenshots/light-proof-of-work.png)
-![Operations, dark](docs/screenshots/dark-operations.png)
+![Dashboard, light](docs/screenshots/dashboard-light.png)
+![Dashboard, dark](docs/screenshots/dashboard-dark.png)
 
 
-A marketing piece, not an info panel: giant count-up hero figures (lines shipped, commits,
-projects, spend, sessions, compute), a full-width commit-velocity timeline as the hero visual, a
-strip of derived cost-per-outcome ratios (first-try rate, $/commit, lines/$, …), then a grid of
-charts. Numbers count up on load and charts draw in — fast, and skipped under
-`prefers-reduced-motion`. `src/derived.ts` computes the marketing projections; `src/motion.tsx`
-holds the count-up hook and reveal wrapper.
+One scrolling page, no tabs. A masthead, a sticky in-page rail (scroll-spy section anchors plus the
+live-refresh dot and the dark/light toggle), then a headline strip and five titled sections
+separated by hairline rules: **Overview** (the six numbers that carry the story) → **Spend** (every
+money figure in one place — total, cost per model, cost per ticket, cost per commit, lines per
+dollar, daily spend, one currency, one window) → **Work shipped** (commit velocity, lines per
+project, authorship) → **The loop** (ticket throughput, lead time, rework, worker outcomes) →
+**Runtime** (system health, session analytics, automation, memory). Giant count-up hero figures and
+a full-width commit-velocity timeline are the visual anchors; numbers count up on load and charts
+draw in — fast, and skipped under `prefers-reduced-motion`. `src/derived.ts` computes the marketing
+projections; `src/motion.tsx` holds the count-up hook and reveal wrapper; `src/components/section-nav.tsx`
+is the sticky rail and its scroll-spy.
 
 ## Charts
 
