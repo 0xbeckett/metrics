@@ -2,8 +2,7 @@ import type { Metrics } from "./metrics";
 
 export type Author = { name: string; commits: number; net: number; additions: number };
 
-/** Pure marketing projections over one fetched harvester rollup. */
-export function deriveMetrics(metrics: Metrics) {
+function computeDerived(metrics: Metrics) {
   const h = metrics.headline;
   const cs = metrics.codeStats;
   const authors: Author[] = (() => {
@@ -36,6 +35,25 @@ export function deriveMetrics(metrics: Metrics) {
     cycleSeries: metrics.reviewCycles.map((c) => ({ label: c.label, value: c.count })),
     runsSeries: metrics.runsOverTime.map((d) => ({ date: d.date, value: d.runs })),
   };
+}
+
+export type Derived = ReturnType<typeof computeDerived>;
+
+const cache = new WeakMap<Metrics, Derived>();
+
+/**
+ * Pure marketing projections over one fetched harvester rollup, memoized on the
+ * document itself. The series arrays here are handed straight to the charts, and
+ * dither-kit keys its entrance replay on `data` *identity* — so recomputing them
+ * on an unrelated re-render would re-animate every plot. One document in, one
+ * result out, for as long as that document is the live one.
+ */
+export function deriveMetrics(metrics: Metrics): Derived {
+  const hit = cache.get(metrics);
+  if (hit) return hit;
+  const derived = computeDerived(metrics);
+  cache.set(metrics, derived);
+  return derived;
 }
 
 export function int(n: number): string {

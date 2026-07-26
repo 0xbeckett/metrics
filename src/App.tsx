@@ -5,7 +5,7 @@ import { HeroStat, Label, LiveDot, Panel } from "@/components/ui";
 import { SectionNav, useScrollSpy, type NavSection } from "@/components/section-nav";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/theme";
-import { formatAge, useLiveMetrics } from "@/live";
+import { formatAge, useDataAge, useLiveMetrics } from "@/live";
 import { shortDate, usdPrecise, type Metrics } from "@/metrics";
 import { compact, deriveMetrics, int, lastDelta } from "@/derived";
 import { metricDither } from "@/palette";
@@ -79,8 +79,19 @@ const Overview = memo(function Overview({ metrics }: { metrics: Metrics }) {
  * Masthead live indicator: a pulsing good-state dot + honest data age, which
  * degrades to a hollow warn ring and the word "stale". Three channels — glyph
  * shape, wording, colour — so the state never rides on hue alone.
+ *
+ * It owns the 1s clock rather than taking an age from above, so the per-second
+ * tick re-renders these few spans and nothing else on the page.
  */
-function LiveIndicator({ ageSeconds, stale }: { ageSeconds: number | null; stale: boolean }) {
+const LiveIndicator = memo(function LiveIndicator({
+  refreshedAt,
+  fetchOk,
+}: {
+  refreshedAt: number | null;
+  fetchOk: boolean;
+}) {
+  const { ageSeconds, stale } = useDataAge(refreshedAt, fetchOk);
+
   return (
     <div
       className={cn(
@@ -95,7 +106,7 @@ function LiveIndicator({ ageSeconds, stale }: { ageSeconds: number | null; stale
       <span className="sr-only">{stale ? "data stale" : `updated ${formatAge(ageSeconds)}`}</span>
     </div>
   );
-}
+});
 
 /** A titled page section: a hairline rule and roomy whitespace above, an eyebrow
  *  + serif heading, then the body. The eyebrow names the section's role. */
@@ -164,7 +175,7 @@ function Colophon({ metrics }: { metrics: Metrics }) {
 
 export function App() {
   const { dark, toggle } = useTheme();
-  const { metrics, ageSeconds, stale } = useLiveMetrics();
+  const { metrics, refreshedAt, fetchOk } = useLiveMetrics();
   const active = useScrollSpy(SECTIONS.map((s) => s.id));
 
   return (
@@ -186,7 +197,7 @@ export function App() {
           active={active}
           controls={
             <>
-              <LiveIndicator ageSeconds={ageSeconds} stale={stale} />
+              <LiveIndicator refreshedAt={refreshedAt} fetchOk={fetchOk} />
               <button
                 type="button"
                 onClick={toggle}

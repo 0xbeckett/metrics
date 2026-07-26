@@ -7,6 +7,12 @@ import { fallbackMetrics, fetchMetrics, type Metrics } from "@/metrics";
  * cause no re-render, no flash, no relayout. A 1s clock drives the "updated Ns
  * ago" readout, which degrades honestly to a stale state when a fetch fails or
  * the document stops advancing.
+ *
+ * The two live at different cadences on purpose, in two hooks. `useLiveMetrics`
+ * only re-renders when the document actually advances; the per-second tick lives
+ * in `useDataAge`, called by the freshness readout alone. Keeping them in one
+ * hook re-rendered the whole page every second, which re-created the chart
+ * series arrays and made every dither canvas replay its entrance animation.
  */
 
 const POLL_MS = 15_000;
@@ -18,15 +24,19 @@ const signature = (m: Metrics) => `${m.refreshed_at ?? ""}|${m.source_generated_
 
 export type LiveState = {
   metrics: Metrics;
+  /** When the document says it was refreshed, in epoch ms — null if unstamped. */
+  refreshedAt: number | null;
+  fetchOk: boolean;
+};
+
+export type DataAge = {
   ageSeconds: number | null;
   stale: boolean;
-  fetchOk: boolean;
 };
 
 export function useLiveMetrics(): LiveState {
   const [metrics, setMetrics] = useState<Metrics>(fallbackMetrics);
   const [fetchOk, setFetchOk] = useState(true);
-  const [now, setNow] = useState(() => Date.now());
   const sigRef = useRef(signature(fallbackMetrics));
 
   useEffect(() => {
@@ -55,16 +65,29 @@ export function useLiveMetrics(): LiveState {
     };
   }, []);
 
+  const dataTs = metrics.refreshed_at ? Date.parse(metrics.refreshed_at) : NaN;
+  const refreshedAt = Number.isFinite(dataTs) ? dataTs : null;
+
+  return { metrics, refreshedAt, fetchOk };
+}
+
+/**
+ * The 1s freshness clock, owned by whoever renders the readout. Everything this
+ * ticks re-renders once a second, so keep it as low in the tree as possible —
+ * today that is `LiveIndicator` and nothing else.
+ */
+export function useDataAge(refreshedAt: number | null, fetchOk: boolean): DataAge {
+  const [now, setNow] = useState(() => Date.now());
+
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
   }, []);
 
-  const dataTs = metrics.refreshed_at ? Date.parse(metrics.refreshed_at) : NaN;
-  const ageSeconds = Number.isFinite(dataTs) ? Math.max(0, Math.floor((now - dataTs) / 1000)) : null;
+  const ageSeconds = refreshedAt === null ? null : Math.max(0, Math.floor((now - refreshedAt) / 1000));
   const stale = !fetchOk || ageSeconds === null || ageSeconds > STALE_SECONDS;
 
-  return { metrics, ageSeconds, stale, fetchOk };
+  return { ageSeconds, stale };
 }
 
 /** "updated 12s ago" / "3m ago" / "2h ago" from an age in seconds. */

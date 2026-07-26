@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /*
@@ -17,17 +17,28 @@ export type NavSection = { id: string; label: string };
  * rather than IntersectionObserver so the "current" section is unambiguous even
  * with tall panels, and pins to the last section once the page is scrolled to
  * the bottom (so short trailing sections still light up).
+ *
+ * The scroll handler fires on every frame of a scroll, so it only calls `setActive`
+ * when the section genuinely changed — this hook sits at the root, and setting
+ * state per scroll event would re-render (and re-animate) the whole page while
+ * the reader is simply moving down it.
  */
 export function useScrollSpy(ids: string[], offset = 96): string {
   const key = ids.join(",");
   const [active, setActive] = useState(ids[0] ?? "");
+  const activeRef = useRef(active);
 
   useEffect(() => {
+    const commit = (next: string) => {
+      if (next === activeRef.current) return;
+      activeRef.current = next;
+      setActive(next);
+    };
     const compute = () => {
       const atBottom =
         window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
       if (atBottom) {
-        setActive(ids[ids.length - 1] ?? "");
+        commit(ids[ids.length - 1] ?? "");
         return;
       }
       let current = ids[0] ?? "";
@@ -36,7 +47,7 @@ export function useScrollSpy(ids: string[], offset = 96): string {
         if (!el) continue;
         if (el.getBoundingClientRect().top - offset <= 1) current = id;
       }
-      setActive(current);
+      commit(current);
     };
     compute();
     window.addEventListener("scroll", compute, { passive: true });

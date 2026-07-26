@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { memo, useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ChartCard, Label, Metric, Panel, StatChip, StatusDot } from "@/components/ui";
 import { BarsPlain, ColumnsPlain, LinePlain, ProportionBar } from "@/components/charts-plain";
@@ -17,6 +17,11 @@ import { Reveal } from "@/motion";
  * trend showpieces (commit velocity, delivery) keep the dither texture. Every
  * section degrades to nothing when its source was unavailable, and money is told
  * in exactly one place (Spend) with one currency format.
+ *
+ * Each exported view is `memo`'d on its one prop: they only ever need to re-render
+ * when the metrics document advances, and re-rendering them for any other reason
+ * rebuilds the chart series arrays, which dither-kit reads as new data and
+ * replays the entrance animation for.
  */
 
 // One currency voice for the whole page: whole dollars with grouping for totals
@@ -33,6 +38,21 @@ const uptime = (s: number | null): string => {
   if (h >= 1) return `${h}h`;
   return `${Math.floor(s / 60)}m`;
 };
+
+/**
+ * A local wall clock for the panels that render a relative time ("in 3m", "12s").
+ * They used to ride the page-wide 1s tick; now that the sections are memoized,
+ * each keeps its own — so the label stays honest while the re-render stays inside
+ * that one panel. Only for panels with no canvas chart in them.
+ */
+function useNowTick(everyMs: number): number {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), everyMs);
+    return () => clearInterval(id);
+  }, [everyMs]);
+  return now;
+}
 
 /** A compact multi-figure row inside a panel body. */
 function Figures({ children }: { children: ReactNode }) {
@@ -53,7 +73,7 @@ function ChipStrip({ children }: { children: ReactNode }) {
 // its derived ratios, the page-wide daily spend, cost per model, and worker cost
 // per ticket. One currency format, one time window.
 
-export function SpendView({ metrics }: { metrics: Metrics }) {
+export const SpendView = memo(function SpendView({ metrics }: { metrics: Metrics }) {
   const h = metrics.headline;
   const d = deriveMetrics(metrics);
   const spend = metrics.spend;
@@ -152,12 +172,12 @@ export function SpendView({ metrics }: { metrics: Metrics }) {
       </div>
     </div>
   );
-}
+});
 
 // ── Work shipped ──────────────────────────────────────────────────────────────
 // Git output: the velocity showpiece, then authorship and per-project lines.
 
-export function WorkView({ metrics }: { metrics: Metrics }) {
+export const WorkView = memo(function WorkView({ metrics }: { metrics: Metrics }) {
   const cs = metrics.codeStats;
   const d = deriveMetrics(metrics);
   const h = metrics.headline;
@@ -205,7 +225,7 @@ export function WorkView({ metrics }: { metrics: Metrics }) {
       </div>
     </div>
   );
-}
+});
 
 // ── The loop (tickets) ────────────────────────────────────────────────────────
 
@@ -305,7 +325,7 @@ function WorkerOutcomes({ metrics }: { metrics: Metrics }) {
   );
 }
 
-export function LoopView({ metrics }: { metrics: Metrics }) {
+export const LoopView = memo(function LoopView({ metrics }: { metrics: Metrics }) {
   const hasTrend = (metrics.tickets?.openedClosedPerDay.length ?? 0) > 1;
   return (
     <div className="flex flex-col gap-6">
@@ -328,11 +348,12 @@ export function LoopView({ metrics }: { metrics: Metrics }) {
       <WorkerOutcomes metrics={metrics} />
     </div>
   );
-}
+});
 
 // ── Runtime ───────────────────────────────────────────────────────────────────
 
 function SystemStrip({ metrics }: { metrics: Metrics }) {
+  const now = useNowTick(30_000);
   const { daemon, logs, routines, headline } = metrics;
   const activeSvc = daemon?.services.filter((s) => s.active === "active").length ?? 0;
   const totalSvc = daemon?.services.length ?? 0;
@@ -360,7 +381,7 @@ function SystemStrip({ metrics }: { metrics: Metrics }) {
           <Metric label="Routines" value={`${routines.enabled}`} sub={`of ${routines.total} enabled`} />
         ) : null}
         {nextRoutine ? (
-          <Metric label="Next fire" value={untilFire(nextRoutine.nextFireAt, Date.now())} sub={nextRoutine.name} />
+          <Metric label="Next fire" value={untilFire(nextRoutine.nextFireAt, now)} sub={nextRoutine.name} />
         ) : null}
       </div>
       {daemon?.available ? (
@@ -480,6 +501,7 @@ function RunPanels({ metrics }: { metrics: Metrics }) {
 }
 
 function RoutinesPanel({ metrics }: { metrics: Metrics }) {
+  const now = useNowTick(30_000);
   const r = metrics.routines;
   if (!r?.available) return null;
   const rows = [...r.items].sort((a, b) => {
@@ -492,7 +514,7 @@ function RoutinesPanel({ metrics }: { metrics: Metrics }) {
     <ChartCard title="Routines" kicker={`${r.enabled} enabled · next fire`}>
       <ul className="flex flex-col divide-y divide-border">
         {rows.map((item) => {
-          const fires = untilFire(item.nextFireAt, Date.now());
+          const fires = untilFire(item.nextFireAt, now);
           return (
             <li
               key={item.id ?? item.name}
@@ -574,11 +596,7 @@ function kindColor(kind: string): string {
 
 function ActivityStream({ activity }: { activity: ActivityEvent[] }) {
   const reduce = useReducedMotion();
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const id = setInterval(() => setNow(Date.now()), 5000);
-    return () => clearInterval(id);
-  }, []);
+  const now = useNowTick(5000);
   const rows = activity.slice(0, 14);
 
   return (
@@ -623,7 +641,7 @@ function ActivityStream({ activity }: { activity: ActivityEvent[] }) {
   );
 }
 
-export function RuntimeView({ metrics }: { metrics: Metrics }) {
+export const RuntimeView = memo(function RuntimeView({ metrics }: { metrics: Metrics }) {
   return (
     <div className="flex flex-col gap-6">
       <SystemStrip metrics={metrics} />
@@ -636,4 +654,4 @@ export function RuntimeView({ metrics }: { metrics: Metrics }) {
       <MemoryPanels metrics={metrics} />
     </div>
   );
-}
+});
