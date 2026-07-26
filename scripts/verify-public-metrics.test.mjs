@@ -81,6 +81,41 @@ test("assertPublicText throws naming the offending rule", () => {
   assert.throws(() => assertPublicText("leak /home/beckett/secret", "doc"), /local filesystem path/i);
 });
 
+// ── Claude Code session analytics (#2): generic free-text backstop ───────────
+// Every legitimate string in this document is a short label (ticket ref, model id, tool name).
+// A harvester regression that lets raw transcript prose through won't necessarily look like an
+// email/path/secret, so a bare "string is suspiciously long" rule is the last line of defense.
+test("rejects a JSON string value over the length bound, even with no other tell", () => {
+  const prose = "please open the config file and swap the staging endpoint for the production one, then rerun the deploy script and let me know once it finishes so I can tell the whole team on discord it went out fine";
+  assert.ok(prose.length > 200);
+  assert.ok(hits(JSON.stringify({ note: prose })).includes("long-string-field"));
+});
+
+test("allows short claude-sessions rollup fields", () => {
+  const ok = JSON.stringify({
+    claudeSessions: {
+      total: 42,
+      byClassification: [{ classification: "worker", count: 30 }],
+      toolCallMix: [{ tool: "Bash", count: 118 }],
+      byModel: [{ model: "claude-sonnet-5", label: "sonnet-5", sessions: 20 }],
+    },
+  });
+  assert.deepEqual(hits(ok), []);
+  assert.doesNotThrow(() => assertPublicText(ok, "claude-sessions"));
+});
+
+test("rejects a claude-sessions row that leaked free text into a tool-name-shaped field", () => {
+  const bad = JSON.stringify({
+    claudeSessions: {
+      toolCallMix: [{
+        tool: "please fix the login bug for the user and don't forget to remove the debug console.log statements before you commit this change, thanks so much for all the help today",
+        count: 1,
+      }],
+    },
+  });
+  assert.ok(hits(bad).includes("long-string-field"));
+});
+
 // ── End-to-end: the CLI verifier rejects a leaky file ────────────────────────
 test("verify-public-metrics.mjs exits non-zero on a leaky document", () => {
   const good = join(tmpdir(), `mx-good-${process.pid}.json`);
