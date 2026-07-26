@@ -1,83 +1,50 @@
-import { memo, useEffect, useState } from "react";
+import { memo, type ReactNode } from "react";
 import { Moon, Sun } from "lucide-react";
-import { AreaViz, Spark } from "@/components/charts";
-import { BarsPlain, ColumnsPlain, LinePlain } from "@/components/charts-plain";
-import { ChartCard, HeroStat, Label, LiveDot, Panel, StatChip } from "@/components/ui";
-import { Reveal } from "@/motion";
+import { Spark } from "@/components/charts";
+import { HeroStat, Label, LiveDot, Panel } from "@/components/ui";
+import { SectionNav, useScrollSpy, type NavSection } from "@/components/section-nav";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/theme";
 import { formatAge, useLiveMetrics } from "@/live";
-import { shortDate, usd, usdPrecise, type Metrics } from "@/metrics";
-import { compact, deriveMetrics, int, lastDelta, pct } from "@/derived";
-import { metricColor, metricDither } from "@/palette";
-import { OperationsView } from "@/panels";
-import { RecallView } from "@/RecallView";
+import { shortDate, usdPrecise, type Metrics } from "@/metrics";
+import { compact, deriveMetrics, int, lastDelta } from "@/derived";
+import { metricDither } from "@/palette";
+import { SpendView, WorkView, LoopView, RuntimeView } from "@/panels";
 
-const usdFull = (n: number) => `$${int(n)}`;
-
-type TabId = "work" | "ops" | "recall";
-const TABS: { id: TabId; label: string }[] = [
-  { id: "work", label: "Proof of Work" },
-  { id: "ops", label: "Operations" },
-  { id: "recall", label: "Recall Eval" },
+const SECTIONS: NavSection[] = [
+  { id: "overview", label: "Overview" },
+  { id: "spend", label: "Spend" },
+  { id: "work", label: "Work" },
+  { id: "loop", label: "The loop" },
+  { id: "runtime", label: "Runtime" },
 ];
 
-const MAST: Record<TabId, { kicker: string; title: string; blurb: string }> = {
-  work: {
-    kicker: "Beckett · Autonomous Agent",
-    title: "Proof of Work",
-    blurb: "Every figure is harvested from real git history and session logs — no numbers by hand.",
-  },
-  ops: {
-    kicker: "Beckett · Operations",
-    title: "The machine, running",
-    blurb: "Tickets, worker economics, spend, memory and system health — the live shape of the loop.",
-  },
-  recall: {
-    kicker: "Beckett · Recall Eval",
-    title: "Recall scores",
-    blurb: "How the memory-recall agent ranks against the golden set — P@1, P@5 and MRR per category.",
-  },
-};
-
 /**
- * The code-stats + telemetry view — lines shipped, commit velocity, authorship,
- * cost and runs. The commit-velocity trend keeps the dither texture as a
- * showpiece; the dense ranking/throughput panels use the plain hairline kit.
+ * The headline strip: the six numbers that carry the whole story, each pointing
+ * forward to the section that expands it — spend, tickets, code output, sessions,
+ * quality. Figures count up on reveal and re-tween on every live poll.
  */
-const CodeStatsView = memo(function CodeStatsView({ metrics }: { metrics: Metrics }) {
+const Overview = memo(function Overview({ metrics }: { metrics: Metrics }) {
   const h = metrics.headline;
   const cs = metrics.codeStats;
-  const {
-    authorSeries, beckettShare, commitsPerDay, costPerCommit, costSeries, cycleSeries,
-    firstTryRate, linesPerDollar, projectSeries, runsSeries, velocitySeries, wallSeries,
-  } = deriveMetrics(metrics);
+  const d = deriveMetrics(metrics);
+  const t = metrics.tickets;
+  const doneTickets = t?.byStatus.find((s) => s.status === "done")?.count ?? 0;
   const dailyCommits = cs.velocity.map((v) => v.commits);
-  const dailyRuns = metrics.runsOverTime.map((d) => d.runs);
-  const dailyCost = metrics.runsOverTime.map((d) => d.cost);
-  const runsDelta = lastDelta(runsSeries);
-  const costDelta = lastDelta(metrics.runsOverTime.map((d) => ({ value: d.cost })));
-  const estimatedModels = metrics.models.filter((m) => m.estimate).map((m) => m.label);
-  const estimateNote = estimatedModels.length ? ` · est: ${estimatedModels.join(", ")}` : "";
-  const runWindow = h.firstRun && h.lastRun ? `${shortDate(h.firstRun)} – ${shortDate(h.lastRun)}` : "—";
+  const dailyRuns = metrics.runsOverTime.map((x) => x.runs);
+  const dailyCost = metrics.runsOverTime.map((x) => x.cost);
+  const runsDelta = lastDelta(metrics.runsOverTime.map((x) => ({ value: x.runs })));
+  const costDelta = lastDelta(metrics.runsOverTime.map((x) => ({ value: x.cost })));
 
   return (
-    <div className="flex flex-col gap-6">
-      <section className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
-        <HeroStat label="Lines shipped" value={cs.headline.additions} format={int} sub={`+${int(cs.headline.net)} net`} />
+    <section id="overview" className="scroll-mt-24">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
         <HeroStat
-          label="Commits"
-          value={cs.headline.commits}
-          format={int}
-          spark={<Spark data={dailyCommits} color={metricDither("commits")} />}
-        />
-        <HeroStat label="Projects" value={cs.headline.projects} format={int} sub="repositories" />
-        <HeroStat
-          label="Spent"
+          label="Total spend"
           value={h.totalSpend}
-          format={usdFull}
+          format={usdPrecise}
           delta={Math.round(costDelta)}
-          deltaFormat={(n) => `$${Math.round(n)}`}
+          deltaFormat={(n) => usdPrecise(Math.round(n))}
           deltaGoodWhen="down"
           spark={<Spark data={dailyCost} color={metricDither("spend")} />}
         />
@@ -89,135 +56,22 @@ const CodeStatsView = memo(function CodeStatsView({ metrics }: { metrics: Metric
           deltaGoodWhen="up"
           spark={<Spark data={dailyRuns} color={metricDither("sessions")} />}
         />
-        <HeroStat label="Compute" value={h.totalWallHours} format={(n) => `${int(n)}h`} sub={`${h.modelsUsed} models`} />
-      </section>
-
-      <Reveal>
-        <ChartCard title="Commit velocity" kicker={`daily · ${runWindow}`} hue={metricColor("commits")}>
-          <AreaViz
-            data={velocitySeries}
-            color={metricDither("commits")}
-            seriesLabel="Commits"
-            heightClass="h-[260px] sm:h-[320px]"
-            maxTicks={7}
-            xFormatter={(v) => shortDate(String(v))}
-            yFormatter={(v) => int(v)}
-            valueFormatter={(v) => `${int(v)} commits`}
-          />
-        </ChartCard>
-      </Reveal>
-
-      <Panel className="overflow-x-auto">
-        <div className="flex flex-nowrap divide-x divide-border">
-          <StatChip value={firstTryRate} label="First try" format={pct} />
-          <StatChip value={beckettShare} label="By Beckett" format={pct} />
-          <StatChip value={costPerCommit} label="/ commit" format={(n) => `$${n.toFixed(2)}`} />
-          <StatChip value={linesPerDollar} label="Lines / $" format={(n) => int(n)} />
-          <StatChip value={commitsPerDay} label="Commits / day" format={(n) => n.toFixed(1)} />
-          <StatChip value={h.tasksTracked ?? 0} label="Tasks" format={int} />
-        </div>
-      </Panel>
-
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-        <Reveal>
-          <ChartCard title="Lines / project" kicker="added · top 8" hue={metricColor("commits")}>
-            <BarsPlain
-              data={projectSeries}
-              color={metricColor("commits")}
-              valueFormat={(n) => (n >= 1000 ? `${(n / 1000).toFixed(1)}k` : int(n))}
-            />
-          </ChartCard>
-        </Reveal>
-        <Reveal delay={0.05}>
-          <ChartCard title="Authorship" kicker="commits · top 7" hue={metricColor("commits")}>
-            <BarsPlain data={authorSeries} color={metricColor("commits")} valueFormat={int} />
-          </ChartCard>
-        </Reveal>
-        <Reveal>
-          <ChartCard
-            title="API cost / model"
-            kicker="USD · current rates"
-            hue={metricColor("spend")}
-            footnote={
-              <>
-                Opus does the heavy lifting and the heavy spending. Rates from the harvester's dated table
-                {metrics.rate_table_effective_date ? ` (${metrics.rate_table_effective_date})` : ""}
-                {estimateNote}
-                {metrics.notes.unratedModelSessions > 0
-                  ? ` · ${metrics.notes.unratedModelSessions} sessions excluded pending model rates`
-                  : ""}.
-              </>
-            }
-          >
-            <BarsPlain data={costSeries} color={metricColor("spend")} valueFormat={usdPrecise} labelWidth={72} />
-          </ChartCard>
-        </Reveal>
-        <Reveal delay={0.05}>
-          <ChartCard title="Runs / day" kicker={`sessions · ${runWindow}`} hue={metricColor("sessions")}>
-            <LinePlain
-              data={runsSeries as unknown as Record<string, string | number>[]}
-              xKey="date"
-              series={[{ key: "value", label: "Runs", color: metricColor("sessions") }]}
-              xFormat={(s) => shortDate(s)}
-              yFormat={int}
-              tipFormat={(n) => `${int(n)} runs`}
-              fill
-            />
-          </ChartCard>
-        </Reveal>
-        <Reveal>
-          <ChartCard title="Wall-clock / model" kicker="hours" hue={metricColor("sessions")}>
-            <BarsPlain
-              data={wallSeries}
-              color={metricColor("sessions")}
-              valueFormat={(n) => `${n.toFixed(1)}h`}
-              labelWidth={72}
-            />
-          </ChartCard>
-        </Reveal>
-        <Reveal delay={0.05}>
-          <ChartCard title="Review cycles" kicker="impl → review bounces · ordered">
-            <ColumnsPlain data={cycleSeries} ramp height={220} yFormat={int} tipFormat={(n) => `${int(n)} runs`} />
-          </ChartCard>
-        </Reveal>
+        <HeroStat
+          label="Commits"
+          value={cs.headline.commits}
+          format={int}
+          sub={`+${compact(cs.headline.additions)} lines`}
+          spark={<Spark data={dailyCommits} color={metricDither("commits")} />}
+        />
+        <HeroStat label="Lines shipped" value={cs.headline.additions} format={int} sub={`across ${int(cs.headline.projects)} projects`} />
+        {t?.available ? (
+          <HeroStat label="Tickets shipped" value={doneTickets} format={int} sub={`of ${int(t.total)} tracked`} />
+        ) : (
+          <HeroStat label="Compute" value={h.totalWallHours} format={(n) => `${int(n)}h`} sub={`${h.modelsUsed} models`} />
+        )}
+        <HeroStat label="First-try rate" value={d.firstTryRate} format={(n) => `${Math.round(n * 100)}%`} sub="cleared review first pass" />
       </div>
-
-      <footer>
-        <Panel className="flex flex-col gap-3 p-4 text-[11px] leading-relaxed text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:p-5">
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-            <span className="label-caps text-foreground">Sources</span>
-            {metrics.harnesses.map((hn) => (
-              <span key={hn.harness} className="whitespace-nowrap tabular-nums">
-                {hn.harness}
-                <span className="text-foreground"> {hn.count.toLocaleString()}</span>
-              </span>
-            ))}
-          </div>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 tabular-nums">
-            <span>
-              git <span className="text-foreground">{cs.source_generated_at ? cs.source_generated_at.slice(0, 10) : "—"}</span>
-            </span>
-            <span>
-              telemetry <span className="text-foreground">{metrics.source_generated_at ? metrics.source_generated_at.slice(0, 10) : "—"}</span>
-            </span>
-            <span>
-              charts{" "}
-              <a
-                href="https://www.tripwire.sh/dither-kit"
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-[2px] text-foreground underline decoration-primary decoration-1 underline-offset-2 transition-colors duration-150 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                dither-kit
-              </a>
-              {" · "}
-              plain
-            </span>
-          </div>
-        </Panel>
-      </footer>
-      <div className="sr-only">{compact(cs.headline.additions)} lines across {cs.headline.projects} projects.</div>
-    </div>
+    </section>
   );
 });
 
@@ -230,86 +84,165 @@ function LiveIndicator({ ageSeconds, stale }: { ageSeconds: number | null; stale
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-2 rounded-md border px-2.5 py-1.5 text-[12px] tabular-nums transition-colors duration-200",
+        "inline-flex items-center gap-2 rounded-md border px-2.5 py-2 text-[12px] tabular-nums transition-colors duration-200",
         stale ? "border-warn/40 text-warn" : "border-border text-muted-foreground",
       )}
       aria-live="polite"
       title={stale ? "Data has not advanced recently" : "Live — polling every 15s"}
     >
       <LiveDot live={!stale} />
-      <span>{stale ? "stale" : `updated ${formatAge(ageSeconds)}`}</span>
+      <span className="hidden sm:inline">{stale ? "stale" : `updated ${formatAge(ageSeconds)}`}</span>
+      <span className="sr-only">{stale ? "data stale" : `updated ${formatAge(ageSeconds)}`}</span>
     </div>
+  );
+}
+
+/** A titled page section: a hairline rule and roomy whitespace above, an eyebrow
+ *  + serif heading, then the body. The eyebrow names the section's role. */
+function Section({
+  id,
+  kicker,
+  title,
+  blurb,
+  children,
+}: {
+  id: string;
+  kicker: string;
+  title: string;
+  blurb: string;
+  children: ReactNode;
+}) {
+  return (
+    <section id={id} className="scroll-mt-24 border-t border-border pt-10 sm:pt-12">
+      <header className="mb-6 flex flex-col gap-2">
+        <Label>{kicker}</Label>
+        <h2 className="font-display text-3xl leading-[1.02] text-foreground sm:text-4xl">{title}</h2>
+        <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">{blurb}</p>
+      </header>
+      {children}
+    </section>
+  );
+}
+
+function Colophon({ metrics }: { metrics: Metrics }) {
+  const cs = metrics.codeStats;
+  return (
+    <Panel className="mt-12 flex flex-col gap-3 p-4 text-[11px] leading-relaxed text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:p-5">
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+        <span className="label-caps text-foreground">Sources</span>
+        {metrics.harnesses.map((hn) => (
+          <span key={hn.harness} className="whitespace-nowrap tabular-nums">
+            {hn.harness}
+            <span className="text-foreground"> {hn.count.toLocaleString()}</span>
+          </span>
+        ))}
+      </div>
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 tabular-nums">
+        <span>
+          git <span className="text-foreground">{cs.source_generated_at ? cs.source_generated_at.slice(0, 10) : "—"}</span>
+        </span>
+        <span>
+          telemetry <span className="text-foreground">{metrics.source_generated_at ? metrics.source_generated_at.slice(0, 10) : "—"}</span>
+        </span>
+        <span>
+          charts{" "}
+          <a
+            href="https://www.tripwire.sh/dither-kit"
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-[2px] text-foreground underline decoration-primary decoration-1 underline-offset-2 transition-colors duration-150 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            dither-kit
+          </a>
+          {" · "}
+          plain
+        </span>
+      </div>
+    </Panel>
   );
 }
 
 export function App() {
   const { dark, toggle } = useTheme();
   const { metrics, ageSeconds, stale } = useLiveMetrics();
-  const [tab, setTab] = useState<TabId>(() => {
-    const saved = localStorage.getItem("bkt-tab");
-    return saved === "ops" || saved === "recall" ? saved : "work";
-  });
-  useEffect(() => {
-    localStorage.setItem("bkt-tab", tab);
-  }, [tab]);
-
-  const mast = MAST[tab];
+  const active = useScrollSpy(SECTIONS.map((s) => s.id));
 
   return (
     <div className="min-h-screen">
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-        <header className="mb-8 flex flex-col gap-6 sm:mb-12">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex flex-col gap-3">
-              <Label>{mast.kicker}</Label>
-              <h1 className="font-display text-[2.75rem] leading-[0.95] text-foreground sm:text-6xl lg:text-7xl">
-                {mast.title}
-              </h1>
-              <p className="max-w-md text-sm leading-relaxed text-muted-foreground">{mast.blurb}</p>
-            </div>
-            <div className="flex shrink-0 flex-col items-end gap-3">
+      <div className="mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pt-12 lg:px-8">
+        <header className="mb-6 flex flex-col gap-3">
+          <Label>Beckett · Autonomous Agent</Label>
+          <h1 className="font-display text-[2.75rem] leading-[0.95] text-foreground sm:text-6xl lg:text-7xl">
+            Proof of Work
+          </h1>
+          <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
+            One coding agent, told entirely in numbers — every figure harvested from real git history
+            and session logs, none by hand.
+          </p>
+        </header>
+
+        <SectionNav
+          sections={SECTIONS}
+          active={active}
+          controls={
+            <>
+              <LiveIndicator ageSeconds={ageSeconds} stale={stale} />
               <button
                 type="button"
                 onClick={toggle}
                 aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
-                className="rounded-md border border-border p-3 text-foreground transition-[color,background-color,border-color,transform] duration-200 ease-out sm:p-2.5 hover:border-border-strong hover:bg-secondary hover:text-primary active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="rounded-md border border-border p-2.5 text-foreground transition-[color,background-color,border-color,transform] duration-200 ease-out hover:border-border-strong hover:bg-secondary hover:text-primary active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 {dark ? <Sun className="size-4.5" /> : <Moon className="size-4.5" />}
               </button>
-              <LiveIndicator ageSeconds={ageSeconds} stale={stale} />
-            </div>
-          </div>
+            </>
+          }
+        />
 
-          <nav className="flex w-fit gap-1 rounded-lg border border-border p-1" aria-label="Dashboard views">
-            {TABS.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => setTab(t.id)}
-                aria-current={tab === t.id ? "page" : undefined}
-                className={cn(
-                  // Roomier on touch (44px), the composed desktop height above sm.
-                  "rounded-md px-3 py-3 text-[13px] font-medium transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:px-4 sm:py-1.5",
-                  tab === t.id
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-secondary hover:text-foreground",
-                )}
-              >
-                {t.label}
-              </button>
-            ))}
-          </nav>
-        </header>
+        <main className="flex flex-col gap-10 sm:gap-12">
+          <Overview metrics={metrics} />
 
-        <main>
-          {tab === "work" ? (
-            <CodeStatsView metrics={metrics} />
-          ) : tab === "ops" ? (
-            <OperationsView metrics={metrics} />
-          ) : (
-            <RecallView />
-          )}
+          <Section
+            id="spend"
+            kicker="The money"
+            title="Where the dollars go"
+            blurb="Every cost the agent incurs, in one place: the running total and its per-outcome ratios, daily spend, cost per model, and cost per ticket — one currency, one window."
+          >
+            <SpendView metrics={metrics} />
+          </Section>
+
+          <Section
+            id="work"
+            kicker="Output"
+            title="Work shipped"
+            blurb="What the spend bought: commit velocity, lines per project, and who authored them."
+          >
+            <WorkView metrics={metrics} />
+          </Section>
+
+          <Section
+            id="loop"
+            kicker="The loop"
+            title="Tickets in, work out"
+            blurb="The delivery loop end to end — throughput, lead time, rework, and how worker runs land."
+          >
+            <LoopView metrics={metrics} />
+          </Section>
+
+          <Section
+            id="runtime"
+            kicker="Runtime"
+            title="The machine, running"
+            blurb="System health, session analytics, automation and memory — the live shape of the host."
+          >
+            <RuntimeView metrics={metrics} />
+          </Section>
         </main>
+
+        <Colophon metrics={metrics} />
+        <div className="sr-only">
+          {compact(metrics.codeStats.headline.additions)} lines across {metrics.codeStats.headline.projects} projects.
+        </div>
       </div>
     </div>
   );
