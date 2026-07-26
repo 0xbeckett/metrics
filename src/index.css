@@ -30,10 +30,35 @@
 
 /*
   datacurve.ai direction — warm light paper, warm ink, hairline surfaces, one
-  restrained accent reserved for live/delta states. One token system: dark mode
-  is the same roles inverted (warm-black paper / warm-off-white ink), and both
-  chart kits (dither-kit + the plain hairline set) read their colours from these
-  tokens, so a token change moves everything at once.
+  restrained accent on the chrome. One token system: dark mode is the same roles
+  inverted (warm-black paper / warm-off-white ink), and both chart kits
+  (dither-kit + the plain hairline set) read their colours from these tokens, so
+  a token change moves everything at once.
+
+  Colour lives in the DATA, not the furniture (#3). Three families:
+
+    --series-1..6   categorical identity — a metric/model/entity keeps its hue in
+                    every panel it appears in. FIXED ORDER: the order is the
+                    CVD-safety mechanism, assigned in sequence and never cycled.
+    --seq-1..5      one-hue ordinal ramp (clay) for ordered buckets — duration,
+                    turns, review cycles. Light→dark on paper; the anchor flips
+                    in dark mode so "more" always moves away from the surface.
+    --good/--warn/--critical
+                    reserved status steps, distinct from the categorical slots,
+                    always shipped with an icon/glyph + label (never hue alone).
+
+  Every value is authored once as an "r g b" triplet: the hex form and the
+  dither-kit canvas seeds both read that one triplet, so flipping a token moves
+  the SVG kit, the canvas kit and the chrome together.
+
+  Validated with the dataviz skill's `validate_palette.js` against these exact
+  surfaces (#f8f6f2 / #161311), adjacent pairlist — the pairlist for bars, lines
+  and stacks, which is every form on this page:
+    light  worst adjacent CVD ΔE 14.0 (protan) · normal-vision ΔE 20.6 · all 6 ≥ 3:1
+    dark   worst adjacent CVD ΔE 14.1 (protan) · normal-vision ΔE 20.2 · all 6 ≥ 3:1
+  (Targets: CVD ≥ 8, normal-vision ≥ 15, contrast ≥ 3:1.) Six is also the cap:
+  no six-colour set clears the all-pairs test, so scatter/small-multiple forms
+  are off the menu here by design.
 */
 :root {
   /* Radii — 4px on small elements, 8px on panels. No pills. */
@@ -84,17 +109,41 @@
   --dk-ink: 28 22 18;
   --dk-accent: 184 67 31;
   --dk-muted: 120 110 100;
-  /* Legacy category names remap onto the warm system so any stray use stays
-     on-theme; the redesign only paints dither showpieces in ink/accent. */
-  --dk-red: 184 67 31;
-  --dk-orange: 158 96 44;
-  --dk-blue: 74 82 96;
-  --dk-green: 90 104 74;
-  --dk-purple: 96 82 110;
-  --dk-pink: 150 84 96;
-  --dk-grey: 120 110 100;
+
+  /* ── Categorical series palette — fixed order, never cycled ─────────────
+     1 rose · 2 indigo · 3 moss · 4 violet · 5 gold · 6 teal */
+  --series-1-rgb: 190 66 98;
+  --series-2-rgb: 43 88 177;
+  --series-3-rgb: 87 152 84;
+  --series-4-rgb: 114 65 160;
+  --series-5-rgb: 183 129 0;
+  --series-6-rgb: 0 148 151;
+
+  /* Ordinal ramp — one hue (clay), light → dark as magnitude rises. */
+  --seq-1: #d19d86;
+  --seq-2: #c48366;
+  --seq-3: #b66946;
+  --seq-4: #a74f21;
+  --seq-5: #973200;
+
+  /* Status — reserved meaning, never a series hue. AA as text on paper. */
+  --good: #1f7a3d;        /* 4.98:1 */
+  --warn: #8f5c07;        /* 5.26:1 */
+  --critical: #c0392b;    /* 5.04:1 */
 
   color-scheme: light;
+}
+
+/* The colour form of each slot, derived from the one triplet above. Declared
+   once: custom properties re-substitute per element, so these pick up `.dark`
+   values automatically and there is no second place to edit. */
+:root {
+  --series-1: rgb(var(--series-1-rgb));
+  --series-2: rgb(var(--series-2-rgb));
+  --series-3: rgb(var(--series-3-rgb));
+  --series-4: rgb(var(--series-4-rgb));
+  --series-5: rgb(var(--series-5-rgb));
+  --series-6: rgb(var(--series-6-rgb));
 }
 
 .dark {
@@ -134,13 +183,25 @@
   --dk-ink: 242 238 231;
   --dk-accent: 224 120 80;
   --dk-muted: 150 140 130;
-  --dk-red: 224 120 80;
-  --dk-orange: 214 150 96;
-  --dk-blue: 150 165 190;
-  --dk-green: 160 180 140;
-  --dk-purple: 180 160 200;
-  --dk-pink: 214 150 170;
-  --dk-grey: 150 140 130;
+
+  /* Same six hues, re-stepped for the dark plane (not an automatic flip). */
+  --series-1-rgb: 217 99 126;
+  --series-2-rgb: 86 132 218;
+  --series-3-rgb: 81 146 78;
+  --series-4-rgb: 149 101 199;
+  --series-5-rgb: 185 137 24;
+  --series-6-rgb: 5 163 166;
+
+  /* The ramp flips its anchor: step 1 hugs the dark surface, step 5 is brightest. */
+  --seq-1: #794228;
+  --seq-2: #945232;
+  --seq-3: #b1623d;
+  --seq-4: #cf7347;
+  --seq-5: #ee8452;
+
+  --good: #5fbe7d;        /* 8.06:1 */
+  --warn: #d9a441;        /* 8.22:1 */
+  --critical: #f0796a;    /* 6.74:1 */
 
   color-scheme: dark;
 }
@@ -168,6 +229,16 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ink: var(--ink);
+
+  --color-good: var(--good);
+  --color-warn: var(--warn);
+  --color-critical: var(--critical);
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
+  --color-series-3: var(--series-3);
+  --color-series-4: var(--series-4);
+  --color-series-5: var(--series-5);
+  --color-series-6: var(--series-6);
 
   --radius-sm: var(--radius-small);
   --radius-md: var(--radius-small);
