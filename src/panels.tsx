@@ -57,6 +57,7 @@ export function SpendView({ metrics }: { metrics: Metrics }) {
   const h = metrics.headline;
   const d = deriveMetrics(metrics);
   const spend = metrics.spend;
+  const sessionsCost = metrics.claudeSessions?.available ? metrics.claudeSessions.totalCost : null;
   const costDelta = lastDelta(metrics.runsOverTime.map((x) => ({ value: x.cost })));
   const estimatedModels = metrics.models.filter((m) => m.estimate).map((m) => m.label);
   const estimateNote = estimatedModels.length ? ` · est: ${estimatedModels.join(", ")}` : "";
@@ -77,7 +78,15 @@ export function SpendView({ metrics }: { metrics: Metrics }) {
           kicker={`USD · daily · ${runWindow}`}
           hue={metricColor("spend")}
           action={costDelta ? <Label>{`${costDelta > 0 ? "▲" : "▼"} ${money(Math.abs(costDelta))} vs prior day`}</Label> : undefined}
-          footnote="Every priced session across all harnesses, summed by day — the same running total the headline reports."
+          footnote={
+            <>
+              Every priced session across all harnesses, summed by day — the same running total the
+              headline reports.
+              {sessionsCost !== null
+                ? ` Across every Claude Code transcript on the host — a wider lens — priced usage totals ${money(sessionsCost)}.`
+                : ""}
+            </>
+          }
         >
           <LinePlain
             data={metrics.runsOverTime as unknown as Record<string, string | number>[]}
@@ -371,6 +380,7 @@ function ClaudeSessionsPanels({ metrics }: { metrics: Metrics }) {
   if (!c?.available) return null;
   const toolBars = c.toolCallMix.map((t) => ({ label: t.tool, value: t.count }));
   const modelBars = c.byModel.map((m) => ({ label: m.label, value: m.sessions }));
+  const totalTokens = c.byModel.reduce((sum, m) => sum + m.tokens, 0);
 
   return (
     <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
@@ -385,7 +395,7 @@ function ClaudeSessionsPanels({ metrics }: { metrics: Metrics }) {
           <Metric label="Total" value={int(c.total)} sub="sessions" />
           <Metric label="Errors" value={int(c.errorCount)} />
           <Metric label="Permission denials" value={int(c.permissionDenials)} />
-          <Metric label="Cost" value={c.totalCost !== null ? money(c.totalCost) : "—"} sub={c.totalCost === null ? "no priced sessions" : undefined} />
+          <Metric label="Tokens" value={compact(totalTokens)} sub="in + out · all models" />
         </Figures>
         <div className="mt-2">
           <LinePlain

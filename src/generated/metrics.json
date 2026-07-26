@@ -1,31 +1,31 @@
 {
   "schema_version": 2,
-  "refreshed_at": "2026-07-26T06:15:03Z",
-  "source_generated_at": "2026-07-26T06:15:02.668Z",
+  "refreshed_at": "2026-07-26T07:24:31.821Z",
+  "source_generated_at": "2026-07-26T07:23:53.469Z",
   "rate_table_effective_date": "2026-07-16",
   "headline": {
-    "totalRuns": 2585,
-    "totalSpend": 2000.49,
-    "totalWallHours": 1059.9,
+    "totalRuns": 2593,
+    "totalSpend": 2016.04,
+    "totalWallHours": 1060.9,
     "modelsUsed": 7,
     "firstRun": "2026-06-28",
     "lastRun": "2026-07-26",
-    "tasksTracked": 272
+    "tasksTracked": 274
   },
   "models": [
     {
       "model": "claude-opus-4-8",
       "label": "opus-4.8",
-      "color": "red",
-      "runs": 1277,
-      "cost": 1408.92,
-      "wallHours": 1012.91,
+      "color": "rose",
+      "runs": 1279,
+      "cost": 1419.31,
+      "wallHours": 1013.51,
       "estimate": true
     },
     {
       "model": "gpt-5.5",
       "label": "gpt-5.5",
-      "color": "green",
+      "color": "gold",
       "runs": 169,
       "cost": 190.54,
       "wallHours": 6.84,
@@ -34,17 +34,17 @@
     {
       "model": "claude-sonnet-5",
       "label": "sonnet-5",
-      "color": "blue",
-      "runs": 252,
-      "cost": 182.07,
-      "wallHours": 14.62,
+      "color": "indigo",
+      "runs": 256,
+      "cost": 187.19,
+      "wallHours": 14.97,
       "estimate": true
     },
     {
       "model": "gpt-5.6-terra",
       "label": "terra",
-      "color": "orange",
-      "runs": 110,
+      "color": "gold",
+      "runs": 111,
       "cost": 153.88,
       "wallHours": 7.83,
       "estimate": false
@@ -52,7 +52,7 @@
     {
       "model": "claude-fable-5",
       "label": "fable-5",
-      "color": "purple",
+      "color": "violet",
       "runs": 104,
       "cost": 47.5,
       "wallHours": 14.84,
@@ -61,16 +61,16 @@
     {
       "model": "claude-haiku-4-5-20251001",
       "label": "haiku-4.5",
-      "color": "green",
-      "runs": 465,
-      "cost": 16.36,
+      "color": "moss",
+      "runs": 466,
+      "cost": 16.4,
       "wallHours": 2.73,
       "estimate": true
     },
     {
       "model": "gpt-5.6-luna",
       "label": "luna",
-      "color": "pink",
+      "color": "teal",
       "runs": 208,
       "cost": 1.22,
       "wallHours": 0.16,
@@ -81,7 +81,12 @@
     {
       "cycles": 0,
       "label": "0",
-      "count": 2585
+      "count": 2588
+    },
+    {
+      "cycles": 1,
+      "label": "1",
+      "count": 5
     }
   ],
   "runsOverTime": [
@@ -227,18 +232,18 @@
     },
     {
       "date": "2026-07-26",
-      "runs": 13,
-      "cost": 28.86
+      "runs": 21,
+      "cost": 44.41
     }
   ],
   "harnesses": [
     {
       "harness": "claude-code",
-      "count": 2098
+      "count": 2105
     },
     {
       "harness": "pi",
-      "count": 413
+      "count": 414
     },
     {
       "harness": "codex",
@@ -246,14 +251,14 @@
     }
   ],
   "codeStats": {
-    "source_generated_at": "2026-07-26T06:15:03.424Z",
+    "source_generated_at": "2026-07-26T07:23:54.526Z",
     "headline": {
-      "commits": 572,
-      "files": 760,
-      "projects": 38,
-      "additions": 228439,
-      "deletions": 69199,
-      "net": 159240
+      "commits": 580,
+      "files": 763,
+      "projects": 39,
+      "additions": 229995,
+      "deletions": 69832,
+      "net": 160163
     },
     "projects": [
       {
@@ -277,6 +282,16 @@
         "last_commit": "2026-07-01T22:22:42-07:00"
       },
       {
+        "repo": "metrics",
+        "commits": 27,
+        "files": 99,
+        "additions": 21362,
+        "deletions": 6277,
+        "net": 15085,
+        "first_commit": "2026-07-18T06:05:00-07:00",
+        "last_commit": "2026-07-25T23:15:12-07:00"
+      },
+      {
         "repo": "bored",
         "commits": 25,
         "files": 60,
@@ -295,16 +310,6 @@
         "net": 7610,
         "first_commit": "2026-07-19T06:58:00-07:00",
         "last_commit": "2026-07-21T12:22:28-07:00"
-      },
-      {
-        "repo": "metrics",
-        "commits": 20,
-        "files": 96,
-        "additions": 19806,
-        "deletions": 5644,
-        "net": 14162,
-        "first_commit": "2026-07-18T06:05:00-07:00",
-        "last_commit": "2026-07-25T02:27:13-07:00"
       },
       {
         "repo": "andc",
@@ -465,6 +470,16 @@
         "net": 0,
         "first_commit": "2026-07-07T00:15:33-07:00",
         "last_commit": "2026-07-07T00:15:33-07:00"
+      },
+      {
+        "repo": "betterwright-profiles",
+        "commits": 1,
+        "files": 0,
+        "additions": 0,
+        "deletions": 0,
+        "net": 0,
+        "first_commit": "2026-07-26T00:04:48-07:00",
+        "last_commit": "2026-07-26T00:04:48-07:00"
       },
       {
         "repo": "black-hole-codex",
@@ -640,10 +655,10 @@
     "authors": [
       {
         "name": "beckett",
-        "commits": 322,
-        "additions": 127131,
-        "deletions": 38730,
-        "net": 88401
+        "commits": 330,
+        "additions": 128687,
+        "deletions": 39363,
+        "net": 89324
       },
       {
         "name": "frgmt0",
@@ -891,48 +906,56 @@
       },
       {
         "date": "2026-07-25",
-        "commits": 7
+        "commits": 14
+      },
+      {
+        "date": "2026-07-26",
+        "commits": 1
       }
     ]
   },
   "notes": {
     "skippedRows": 0,
-    "unratedModelSessions": 216,
+    "unratedModelSessions": 225,
     "anyEstimated": true
   },
   "tickets": {
     "available": true,
-    "total": 2,
+    "total": 3,
     "byStatus": [
       {
         "status": "active",
         "count": 2
+      },
+      {
+        "status": "done",
+        "count": 1
       }
     ],
     "openedClosedPerDay": [
       {
         "date": "2026-07-26",
-        "opened": 2,
-        "closed": 0
+        "opened": 3,
+        "closed": 1
       }
     ],
     "leadTimeDays": {
-      "count": 0,
-      "mean": 0,
-      "p50": 0,
-      "p90": 0,
-      "max": 0
+      "count": 1,
+      "mean": 0.03,
+      "p50": 0.03,
+      "p90": 0.03,
+      "max": 0.03
     },
     "branchesPerTask": {
-      "mean": 1.5,
-      "max": 2,
+      "mean": 1.67,
+      "max": 3,
       "distribution": [
         {
           "branches": 1,
-          "count": 1
+          "count": 2
         },
         {
-          "branches": 2,
+          "branches": 3,
           "count": 1
         }
       ]
@@ -941,25 +964,25 @@
   },
   "workers": {
     "available": true,
-    "totalRuns": 380,
+    "totalRuns": 386,
     "byStage": [
       {
         "stage": "implement",
-        "count": 249
+        "count": 253
       },
       {
         "stage": "review",
-        "count": 131
+        "count": 133
       }
     ],
     "byOutcome": [
       {
         "outcome": "done",
-        "count": 275
+        "count": 280
       },
       {
         "outcome": "failed",
-        "count": 60
+        "count": 61
       },
       {
         "outcome": "rework",
@@ -970,7 +993,7 @@
         "count": 9
       }
     ],
-    "firstTryPassRate": 0.731,
+    "firstTryPassRate": 0.732,
     "reworkCycles": {
       "count": 0,
       "mean": 0,
@@ -980,49 +1003,49 @@
     "stalls": 0,
     "restarts": 1,
     "totals": {
-      "turns": 15006,
-      "toolCalls": 17150,
-      "tokensIn": 1250743881,
-      "tokensOut": 888496,
-      "wallHours": 56.9
+      "turns": 15626,
+      "toolCalls": 17753,
+      "tokensIn": 1351675524,
+      "tokensOut": 900721,
+      "wallHours": 58.6
     },
     "perRun": {
       "turns": {
-        "count": 380,
-        "mean": 39.5,
-        "p50": 31.5,
-        "p90": 81,
+        "count": 386,
+        "mean": 40.5,
+        "p50": 32,
+        "p90": 82,
         "max": 289
       },
       "toolCalls": {
-        "count": 380,
-        "mean": 45.1,
-        "p50": 34,
-        "p90": 93.1,
+        "count": 386,
+        "mean": 46,
+        "p50": 35,
+        "p90": 97,
         "max": 393
       },
       "tokens": {
-        "count": 380,
-        "mean": 3293769,
-        "p50": 1497131,
-        "p90": 8556597,
+        "count": 386,
+        "mean": 3504084,
+        "p50": 1521466,
+        "p90": 8706861,
         "max": 61185687
       },
       "wallMinutes": {
-        "count": 380,
-        "mean": 9,
-        "p50": 5.9,
-        "p90": 20.8,
+        "count": 386,
+        "mean": 9.1,
+        "p50": 6,
+        "p90": 21.1,
         "max": 60.1
       }
     },
-    "journalFiles": 2,
+    "journalFiles": 5,
     "workerDirs": 9
   },
   "spend": {
     "available": true,
-    "totalSpend": 1368.66,
-    "runsPriced": 380,
+    "totalSpend": 1420.95,
+    "runsPriced": 386,
     "overTime": [
       {
         "date": "2026-07-11",
@@ -1101,8 +1124,8 @@
       },
       {
         "date": "2026-07-26",
-        "cost": 19.02,
-        "runs": 5
+        "cost": 71.31,
+        "runs": 11
       }
     ],
     "byModel": [
@@ -1124,40 +1147,40 @@
         "model": "claude-sonnet-5",
         "label": "sonnet-5",
         "color": "blue",
-        "cost": 188.76,
-        "runs": 105
+        "cost": 215.82,
+        "runs": 109
       },
       {
         "model": "claude-opus-5",
         "label": "opus-5",
         "color": "red",
-        "cost": 166.71,
-        "runs": 12
+        "cost": 191.94,
+        "runs": 13
       },
       {
         "model": "gpt-5.6-terra",
         "label": "terra",
         "color": "orange",
         "cost": 104.06,
-        "runs": 99
+        "runs": 100
       }
     ],
     "byStage": [
       {
         "stage": "implement",
-        "cost": 1114.42,
-        "runs": 249
+        "cost": 1162.95,
+        "runs": 253
       },
       {
         "stage": "review",
-        "cost": 254.25,
-        "runs": 131
+        "cost": 258,
+        "runs": 133
       }
     ],
     "costPerTicket": {
-      "count": 158,
-      "mean": 8.66,
-      "p50": 5.51,
+      "count": 161,
+      "mean": 8.83,
+      "p50": 5.65,
       "max": 109.3,
       "top": [
         {
@@ -1197,6 +1220,10 @@
           "cost": 25.91
         },
         {
+          "ref": "#3",
+          "cost": 25.22
+        },
+        {
           "ref": "OPS-151",
           "cost": 24.63
         },
@@ -1215,10 +1242,6 @@
         {
           "ref": "#20",
           "cost": 20.13
-        },
-        {
-          "ref": "OPS-179",
-          "cost": 19.98
         }
       ]
     }
@@ -1242,10 +1265,10 @@
     ],
     "durationSeconds": {
       "count": 50,
-      "mean": 106,
+      "mean": 101.7,
       "p50": 75.7,
-      "p90": 252.7,
-      "max": 364.5
+      "p90": 212.5,
+      "max": 343.6
     },
     "durationBuckets": [
       {
@@ -1258,7 +1281,7 @@
       },
       {
         "label": "1–3m",
-        "count": 20
+        "count": 21
       },
       {
         "label": "3–6m",
@@ -1266,7 +1289,7 @@
       },
       {
         "label": ">6m",
-        "count": 1
+        "count": 0
       }
     ]
   },
@@ -1292,9 +1315,9 @@
   },
   "memory": {
     "available": true,
-    "nodeCount": 25,
+    "nodeCount": 26,
     "edgeCount": 28,
-    "orphanCount": 7,
+    "orphanCount": 8,
     "byType": [
       {
         "type": "reference",
@@ -1302,7 +1325,7 @@
       },
       {
         "type": "feedback",
-        "count": 7
+        "count": 8
       },
       {
         "type": "self",
@@ -1326,14 +1349,14 @@
       }
     ],
     "ageDays": {
-      "count": 19,
-      "mean": 8.3,
-      "p50": 1,
-      "max": 27.2,
+      "count": 20,
+      "mean": 7.9,
+      "p50": 0.4,
+      "max": 27.3,
       "distribution": [
         {
           "bucket": "<1w",
-          "count": 13
+          "count": 14
         },
         {
           "bucket": "1–4w",
@@ -1439,6 +1462,11 @@
         "name": "owner-lockout-guard",
         "type": "feedback",
         "degree": 1
+      },
+      {
+        "name": "upstream-pr-no-permission",
+        "type": "feedback",
+        "degree": 0
       },
       {
         "name": "wedge-alert-false-positive",
@@ -1593,8 +1621,8 @@
   },
   "routines": {
     "available": true,
-    "total": 14,
-    "enabled": 14,
+    "total": 15,
+    "enabled": 15,
     "disabled": 0,
     "byKind": [
       {
@@ -1608,6 +1636,10 @@
       {
         "kind": "deps-update",
         "count": 1
+      },
+      {
+        "kind": "watch",
+        "count": 1
       }
     ],
     "items": [
@@ -1616,7 +1648,7 @@
         "name": "daily X shitpost",
         "kind": "x-shitpost",
         "enabled": true,
-        "nextFireAt": "2026-07-25T19:14:00.000Z",
+        "nextFireAt": "2026-07-26T19:35:00.000Z",
         "lastFiredAt": "2026-07-25T19:14:18.748Z"
       },
       {
@@ -1624,7 +1656,7 @@
         "name": "X post (evening)",
         "kind": "browser",
         "enabled": true,
-        "nextFireAt": "2026-07-26T00:43:00.000Z",
+        "nextFireAt": "2026-07-27T01:06:00.000Z",
         "lastFiredAt": "2026-07-26T00:43:29.358Z"
       },
       {
@@ -1632,7 +1664,7 @@
         "name": "X mentions (morning)",
         "kind": "browser",
         "enabled": true,
-        "nextFireAt": "2026-07-25T16:49:00.000Z",
+        "nextFireAt": "2026-07-26T16:47:00.000Z",
         "lastFiredAt": "2026-07-25T16:49:00.690Z"
       },
       {
@@ -1640,7 +1672,7 @@
         "name": "X mentions (midday)",
         "kind": "browser",
         "enabled": true,
-        "nextFireAt": "2026-07-25T21:06:00.000Z",
+        "nextFireAt": "2026-07-26T21:05:00.000Z",
         "lastFiredAt": "2026-07-25T21:06:17.103Z"
       },
       {
@@ -1648,7 +1680,7 @@
         "name": "X mentions (evening)",
         "kind": "browser",
         "enabled": true,
-        "nextFireAt": "2026-07-26T03:07:00.000Z",
+        "nextFireAt": "2026-07-27T02:20:00.000Z",
         "lastFiredAt": "2026-07-26T05:18:53.676Z"
       },
       {
@@ -1656,7 +1688,7 @@
         "name": "X post (early)",
         "kind": "browser",
         "enabled": true,
-        "nextFireAt": "2026-07-25T15:41:00.000Z",
+        "nextFireAt": "2026-07-26T15:34:00.000Z",
         "lastFiredAt": "2026-07-25T15:41:00.472Z"
       },
       {
@@ -1664,7 +1696,7 @@
         "name": "X post (morning)",
         "kind": "browser",
         "enabled": true,
-        "nextFireAt": "2026-07-25T17:21:00.000Z",
+        "nextFireAt": "2026-07-26T17:32:00.000Z",
         "lastFiredAt": "2026-07-25T17:21:18.582Z"
       },
       {
@@ -1672,7 +1704,7 @@
         "name": "X post (midday)",
         "kind": "browser",
         "enabled": true,
-        "nextFireAt": "2026-07-25T20:40:00.000Z",
+        "nextFireAt": "2026-07-26T21:10:00.000Z",
         "lastFiredAt": "2026-07-25T20:40:18.986Z"
       },
       {
@@ -1680,7 +1712,7 @@
         "name": "X post (afternoon)",
         "kind": "browser",
         "enabled": true,
-        "nextFireAt": "2026-07-25T22:48:00.000Z",
+        "nextFireAt": "2026-07-26T22:28:00.000Z",
         "lastFiredAt": "2026-07-25T22:48:29.068Z"
       },
       {
@@ -1688,7 +1720,7 @@
         "name": "X post (night)",
         "kind": "browser",
         "enabled": true,
-        "nextFireAt": "2026-07-26T02:41:00.000Z",
+        "nextFireAt": "2026-07-27T02:36:00.000Z",
         "lastFiredAt": "2026-07-26T05:18:55.449Z"
       },
       {
@@ -1696,7 +1728,7 @@
         "name": "X post (late night)",
         "kind": "browser",
         "enabled": true,
-        "nextFireAt": "2026-07-26T04:45:00.000Z",
+        "nextFireAt": "2026-07-27T04:23:00.000Z",
         "lastFiredAt": "2026-07-26T05:18:55.434Z"
       },
       {
@@ -1704,16 +1736,16 @@
         "name": "X post (midnight)",
         "kind": "browser",
         "enabled": true,
-        "nextFireAt": "2026-07-26T06:18:00.000Z",
-        "lastFiredAt": "2026-07-25T05:30:14.895Z"
+        "nextFireAt": "2026-07-27T05:46:00.000Z",
+        "lastFiredAt": "2026-07-26T06:18:29.851Z"
       },
       {
         "id": "x-post-witching",
         "name": "X post (witching)",
         "kind": "browser",
         "enabled": true,
-        "nextFireAt": "2026-07-26T06:56:00.000Z",
-        "lastFiredAt": "2026-07-25T06:51:19.105Z"
+        "nextFireAt": "2026-07-27T06:43:00.000Z",
+        "lastFiredAt": "2026-07-26T06:56:10.398Z"
       },
       {
         "id": "weekly-deps-update",
@@ -1722,26 +1754,34 @@
         "enabled": true,
         "nextFireAt": "2026-07-26T15:26:00.000Z",
         "lastFiredAt": null
+      },
+      {
+        "id": "model-news-watch",
+        "name": "model news event watch",
+        "kind": "watch",
+        "enabled": true,
+        "nextFireAt": null,
+        "lastFiredAt": null
       }
     ]
   },
   "logs": {
     "available": true,
     "files": 1,
-    "totalLines": 150701,
+    "totalLines": 150979,
     "errorLines": 0,
     "errorRate": 0,
     "perDay": [
       {
         "date": "2026-07-26",
-        "lines": 150701,
+        "lines": 150979,
         "errors": 0
       }
     ]
   },
   "daemon": {
     "available": true,
-    "version": "6.2.4",
+    "version": "6.3.0",
     "services": [
       {
         "name": "beckett-alert@beckett-rpc",
@@ -1771,29 +1811,227 @@
         "name": "beckett-metrics",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 2528405
+        "uptimeSeconds": 2457336
       },
       {
         "name": "beckett-rpc",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 4200607
+        "uptimeSeconds": 4204775
       },
       {
         "name": "beckett-secret",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 2942907
+        "uptimeSeconds": 2947075
       },
       {
         "name": "beckett-v4",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 2455462
+        "uptimeSeconds": 2457160
       }
     ]
   },
   "recentActivity": [
+    {
+      "ts": "2026-07-26T07:04:52.358Z",
+      "kind": "worker",
+      "ref": "#3.1",
+      "title": "BetterWright named profiles (upstream PR)"
+    },
+    {
+      "ts": "2026-07-26T07:04:45.463Z",
+      "kind": "started",
+      "ref": "#3.1",
+      "title": "BetterWright named profiles (upstream PR)"
+    },
+    {
+      "ts": "2026-07-26T07:02:51.666Z",
+      "kind": "opened",
+      "ref": "#2.3",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T07:02:51.541Z",
+      "kind": "started",
+      "ref": "#2.3",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T07:02:51.390Z",
+      "kind": "started",
+      "ref": "#2.3",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T07:02:51.388Z",
+      "kind": "done",
+      "ref": "#2.2",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T07:02:48.750Z",
+      "kind": "done",
+      "ref": "#2.2",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T07:02:48.746Z",
+      "kind": "done",
+      "ref": "#2.2",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T07:02:48.620Z",
+      "kind": "done",
+      "ref": "#2.2",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T07:02:43.344Z",
+      "kind": "deploy",
+      "ref": "#2.2",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T07:02:43.092Z",
+      "kind": "worker",
+      "ref": "#2.2",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T06:26:40.120Z",
+      "kind": "started",
+      "ref": "#2.2",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T06:23:51.003Z",
+      "kind": "done",
+      "ref": "#1.1",
+      "title": "Model-release watcher: post when a genuinely new model ships"
+    },
+    {
+      "ts": "2026-07-26T06:23:50.265Z",
+      "kind": "done",
+      "ref": "#1.1",
+      "title": "Model-release watcher: post when a genuinely new model ships"
+    },
+    {
+      "ts": "2026-07-26T06:23:50.263Z",
+      "kind": "done",
+      "ref": "#1.1",
+      "title": "Model-release watcher: post when a genuinely new model ships"
+    },
+    {
+      "ts": "2026-07-26T06:23:50.002Z",
+      "kind": "done",
+      "ref": "#1.1",
+      "title": "Model-release watcher: post when a genuinely new model ships"
+    },
+    {
+      "ts": "2026-07-26T06:23:45.995Z",
+      "kind": "deploy",
+      "ref": "#1.1",
+      "title": "Model-release watcher: post when a genuinely new model ships"
+    },
+    {
+      "ts": "2026-07-26T06:23:45.614Z",
+      "kind": "worker",
+      "ref": "#1.1",
+      "title": "Model-release watcher: post when a genuinely new model ships"
+    },
+    {
+      "ts": "2026-07-26T06:22:41.336Z",
+      "kind": "opened",
+      "ref": "#2.2",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T06:22:41.128Z",
+      "kind": "started",
+      "ref": "#2.2",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T06:22:40.791Z",
+      "kind": "started",
+      "ref": "#2.2",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T06:22:40.788Z",
+      "kind": "done",
+      "ref": "#2.1",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T06:22:36.651Z",
+      "kind": "done",
+      "ref": "#2.1",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T06:22:36.648Z",
+      "kind": "done",
+      "ref": "#2.1",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T06:22:35.987Z",
+      "kind": "done",
+      "ref": "#2.1",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T06:22:32.525Z",
+      "kind": "deploy",
+      "ref": "#2.1",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T06:22:31.774Z",
+      "kind": "worker",
+      "ref": "#2.1",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T06:16:50.967Z",
+      "kind": "in-review",
+      "ref": "#2.1",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T06:16:50.261Z",
+      "kind": "in-review",
+      "ref": "#2.1",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T06:16:50.214Z",
+      "kind": "worker",
+      "ref": "#2.1",
+      "title": "Metrics site: session analytics + a real colour pass"
+    },
+    {
+      "ts": "2026-07-26T06:16:07.336Z",
+      "kind": "in-review",
+      "ref": "#1.1",
+      "title": "Model-release watcher: post when a genuinely new model ships"
+    },
+    {
+      "ts": "2026-07-26T06:16:07.013Z",
+      "kind": "in-review",
+      "ref": "#1.1",
+      "title": "Model-release watcher: post when a genuinely new model ships"
+    },
+    {
+      "ts": "2026-07-26T06:16:06.963Z",
+      "kind": "worker",
+      "ref": "#1.1",
+      "title": "Model-release watcher: post when a genuinely new model ships"
+    },
     {
       "ts": "2026-07-26T05:54:19.184Z",
       "kind": "started",
@@ -1821,15 +2059,15 @@
   ],
   "claudeSessions": {
     "available": true,
-    "total": 2321,
+    "total": 2339,
     "byClassification": [
       {
         "classification": "concierge",
-        "count": 1322
+        "count": 1331
       },
       {
         "classification": "worker",
-        "count": 794
+        "count": 801
       },
       {
         "classification": "other",
@@ -1837,7 +2075,7 @@
       },
       {
         "classification": "quick",
-        "count": 94
+        "count": 96
       }
     ],
     "sessionsOverTime": [
@@ -1955,45 +2193,45 @@
       },
       {
         "date": "2026-07-26",
-        "count": 19
+        "count": 37
       }
     ],
     "toolCallMix": [
       {
         "tool": "Bash",
-        "count": 19945
+        "count": 20258
       },
       {
         "tool": "Read",
-        "count": 4656
+        "count": 4762
       },
       {
         "tool": "Edit",
-        "count": 2469
+        "count": 2550
       },
       {
         "tool": "StructuredOutput",
-        "count": 2114
-      },
-      {
-        "tool": "WebFetch",
-        "count": 1046
+        "count": 2145
       },
       {
         "tool": "mcp__browser__betterwright_browser",
-        "count": 1029
+        "count": 1072
+      },
+      {
+        "tool": "WebFetch",
+        "count": 1048
       },
       {
         "tool": "Write",
-        "count": 980
+        "count": 1004
       },
       {
         "tool": "WebSearch",
-        "count": 737
+        "count": 739
       },
       {
         "tool": "ToolSearch",
-        "count": 557
+        "count": 559
       },
       {
         "tool": "Agent",
@@ -2001,33 +2239,33 @@
       },
       {
         "tool": "Skill",
-        "count": 154
+        "count": 157
       },
       {
-        "tool": "mcp__browser__playwright_eval",
+        "tool": "TaskUpdate",
         "count": 115
       }
     ],
     "durationBuckets": [
       {
         "label": "<1m",
-        "count": 1005
+        "count": 1009
       },
       {
         "label": "1-5m",
-        "count": 636
+        "count": 642
       },
       {
         "label": "5-15m",
-        "count": 341
+        "count": 343
       },
       {
         "label": "15-30m",
-        "count": 150
+        "count": 151
       },
       {
         "label": "30-60m",
-        "count": 61
+        "count": 66
       },
       {
         "label": "1-3h",
@@ -2041,15 +2279,15 @@
     "turnBuckets": [
       {
         "label": "1",
-        "count": 1544
+        "count": 1552
       },
       {
         "label": "2-5",
-        "count": 519
+        "count": 527
       },
       {
         "label": "6-15",
-        "count": 215
+        "count": 217
       },
       {
         "label": "16-40",
@@ -2065,14 +2303,14 @@
       }
     ],
     "duration": {
-      "count": 2321,
-      "mean": 1686.6,
-      "p50": 89.6,
-      "p90": 1434.6,
+      "count": 2339,
+      "mean": 1679.1,
+      "p50": 90.5,
+      "p90": 1457.1,
       "max": 295409.4
     },
     "turns": {
-      "count": 2321,
+      "count": 2339,
       "mean": 2.6,
       "p50": 1,
       "p90": 6,
@@ -2082,62 +2320,62 @@
       {
         "model": "claude-opus-4-8",
         "label": "opus-4.8",
-        "color": "red",
-        "sessions": 1277,
-        "tokens": 3148284851
+        "color": "rose",
+        "sessions": 1279,
+        "tokens": 3178986374
       },
       {
         "model": "claude-haiku-4-5-20251001",
         "label": "haiku-4.5",
-        "color": "green",
-        "sessions": 465,
-        "tokens": 100958599
+        "color": "moss",
+        "sessions": 466,
+        "tokens": 101047409
       },
       {
         "model": "claude-sonnet-5",
         "label": "sonnet-5",
-        "color": "blue",
-        "sessions": 252,
-        "tokens": 653987596
+        "color": "indigo",
+        "sessions": 256,
+        "tokens": 676270552
       },
       {
         "model": "claude-opus-5",
         "label": "opus-5",
-        "color": "orange",
-        "sessions": 147,
-        "tokens": 491081484
+        "color": "rose",
+        "sessions": 156,
+        "tokens": 557945150
       },
       {
         "model": "claude-fable-5",
         "label": "fable-5",
-        "color": "purple",
+        "color": "violet",
         "sessions": 104,
         "tokens": 604571035
       },
       {
         "model": "<synthetic>",
         "label": "<synthetic>",
-        "color": "red",
+        "color": "muted",
         "sessions": 28,
         "tokens": 0
       },
       {
         "model": "claude-sonnet-4-6",
         "label": "sonnet-4-6",
-        "color": "blue",
+        "color": "indigo",
         "sessions": 19,
         "tokens": 15237171
       },
       {
         "model": "claude-sonnet-4-5-20250929",
         "label": "sonnet-4-5-20250929",
-        "color": "green",
+        "color": "indigo",
         "sessions": 16,
         "tokens": 15331094
       }
     ],
-    "totalCost": 3804.07,
-    "errorCount": 1753,
-    "permissionDenials": 40
+    "totalCost": 3843.15,
+    "errorCount": 1777,
+    "permissionDenials": 41
   }
 }
