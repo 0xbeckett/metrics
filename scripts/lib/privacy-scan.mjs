@@ -82,6 +82,18 @@ const RULES = [
     // and lack the mixed-case-plus-digit density.
     re: /(?<![A-Za-z0-9_-])(?=[A-Za-z0-9_-]{25,}(?![A-Za-z0-9_-]))(?=[A-Za-z0-9_-]*[A-Z])(?=[A-Za-z0-9_-]*[a-z])(?=[A-Za-z0-9_-]*\d)[A-Za-z0-9_-]{25,}/g,
   },
+  {
+    id: "long-string-field",
+    describe: "JSON string value longer than the public-document bound (possible leaked free text)",
+    // Every legitimate string this document ships (ticket refs/titles, model ids, tool names,
+    // repo/author labels) is a short label — the longest currently observed is well under 100
+    // chars. A harvester bug that lets raw transcript prose (a prompt, a tool result, a file
+    // body) through won't necessarily contain an email/path/secret shape, so this is the generic
+    // backstop: any single JSON string literal over 200 chars hard-fails, no matter what it says.
+    // The alternation mirrors JSON string grammar (escaped chars don't end the literal early) so
+    // it can't straddle a quote boundary into an unrelated key/value.
+    re: /"(?:[^"\\]|\\.){200,}"/g,
+  },
 ];
 
 /**
