@@ -48,15 +48,38 @@ export function SectionHeader({
   );
 }
 
-/** Signed delta beside a metric — the one accent, direction shown by glyph+sign. */
-export function Delta({ value, format }: { value: number; format?: (n: number) => string }) {
+/**
+ * Signed delta beside a metric. Direction is carried by the arrow glyph first;
+ * colour is the second channel and only appears when the caller says which way
+ * is *better* (`goodWhen`) — more sessions is good, more spend is not. Without
+ * it the delta stays on the neutral accent, because the sign alone has no
+ * polarity.
+ */
+export function Delta({
+  value,
+  format,
+  goodWhen,
+}: {
+  value: number;
+  format?: (n: number) => string;
+  goodWhen?: "up" | "down";
+}) {
   if (!value) return null;
   const up = value > 0;
   const fmt = format ?? ((n: number) => String(Math.abs(Math.round(n))));
+  const tone = !goodWhen
+    ? "text-primary"
+    : (up && goodWhen === "up") || (!up && goodWhen === "down")
+      ? "text-good"
+      : "text-critical";
   return (
-    <span className="inline-flex items-center gap-0.5 text-[13px] font-medium tabular-nums text-primary">
+    <span
+      className={cn("inline-flex items-center gap-0.5 text-[13px] font-medium tabular-nums", tone)}
+      title={`${up ? "up" : "down"} ${fmt(Math.abs(value))} vs the previous day`}
+    >
       {up ? <ArrowUpRight className="size-3.5" /> : <ArrowDownRight className="size-3.5" />}
       {fmt(Math.abs(value))}
+      <span className="sr-only">{up ? "up" : "down"}</span>
     </span>
   );
 }
@@ -74,6 +97,7 @@ export function HeroStat({
   unit,
   delta,
   deltaFormat,
+  deltaGoodWhen,
   spark,
   className,
 }: {
@@ -84,6 +108,7 @@ export function HeroStat({
   unit?: string;
   delta?: number;
   deltaFormat?: (n: number) => string;
+  deltaGoodWhen?: "up" | "down";
   spark?: ReactNode;
   className?: string;
 }) {
@@ -98,7 +123,7 @@ export function HeroStat({
             className="font-display text-[2.4rem] leading-[0.95] tabular-nums text-foreground sm:text-5xl"
           />
           {unit ? <span className="text-sm text-muted-foreground">{unit}</span> : null}
-          {delta !== undefined ? <Delta value={delta} format={deltaFormat} /> : null}
+          {delta !== undefined ? <Delta value={delta} format={deltaFormat} goodWhen={deltaGoodWhen} /> : null}
         </div>
         {sub ? <div className="text-[12px] tabular-nums text-muted-foreground">{sub}</div> : null}
       </div>
@@ -190,10 +215,16 @@ export function StatChip({
   );
 }
 
-/** A titled chart panel: serif title + kicker, roomy plot area, optional footnote. */
+/**
+ * A titled chart panel: serif title + kicker, roomy plot area, optional
+ * footnote. `hue` paints a small rule beside the title in the panel's series
+ * colour — the same token its marks use — so a reader can tie panel to metric
+ * before reading a single label. Panels that carry several hues leave it off.
+ */
 export function ChartCard({
   title,
   kicker,
+  hue,
   footnote,
   action,
   children,
@@ -201,17 +232,30 @@ export function ChartCard({
 }: {
   title: string;
   kicker?: string;
+  hue?: string;
   footnote?: ReactNode;
   action?: ReactNode;
   children: ReactNode;
   className?: string;
 }) {
   return (
-    <Panel as="section" className={cn("flex flex-col", className)}>
+    <Panel
+      as="section"
+      className={cn("flex flex-col transition-colors duration-200 hover:border-border-strong", className)}
+    >
       <div className="flex items-baseline justify-between gap-3 border-b border-border px-4 py-3 sm:px-5">
-        <div className="flex flex-col gap-0.5">
-          <h3 className="font-display text-lg leading-none text-foreground">{title}</h3>
-          {kicker ? <Label>{kicker}</Label> : null}
+        <div className="flex min-w-0 items-baseline gap-2.5">
+          {hue ? (
+            <span
+              aria-hidden
+              className="mt-0.5 h-3.5 w-[3px] shrink-0 self-center rounded-full"
+              style={{ background: hue }}
+            />
+          ) : null}
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <h3 className="font-display text-lg leading-none text-foreground">{title}</h3>
+            {kicker ? <Label>{kicker}</Label> : null}
+          </div>
         </div>
         {action ? <div className="shrink-0">{action}</div> : null}
       </div>
@@ -225,30 +269,38 @@ export function ChartCard({
   );
 }
 
-/** A pulsing accent dot — the "live" indicator glyph. Steady under reduced motion. */
+/**
+ * The "live" indicator glyph: a pulsing good-state dot, or a hollow warn ring
+ * when the feed has gone stale. State reads from the ring/fill shape and the
+ * adjacent text as well as the hue. Steady under reduced motion.
+ */
 export function LiveDot({ live = true }: { live?: boolean }) {
   return (
     <span className="relative inline-flex size-2">
       {live ? (
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60 motion-reduce:hidden" />
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-good opacity-60 motion-reduce:hidden" />
       ) : null}
       <span
         className={cn(
           "relative inline-flex size-2 rounded-full",
-          live ? "bg-primary" : "bg-muted-foreground",
+          live ? "bg-good" : "border-[1.5px] border-warn bg-transparent",
         )}
       />
     </span>
   );
 }
 
-/** A small square status dot + label — daemon/service state, not color-alone. */
+/** A small status dot + label — daemon/service state. Filled square = up, hollow
+ *  ring = down, and the label spells it out; hue is never the only carrier. */
 export function StatusDot({ ok, label }: { ok: boolean; label: string }) {
   return (
     <span className="inline-flex items-center gap-1.5 text-[12px] tabular-nums text-muted-foreground">
       <span
         aria-hidden
-        className={cn("size-1.5 rounded-[1px]", ok ? "bg-foreground" : "bg-primary")}
+        className={cn(
+          "size-2 rounded-[1px]",
+          ok ? "bg-good" : "border-[1.5px] border-critical bg-transparent",
+        )}
       />
       {label}
     </span>

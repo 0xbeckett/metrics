@@ -43,23 +43,34 @@ const RECALL_SRC = process.env.RECALL_EVAL_DATASET
   : resolve(REPO_ROOT, "data", "recall-eval.json");
 const RECALL_OUT = resolve(__dirname, "..", "src", "generated", "recall.json");
 
-// Display label + dither-kit palette colour per model. Any model the harvester
-// emits that we don't recognise still renders — it falls through to "grey".
+// Display label + categorical palette slot per model. Colour follows the model
+// FAMILY, not the row's rank, so opus is the same hue in the cost panel, the
+// wall-clock panel and the session split — and stays that hue when a filter or a
+// new release changes the running order. Slot names are the palette tokens in
+// src/index.css; an unrecognised family falls through to the muted role rather
+// than borrowing a family's hue.
 const MODEL_META = {
-  "claude-opus-4-8": { label: "opus-4.8", color: "red" },
-  "claude-sonnet-5": { label: "sonnet-5", color: "blue" },
-  "claude-haiku-4-5-20251001": { label: "haiku-4.5", color: "green" },
-  "claude-fable-5": { label: "fable-5", color: "purple" },
-  "gpt-5.6-terra": { label: "terra", color: "orange" },
-  "gpt-5.6-luna": { label: "luna", color: "pink" },
+  "claude-opus-4-8": { label: "opus-4.8", color: "rose" },
+  "claude-sonnet-5": { label: "sonnet-5", color: "indigo" },
+  "claude-haiku-4-5-20251001": { label: "haiku-4.5", color: "moss" },
+  "claude-fable-5": { label: "fable-5", color: "violet" },
+  "gpt-5.6-terra": { label: "terra", color: "gold" },
+  "gpt-5.6-luna": { label: "luna", color: "teal" },
 };
-const FALLBACK_COLORS = ["blue", "green", "purple", "orange", "pink", "red"];
+const MODEL_FAMILY = [
+  [/opus/i, "rose"],
+  [/sonnet/i, "indigo"],
+  [/haiku/i, "moss"],
+  [/fable/i, "violet"],
+  [/terra|^gpt/i, "gold"],
+  [/luna/i, "teal"],
+];
 
-function metaFor(model, idx) {
+function metaFor(model) {
   if (MODEL_META[model]) return MODEL_META[model];
-  // Unknown model: keep it legible, give it a stable colour off the ramp.
   const short = model.replace(/^claude-/, "").replace(/^gpt-/, "gpt-");
-  return { label: short, color: FALLBACK_COLORS[idx % FALLBACK_COLORS.length] };
+  const family = MODEL_FAMILY.find(([re]) => re.test(model));
+  return { label: short, color: family ? family[1] : "muted" };
 }
 
 const num = (v) => (typeof v === "number" && Number.isFinite(v) ? v : null);
@@ -237,8 +248,8 @@ function claudeSessionsForDashboard(raw) {
     turnBuckets: TURN_BUCKETS.map((b) => ({ label: b.label, count: turnBuckets.get(b.label) ?? 0 })),
     duration: statsOf(durations),
     turns: statsOf(turnsArr),
-    byModel: [...byModel.entries()].sort((a, b) => b[1].sessions - a[1].sessions).map(([model, agg], idx) => {
-      const meta = metaFor(model, idx);
+    byModel: [...byModel.entries()].sort((a, b) => b[1].sessions - a[1].sessions).map(([model, agg]) => {
+      const meta = metaFor(model);
       return { model, label: meta.label, color: meta.color, sessions: agg.sessions, tokens: agg.tokens };
     }),
     totalCost: anyCost ? round(totalCost, 2) : null,
@@ -331,8 +342,8 @@ function main() {
 
   // Models sorted by spend (most expensive first) — the story leads with cost.
   const modelsByCost = [...perModel.entries()].sort((a, b) => b[1].cost - a[1].cost);
-  const models = modelsByCost.map(([model, agg], idx) => {
-    const meta = metaFor(model, idx);
+  const models = modelsByCost.map(([model, agg]) => {
+    const meta = metaFor(model);
     return {
       model,
       label: meta.label,
