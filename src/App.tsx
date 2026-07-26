@@ -272,7 +272,7 @@ export function App() {
                 type="button"
                 onClick={toggle}
                 aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
-                className="rounded-md border border-border p-2.5 text-foreground transition-[color,background-color,border-color,transform] duration-200 ease-out hover:border-border-strong hover:bg-secondary hover:text-primary active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="rounded-md border border-border p-3 text-foreground transition-[color,background-color,border-color,transform] duration-200 ease-out sm:p-2.5 hover:border-border-strong hover:bg-secondary hover:text-primary active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 {dark ? <Sun className="size-4.5" /> : <Moon className="size-4.5" />}
               </button>
@@ -288,7 +288,8 @@ export function App() {
                 onClick={() => setTab(t.id)}
                 aria-current={tab === t.id ? "page" : undefined}
                 className={cn(
-                  "rounded-md px-3 py-1.5 text-[13px] font-medium transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:px-4",
+                  // Roomier on touch (44px), the composed desktop height above sm.
+                  "rounded-md px-3 py-3 text-[13px] font-medium transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:px-4 sm:py-1.5",
                   tab === t.id
                     ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:bg-secondary hover:text-foreground",
