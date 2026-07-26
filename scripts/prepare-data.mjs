@@ -474,8 +474,8 @@ function round(n, dp) {
 // Fixed seat presentation. luna (pi) vs haiku (claude -p); colours match the
 // telemetry model palette so a reader who sees both tabs keeps one mental map.
 const SEAT_META = {
-  luna: { label: "luna", color: "pink" },
-  haiku: { label: "haiku", color: "green" },
+  luna: { label: "luna", color: "teal" },
+  haiku: { label: "haiku", color: "moss" },
 };
 // Golden categories → short, glanceable axis labels.
 const CATEGORY_LABEL = {
