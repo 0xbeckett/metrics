@@ -14,6 +14,14 @@ another repository.
   LOC, commits, per-project rollups, authorship display names, and daily velocity. Known author
   identities are canonicalized through `config/author-aliases.json` before contributor buckets
   are aggregated.
+- **Claude sessions** (`scripts/harvest/claude-sessions.ts`, #2) streams `~/.claude/projects/**/*.jsonl`
+  — every Claude Code transcript on the host — incrementally (a per-file path/size/mtime/byte-offset
+  cursor in `data/claude-sessions-state.json`) to produce one row per session: start hour, duration,
+  turn count, tool-call counts by name, model, tokens, cost, error/permission-denial counts, and a
+  worker/concierge/quick classification derived from the project directory shape. The session id is
+  salted-hashed before it ever reaches a row; the salt lives in `data/.claude-sessions-salt`, never
+  in a published document. No prompt text, tool arguments, tool output, or file path is ever read
+  beyond a same-pass regex test (for a permission-denial phrase) whose matched text is discarded.
 
 This app never recomputes cost, cycle counts, or LOC — it only reads, aggregates (sum/count),
 and draws.
@@ -43,8 +51,8 @@ code-stats figure come straight from the harvesters' rows and are only summed/co
 emails and local paths, and refuses to write a public document if either remains. The refresh
 also runs `scripts/verify-public-metrics.mjs` against the staged served JSON.
 
-Point it at different datasets with `TELEMETRY_DATASET=/path/to/runs.json` and
-`CODE_STATS_DATASET=/path/to/code-stats.json`.
+Point it at different datasets with `TELEMETRY_DATASET=/path/to/runs.json`,
+`CODE_STATS_DATASET=/path/to/code-stats.json`, and `CLAUDE_SESSIONS_DATASET=/path/to/claude-sessions.json`.
 
 ## The page
 
