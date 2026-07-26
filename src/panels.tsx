@@ -288,6 +288,67 @@ function MemoryPanels({ metrics }: { metrics: Metrics }) {
   );
 }
 
+// ── Claude Code session analytics (#2) ───────────────────────────────────────
+
+function ClaudeSessionsPanels({ metrics }: { metrics: Metrics }) {
+  const c = metrics.claudeSessions;
+  if (!c?.available) return null;
+  const toolBars = c.toolCallMix.map((t) => ({ label: t.tool, value: t.count }));
+  const modelBars = c.byModel.map((m) => ({ label: m.label, value: m.sessions }));
+
+  return (
+    <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+      <ChartCard
+        title="Sessions over time"
+        kicker={`${int(c.total)} transcripts · worker vs. concierge vs. quick`}
+        footnote="Every Claude Code transcript on the host, split by which project directory it ran in — worker ticket worktrees, the concierge checkout, or a short quick/browser dispatch."
+      >
+        <Figures>
+          <Metric label="Total" value={int(c.total)} sub="sessions" />
+          <Metric label="Errors" value={int(c.errorCount)} />
+          <Metric label="Permission denials" value={int(c.permissionDenials)} />
+          <Metric label="Cost" value={c.totalCost !== null ? usd(c.totalCost) : "—"} sub={c.totalCost === null ? "no priced sessions" : undefined} />
+        </Figures>
+        <div className="mt-2">
+          <LinePlain
+            data={c.sessionsOverTime as unknown as Record<string, string | number>[]}
+            xKey="date"
+            series={[{ key: "count", label: "Sessions", shade: 1 }]}
+            xFormat={(s) => shortDate(s)}
+            yFormat={int}
+            tipFormat={(n) => `${int(n)} sessions`}
+            fill
+            height={220}
+          />
+        </div>
+        <div className="mt-4 flex flex-col gap-2">
+          <Label>By classification</Label>
+          <ProportionBar
+            segments={c.byClassification.map((b) => ({ label: b.classification, value: b.count }))}
+            valueFormat={int}
+          />
+        </div>
+      </ChartCard>
+
+      <ChartCard title="Tool-call mix" kicker="calls · by tool name, top 12" footnote="Tool name and a count only — arguments and results are never read past a same-pass error/permission check.">
+        <BarsPlain data={toolBars} valueFormat={int} labelWidth={110} />
+      </ChartCard>
+
+      <ChartCard title="Session duration" kicker={`median ${duration(c.duration.p50)} · p90 ${duration(c.duration.p90 ?? 0)}`}>
+        <ColumnsPlain data={c.durationBuckets.map((d) => ({ label: d.label, value: d.count }))} height={200} yFormat={int} tipFormat={(n) => `${int(n)} sessions`} />
+      </ChartCard>
+
+      <ChartCard title="Turns per session" kicker={`median ${int(c.turns.p50)} · p90 ${int(c.turns.p90 ?? 0)}`}>
+        <ColumnsPlain data={c.turnBuckets.map((t) => ({ label: t.label, value: t.count }))} height={200} yFormat={int} tipFormat={(n) => `${int(n)} sessions`} />
+      </ChartCard>
+
+      <ChartCard title="Model split" kicker="sessions · primary model per transcript" className="lg:col-span-2">
+        <BarsPlain data={modelBars} valueFormat={int} labelWidth={80} />
+      </ChartCard>
+    </div>
+  );
+}
+
 // ── Activity stream (live) ───────────────────────────────────────────────────
 
 function ago(ts: string, now: number): string {
@@ -381,6 +442,11 @@ export const OperationsView = memo(function OperationsView({ metrics }: { metric
       <section className="flex flex-col gap-5">
         <SectionHeader kicker="Knowledge" title="Memory graph" />
         <MemoryPanels metrics={metrics} />
+      </section>
+
+      <section className="flex flex-col gap-5">
+        <SectionHeader kicker="Sessions" title="Claude Code session analytics" />
+        <ClaudeSessionsPanels metrics={metrics} />
       </section>
 
       <section className="flex flex-col gap-5">

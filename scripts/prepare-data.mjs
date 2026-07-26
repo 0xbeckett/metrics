@@ -34,6 +34,9 @@ const SRC = process.env.TELEMETRY_DATASET
 const CODE_STATS_SRC = process.env.CODE_STATS_DATASET
   ? resolve(process.env.CODE_STATS_DATASET)
   : resolve(REPO_ROOT, "data", "code-stats.json");
+const CLAUDE_SESSIONS_SRC = process.env.CLAUDE_SESSIONS_DATASET
+  ? resolve(process.env.CLAUDE_SESSIONS_DATASET)
+  : resolve(REPO_ROOT, "data", "claude-sessions.json");
 const OUT = resolve(__dirname, "..", "src", "generated", "metrics.json");
 const RECALL_SRC = process.env.RECALL_EVAL_DATASET
   ? resolve(process.env.RECALL_EVAL_DATASET)
@@ -116,6 +119,134 @@ function codeStatsForDashboard(raw) {
   };
 }
 
+// ── Claude Code session analytics (#2) ────────────────────────────────────
+// The harvester (scripts/harvest/claude-sessions.ts) already emits nothing but per-session
+// counts/enums keyed by a salted session-id hash — this projection just rolls those rows into
+// the four-ish small aggregate shapes the dashboard charts consume. Same fail-soft contract as
+// codeStatsForDashboard: a missing/malformed source degrades to an empty, available:false section.
+const DURATION_BUCKETS = [
+  { label: "<1m", max: 60 }, { label: "1-5m", max: 300 }, { label: "5-15m", max: 900 },
+  { label: "15-30m", max: 1800 }, { label: "30-60m", max: 3600 }, { label: "1-3h", max: 10_800 },
+  { label: "3h+", max: Infinity },
+];
+const TURN_BUCKETS = [
+  { label: "1", max: 1 }, { label: "2-5", max: 5 }, { label: "6-15", max: 15 },
+  { label: "16-40", max: 40 }, { label: "41-100", max: 100 }, { label: "100+", max: Infinity },
+];
+function bucketLabel(value, buckets) {
+  for (const b of buckets) if (value <= b.max) return b.label;
+  return buckets[buckets.length - 1].label;
+}
+function statsOf(values) {
+  const xs = [...values].sort((a, b) => a - b);
+  const n = xs.length;
+  if (n === 0) return { count: 0, mean: 0, p50: 0, p90: 0, max: 0 };
+  const pct = (p) => xs[Math.min(n - 1, Math.floor((p / 100) * n))];
+  return {
+    count: n,
+    mean: round(xs.reduce((a, b) => a + b, 0) / n, 1),
+    p50: round(pct(50), 1),
+    p90: round(pct(90), 1),
+    max: round(xs[n - 1], 1),
+  };
+}
+function fillDaysFromCounts(perDay) {
+  const days = [...perDay.keys()].sort();
+  if (days.length === 0) return [];
+  const start = new Date(`${days[0]}T00:00:00Z`);
+  const end = new Date(`${days[days.length - 1]}T00:00:00Z`);
+  const out = [];
+  for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
+    const key = d.toISOString().slice(0, 10);
+    out.push({ date: key, count: perDay.get(key) ?? 0 });
+  }
+  return out;
+}
+
+function claudeSessionsForDashboard(raw) {
+  const empty = {
+    available: false, total: 0, byClassification: [], sessionsOverTime: [], toolCallMix: [],
+    durationBuckets: [], turnBuckets: [], duration: { count: 0, mean: 0, p50: 0, p90: 0, max: 0 },
+    turns: { count: 0, mean: 0, p50: 0, p90: 0, max: 0 }, byModel: [], totalCost: null,
+    errorCount: 0, permissionDenials: 0,
+  };
+  if (!raw || typeof raw !== "object" || !Array.isArray(raw.sessions) || raw.sessions.length === 0) return empty;
+
+  const sessions = raw.sessions.filter((s) => s && typeof s === "object");
+  const byClassification = new Map();
+  const byDay = new Map();
+  const toolMix = new Map();
+  const durationBuckets = new Map();
+  const turnBuckets = new Map();
+  const byModel = new Map();
+  const durations = [];
+  const turnsArr = [];
+  let totalCost = 0;
+  let anyCost = false;
+  let errorCount = 0;
+  let permissionDenials = 0;
+
+  for (const s of sessions) {
+    const cls = text(s.classification) || "other";
+    byClassification.set(cls, (byClassification.get(cls) ?? 0) + 1);
+
+    const startHour = text(s.start_hour);
+    if (startHour && startHour.length >= 10) {
+      const day = startHour.slice(0, 10);
+      byDay.set(day, (byDay.get(day) ?? 0) + 1);
+    }
+
+    const toolCounts = s.tool_calls_by_name && typeof s.tool_calls_by_name === "object" ? s.tool_calls_by_name : {};
+    for (const [tool, count] of Object.entries(toolCounts)) {
+      const label = publicLabel(tool, "unknown");
+      toolMix.set(label, (toolMix.get(label) ?? 0) + nonNegative(count));
+    }
+
+    const dur = nonNegative(s.duration_seconds);
+    durations.push(dur);
+    const db = bucketLabel(dur, DURATION_BUCKETS);
+    durationBuckets.set(db, (durationBuckets.get(db) ?? 0) + 1);
+
+    const turns = nonNegative(s.turns);
+    turnsArr.push(turns);
+    const tb = bucketLabel(turns, TURN_BUCKETS);
+    turnBuckets.set(tb, (turnBuckets.get(tb) ?? 0) + 1);
+
+    const model = text(s.model);
+    if (model) {
+      const agg = byModel.get(model) ?? { sessions: 0, tokens: 0 };
+      agg.sessions += 1;
+      const tok = s.tokens && typeof s.tokens === "object" ? s.tokens : {};
+      agg.tokens += nonNegative(tok.input) + nonNegative(tok.output) + nonNegative(tok.cache_read) + nonNegative(tok.cache_write);
+      byModel.set(model, agg);
+    }
+
+    const cost = num(s.cost_usd);
+    if (cost !== null) { totalCost += cost; anyCost = true; }
+    errorCount += nonNegative(s.error_count);
+    permissionDenials += nonNegative(s.permission_denials);
+  }
+
+  return {
+    available: true,
+    total: sessions.length,
+    byClassification: [...byClassification.entries()].sort((a, b) => b[1] - a[1]).map(([classification, count]) => ({ classification, count })),
+    sessionsOverTime: fillDaysFromCounts(byDay),
+    toolCallMix: [...toolMix.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12).map(([tool, count]) => ({ tool, count })),
+    durationBuckets: DURATION_BUCKETS.map((b) => ({ label: b.label, count: durationBuckets.get(b.label) ?? 0 })),
+    turnBuckets: TURN_BUCKETS.map((b) => ({ label: b.label, count: turnBuckets.get(b.label) ?? 0 })),
+    duration: statsOf(durations),
+    turns: statsOf(turnsArr),
+    byModel: [...byModel.entries()].sort((a, b) => b[1].sessions - a[1].sessions).map(([model, agg], idx) => {
+      const meta = metaFor(model, idx);
+      return { model, label: meta.label, color: meta.color, sessions: agg.sessions, tokens: agg.tokens };
+    }),
+    totalCost: anyCost ? round(totalCost, 2) : null,
+    errorCount,
+    permissionDenials,
+  };
+}
+
 function main() {
   let raw;
   try {
@@ -128,6 +259,10 @@ function main() {
   let rawCodeStats = null;
   try { rawCodeStats = JSON.parse(readFileSync(CODE_STATS_SRC, "utf8")); }
   catch (err) { console.error(`[prepare-data] code-stats dataset unavailable at ${CODE_STATS_SRC}: ${err.message}; emitting empty code stats`); }
+
+  let rawClaudeSessions = null;
+  try { rawClaudeSessions = JSON.parse(readFileSync(CLAUDE_SESSIONS_SRC, "utf8")); }
+  catch (err) { console.error(`[prepare-data] claude-sessions dataset unavailable at ${CLAUDE_SESSIONS_SRC}: ${err.message}; emitting empty claude sessions`); }
 
   const runs = Array.isArray(raw.runs) ? raw.runs : [];
   // The harvester excludes sessions it cannot price, but makes that exclusion explicit.
@@ -291,6 +426,7 @@ function main() {
   out.logs = section("logs", harvestLogs, { available: false });
   out.daemon = section("daemon", harvestDaemon, { available: false });
   out.recentActivity = section("recentActivity", () => harvestActivity(undefined, 50), []);
+  out.claudeSessions = section("claudeSessions", () => claudeSessionsForDashboard(rawClaudeSessions), { available: false });
 
   assertPublicJson(out);
   // Size budget: the whole public document must stay small enough to swap atomically and fetch

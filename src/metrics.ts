@@ -57,6 +57,7 @@ export type Metrics = {
   logs?: LogsSection;
   daemon?: DaemonSection;
   recentActivity?: ActivityEvent[];
+  claudeSessions?: ClaudeSessionsSection;
 };
 
 /** Summary stats shared by several sections (all pre-rounded by the harvester). */
@@ -148,6 +149,22 @@ export type DaemonSection = {
 };
 
 export type ActivityEvent = { ts: string; kind: string; ref: string | null; title: string | null };
+
+export type ClaudeSessionsSection = {
+  available: boolean;
+  total: number;
+  byClassification: { classification: string; count: number }[];
+  sessionsOverTime: { date: string; count: number }[];
+  toolCallMix: { tool: string; count: number }[];
+  durationBuckets: { label: string; count: number }[];
+  turnBuckets: { label: string; count: number }[];
+  duration: StatSummary;
+  turns: StatSummary;
+  byModel: { model: string; label: string; color: DitherColor; sessions: number; tokens: number }[];
+  totalCost: number | null;
+  errorCount: number;
+  permissionDenials: number;
+};
 
 // The committed rollup is a resilient first-paint fallback. The deployed page then requests
 // /metrics.json, which the refresh timer swaps atomically without rebuilding this app shell.

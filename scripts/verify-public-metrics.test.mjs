@@ -86,7 +86,7 @@ test("assertPublicText throws naming the offending rule", () => {
 // A harvester regression that lets raw transcript prose through won't necessarily look like an
 // email/path/secret, so a bare "string is suspiciously long" rule is the last line of defense.
 test("rejects a JSON string value over the length bound, even with no other tell", () => {
-  const prose = "please open the config file and swap the staging endpoint for the production one, then rerun the deploy script and let me know once it finishes so I can tell the whole team on discord it went out fine";
+  const prose = "please open the config file and swap the staging endpoint for the production one, then rerun the deploy script and let me know once it finishes so I can tell the whole team on discord that it went out fine";
   assert.ok(prose.length > 200);
   assert.ok(hits(JSON.stringify({ note: prose })).includes("long-string-field"));
 });
@@ -108,7 +108,7 @@ test("rejects a claude-sessions row that leaked free text into a tool-name-shape
   const bad = JSON.stringify({
     claudeSessions: {
       toolCallMix: [{
-        tool: "please fix the login bug for the user and don't forget to remove the debug console.log statements before you commit this change, thanks so much for all the help today",
+        tool: "please fix the login bug for the user and don't forget to remove the debug console.log statements before you commit this change, thanks so much for all of your help with this today, really appreciate it",
         count: 1,
       }],
     },

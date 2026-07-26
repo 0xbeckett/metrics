@@ -21,6 +21,7 @@ cd "$repo_root"
 echo "[metrics-refresh] harvesting into ${repo_root}/data"
 bun scripts/harvest-telemetry.ts
 bun scripts/harvest-code-stats.ts
+bun scripts/harvest-claude-sessions.ts
 METRICS_REFRESHED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)" node scripts/prepare-data.mjs
 node scripts/verify-public-metrics.mjs src/generated/metrics.json
 
