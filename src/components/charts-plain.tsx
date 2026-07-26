@@ -369,7 +369,12 @@ export function BarsPlain({
   const max = Math.max(1, ...data.map((d) => d.value));
   const gap = 12;
   const track = Math.max(0, w - labelWidth - gap);
-  const x = scaleLinear().domain([0, max]).range([0, track]);
+  // Reserve room at the tip for the value label so the longest bar's figure
+  // still lands inside the panel — at 375px it is the difference between a
+  // clean column and a page that scrolls sideways.
+  const longest = Math.max(...data.map((d) => valueFormat(d.value).length), 1);
+  const gutter = Math.min(track * 0.45, longest * 7 + 10);
+  const x = scaleLinear().domain([0, max]).range([0, Math.max(2, track - gutter)]);
   const bh = Math.min(16, rowHeight - 8);
 
   return (
