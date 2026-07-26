@@ -79,12 +79,17 @@ export const metricDither = (metric: Metric): DitherColor => SLOT_DITHER[METRIC_
 
 // ── Ordinal ramp ─────────────────────────────────────────────────────────────
 
-const seqStep = (t: number): string =>
-  `var(--seq-${Math.min(5, Math.max(1, 1 + Math.round(t * 4)))})`;
+const seqStep = (t: number, lo = 1): string =>
+  `var(--seq-${Math.min(5, Math.max(1, lo + Math.round(t * (5 - lo))))})`;
 
-/** One-hue ramp step for bucket `i` of `n` ordered buckets (light → dark). */
+/**
+ * One-hue ramp step for bucket `i` of `n` ordered buckets (light → dark). Short
+ * sets start at step 2: the palest step is the one that recedes toward the
+ * surface, and it only earns its place when there are enough neighbours to read
+ * it as "the low end" rather than as a washed-out bar.
+ */
 export function rampColor(i: number, n: number): string {
-  return n <= 1 ? "var(--seq-3)" : seqStep(i / (n - 1));
+  return n <= 1 ? "var(--seq-3)" : seqStep(i / (n - 1), n <= 4 ? 2 : 1);
 }
 
 /** One-hue ramp step for a continuous magnitude — heavier value, deeper step. */

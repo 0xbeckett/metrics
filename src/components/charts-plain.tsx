@@ -58,6 +58,18 @@ function Tooltip({ tip, width }: { tip: Tip; width: number }) {
   );
 }
 
+/** Ticks whose *formatted* labels repeat carry no information — a count axis
+ *  topping out at 1 would otherwise print "1 1 1 0 0". Keep the first of each. */
+function uniqueTicks(ticks: number[], format: (n: number) => string): number[] {
+  const seen = new Set<string>();
+  return ticks.filter((t) => {
+    const label = format(t);
+    if (seen.has(label)) return false;
+    seen.add(label);
+    return true;
+  });
+}
+
 /** A legend/tooltip swatch — the only place a series colour meets its label. */
 function Swatch({ color, dashed }: { color: string; dashed?: boolean }) {
   return (
@@ -114,7 +126,7 @@ export function LinePlain({
   const maxY = Math.max(1, ...data.flatMap((d) => series.map((s) => Number(d[s.key]) || 0)));
   const y = scaleLinear().domain([0, maxY]).nice().range([ih, 0]);
   const px = (i: number) => (data.length <= 1 ? iw / 2 : (i / (data.length - 1)) * iw);
-  const yticks = y.ticks(4);
+  const yticks = uniqueTicks(y.ticks(4), yFormat);
   const xstep = Math.max(1, Math.ceil(data.length / maxXTicks));
 
   const path = (s: LineSeries) =>
@@ -269,7 +281,7 @@ export function ColumnsPlain({
   const band = data.length ? iw / data.length : 0;
   // 2px of surface between neighbours, per the mark spec.
   const bw = Math.min(24, Math.max(2, band - 2));
-  const yticks = y.ticks(4);
+  const yticks = uniqueTicks(y.ticks(4), yFormat);
   const xstep = Math.max(1, Math.ceil(data.length / maxXTicks));
   const fillOf = (i: number) => (ramp ? rampColor(i, data.length) : color);
 

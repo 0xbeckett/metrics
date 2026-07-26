@@ -65,20 +65,46 @@ holds the count-up hook and reveal wrapper.
 
 ## Charts
 
-All views render with [**dither-kit**](https://www.tripwire.sh/dither-kit) (`@dither-kit/*`,
-installed into `src/components/dither-kit/`). Each card is monochromatic (one palette colour) to
-stay legible:
+Two kits share one token system. The textured showpieces (commit velocity, the delivery trend,
+the hero sparklines, the recall head-to-head) render with
+[**dither-kit**](https://www.tripwire.sh/dither-kit) (`@dither-kit/*`, installed into
+`src/components/dither-kit/`); the dense panels use the plain hairline SVG set in
+`src/components/charts-plain.tsx`. Both read their colours from the same CSS custom properties,
+so a token change moves the canvas kit and the SVG kit together.
 
-| View | Source | dither-kit component |
-|------|--------|----------------------|
-| Commit velocity (daily, hero) | code stats | `AreaChart` |
-| Lines per project (top 8) | code stats | `BarChart` |
-| Authorship (commits, top 7) | code stats | `BarChart` |
-| API cost per model (USD) | telemetry | `BarChart` |
-| Runs per day | telemetry | `AreaChart` |
-| Wall-clock per model (hours) | telemetry | `BarChart` |
-| Review-cycle distribution | telemetry | `BarChart` |
-| Hero-stat sparklines | both | `Sparkline` |
+| View | Source | Kit |
+|------|--------|-----|
+| Commit velocity (daily, hero) | code stats | dither `AreaChart` |
+| Delivery trend (tickets closed) | tickets | dither `AreaChart` |
+| Recall head-to-head (luna vs haiku) | recall eval | dither `BarChart` |
+| Hero-stat sparklines | both | dither `Sparkline` |
+| Rankings (projects, authors, models, tools) | all | plain `BarsPlain` |
+| Time series (runs, spend, sessions, tickets) | all | plain `LinePlain` |
+| Ordered buckets (duration, turns, cycles) | all | plain `ColumnsPlain` |
+| Splits (outcomes, stages, classifications) | all | plain `ProportionBar` |
+
+### Colour
+
+The palette lives once, in `src/index.css`, as `:root` / `.dark` token pairs; `src/palette.ts`
+maps *meaning* onto those tokens and holds no colour values of its own.
+
+- **`--series-1..6`** — the categorical palette (rose · indigo · moss · violet · gold · teal), a
+  fixed order that is never cycled. A measure keeps its slot across the whole page: commits are
+  indigo, sessions teal, spend gold, tickets closed moss and opened violet, memory rose. Series
+  that share a chart take *adjacent* slots, because only neighbours are validated against each
+  other. A nominal ranking wears the single hue of what it measures — bar length already carries
+  the ranking, and the row label carries the identity.
+- **`--seq-1..5`** — a one-hue clay ramp for ordered magnitude: bucket columns and memory-graph
+  node degree. The anchor flips in dark mode so "more" always moves away from the surface.
+- **`--good` / `--warn` / `--critical`** — reserved status steps, never reused as a series hue and
+  always paired with a glyph or the word itself.
+
+Validated with the dataviz skill's `validate_palette.js` against the real surfaces (`#f8f6f2` /
+`#161311`) on the adjacent pairlist: worst adjacent CVD ΔE **14.0** light / **14.1** dark (target
+≥ 8), worst normal-vision ΔE **20.6** / **20.2** (floor ≥ 15), all six slots ≥ 3:1 against their
+surface. Six is also the ceiling — no six-colour set can clear the all-pairs test, so
+scatter-style forms are deliberately absent. Every rendered text colour clears WCAG AA in both
+themes (worst measured 4.57:1 light, 5.98:1 dark).
 
 ## Develop / build
 
