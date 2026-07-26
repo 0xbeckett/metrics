@@ -1,8 +1,10 @@
 import raw from "./generated/metrics.json";
 
-// dither-kit's palette identifiers. The named hues remain for legacy data, and
-// ink / accent / muted are the token-driven roles the retheme paints with.
+// Palette identifiers shared by both chart kits. The six slot names are the
+// categorical series palette (#3); the old hue names stay as aliases so a stale
+// metrics.json still paints, and ink / accent / muted are the chrome roles.
 export type DitherColor =
+  | "rose" | "indigo" | "moss" | "violet" | "gold" | "teal"
   | "green" | "blue" | "purple" | "pink" | "orange" | "red" | "grey"
   | "ink" | "accent" | "muted";
 
