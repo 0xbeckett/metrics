@@ -3,15 +3,21 @@ import type { DitherColor } from "@/metrics";
 /*
  * The identity layer over the colour tokens in index.css (#3).
  *
- * One rule: a thing keeps its hue everywhere. Commits are indigo in the velocity
- * trend, in the per-project ranking and in the authorship ranking; sessions are
- * teal in the hero spark, the runs-per-day line and the session trend; a model
- * carries the same slot in cost, wall-clock and session-split. Nothing in here
- * holds a colour value — every entry resolves to a `--series-*` / `--seq-*` /
- * status token, so the palette still lives in exactly one file.
+ * One rule: a measure keeps its hue everywhere. Commits are indigo in the
+ * velocity trend, in the per-project ranking and in the authorship ranking;
+ * sessions are teal in the hero spark, the runs-per-day line, the session trend
+ * and the tool mix; spend is gold wherever dollars appear. Nothing in here holds
+ * a colour value — every entry resolves to a `--series-*` / `--seq-*` / status
+ * token, so the palette still lives in exactly one file.
  *
  * Slot order is fixed (1 rose · 2 indigo · 3 moss · 4 violet · 5 gold · 6 teal)
- * and assigned, never cycled — that order is what the CVD validation measured.
+ * and assigned, never cycled — that order is what the CVD validation measured,
+ * and only *neighbouring* slots are validated against each other. So: series
+ * that share a chart take adjacent slots, ordered bucket sets take the one-hue
+ * `--seq-*` ramp, and a nominal ranking (projects, authors, models, tools) wears
+ * the single hue of the thing it measures — bar length already carries the
+ * ranking, and spending six hues on row identity would put unvalidated pairs
+ * side by side for nothing.
  */
 
 export type Slot = 1 | 2 | 3 | 4 | 5 | 6;
@@ -43,20 +49,24 @@ export function ditherColorValue(color: DitherColor): string {
 
 // ── Metric identity ──────────────────────────────────────────────────────────
 // The subjects this dashboard measures. Each owns one slot for the whole page.
+//
+// Two metrics that share a chart must sit on ADJACENT slots — the fixed order is
+// the CVD-safety mechanism and it is only validated pairwise on neighbours. The
+// one such pair here is tickets opened (4) vs closed (3).
 
 export type Metric =
+  | "memory"    // notes and links
   | "commits"   // git output: velocity, lines per project, authorship
-  | "sessions"  // runs / transcripts / tool calls
-  | "spend"     // dollars
-  | "opened"    // tickets opened
   | "closed"    // tickets closed / delivered
-  | "memory";   // notes and links
+  | "opened"    // tickets opened
+  | "spend"     // dollars
+  | "sessions"; // runs / transcripts / tool calls
 
 export const METRIC_SLOT: Record<Metric, Slot> = {
-  opened: 1,
+  memory: 1,
   commits: 2,
   closed: 3,
-  memory: 4,
+  opened: 4,
   spend: 5,
   sessions: 6,
 };
@@ -69,57 +79,51 @@ export const metricDither = (metric: Metric): DitherColor => SLOT_DITHER[METRIC_
 
 // ── Ordinal ramp ─────────────────────────────────────────────────────────────
 
+const seqStep = (t: number): string =>
+  `var(--seq-${Math.min(5, Math.max(1, 1 + Math.round(t * 4)))})`;
+
 /** One-hue ramp step for bucket `i` of `n` ordered buckets (light → dark). */
 export function rampColor(i: number, n: number): string {
-  if (n <= 1) return "var(--seq-3)";
-  const step = 1 + Math.round((i / (n - 1)) * 4);
-  return `var(--seq-${Math.min(5, Math.max(1, step))})`;
+  return n <= 1 ? "var(--seq-3)" : seqStep(i / (n - 1));
+}
+
+/** One-hue ramp step for a continuous magnitude — heavier value, deeper step. */
+export function rampValue(value: number, max: number): string {
+  return seqStep(max > 0 ? Math.min(1, Math.max(0, value / max)) : 0);
 }
 
 // ── Status ───────────────────────────────────────────────────────────────────
 
-export type Tone = "good" | "warn" | "critical";
+export type Tone = "good" | "warn" | "critical" | "neutral";
 
-const TONE_WORDS: Record<Tone, RegExp> = {
+const TONE_WORDS: Record<Exclude<Tone, "neutral">, RegExp> & { neutral: RegExp } = {
   good: /^(done|delivered|complete|completed|closed|ok|pass|passed|success|active|healthy)$/i,
-  warn: /^(blocked|stalled|partial|pending|paused|skipped|timeout|retry|review)$/i,
-  critical: /^(failed|fail|error|errors|cancelled|canceled|dead|denied|abandoned)$/i,
+  warn: /^(blocked|stalled|partial|pending|paused|timeout|retry|rework|empty|stale|degraded)$/i,
+  critical: /^(failed|fail|error|errors|dead|denied|abandoned)$/i,
+  neutral: /^(cancelled|canceled|skipped|unknown|n\/a|none)$/i,
 };
 
 /** Map an outcome/state word to a reserved status tone, or null if it is just a
  *  category. Callers always pair the colour with the label itself. */
 export function toneOf(label: string): Tone | null {
   const word = label.trim();
-  for (const tone of ["good", "warn", "critical"] as const) {
+  for (const tone of ["good", "warn", "critical", "neutral"] as const) {
     if (TONE_WORDS[tone].test(word)) return tone;
   }
   return null;
 }
 
-export const toneColor = (tone: Tone): string => `var(--${tone === "critical" ? "critical" : tone})`;
+export const toneColor = (tone: Tone): string =>
+  tone === "neutral" ? "var(--ink-soft)" : `var(--${tone})`;
 
-/** Outcome/stage segments: status tone where the word means one, else slots in
- *  fixed order. Identity is always carried by the printed label too. */
+/**
+ * Outcome/stage segments: the reserved status token where the word names a
+ * state, else categorical slots assigned in fixed order — never cycled, never
+ * skipped, so only validated neighbours can touch. The printed label carries the
+ * identity either way.
+ */
 export function segmentColor(label: string, index: number): string {
   const tone = toneOf(label);
   if (tone) return toneColor(tone);
-  return slotColor(((index % 6) + 1) as Slot);
-}
-
-// ── Memory note types ────────────────────────────────────────────────────────
-// The graph and the "notes by type" ranking share this map, so a type is the
-// same hue in both panels.
-
-const MEMORY_TYPE_SLOT: Record<string, Slot> = {
-  self: 4,
-  person: 1,
-  project: 2,
-  reference: 6,
-  feedback: 5,
-  user: 3,
-};
-
-export function memoryTypeColor(type: string, index = 0): string {
-  const slot = MEMORY_TYPE_SLOT[type.toLowerCase()] ?? (((index % 6) + 1) as Slot);
-  return slotColor(slot);
+  return slotColor((Math.min(index, 5) + 1) as Slot);
 }

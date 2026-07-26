@@ -44,11 +44,13 @@ const RECALL_SRC = process.env.RECALL_EVAL_DATASET
 const RECALL_OUT = resolve(__dirname, "..", "src", "generated", "recall.json");
 
 // Display label + categorical palette slot per model. Colour follows the model
-// FAMILY, not the row's rank, so opus is the same hue in the cost panel, the
-// wall-clock panel and the session split — and stays that hue when a filter or a
-// new release changes the running order. Slot names are the palette tokens in
-// src/index.css; an unrecognised family falls through to the muted role rather
-// than borrowing a family's hue.
+// FAMILY, not the row's rank, so a model that is drawn as its own series keeps
+// one hue across every panel and does not repaint when a new release changes the
+// running order. Slot names are the palette tokens in src/index.css; an
+// unrecognised family falls through to the muted role rather than borrowing a
+// family's hue. (Per-model *rankings* — cost, wall-clock, session split — are
+// nominal, so they wear their panel's single metric hue and carry identity in
+// the row label; see src/palette.ts.)
 const MODEL_META = {
   "claude-opus-4-8": { label: "opus-4.8", color: "rose" },
   "claude-sonnet-5": { label: "sonnet-5", color: "indigo" },
@@ -471,11 +473,15 @@ function round(n, dp) {
 // rollup above. The raw dataset lives under the git-ignored data/ dir (local only);
 // this projected, path-scrubbed document is what ships to the public build.
 
-// Fixed seat presentation. luna (pi) vs haiku (claude -p); colours match the
-// telemetry model palette so a reader who sees both tabs keeps one mental map.
+// Fixed seat presentation. luna (pi) vs haiku (claude -p). These two are drawn
+// as grouped series in the same chart, so they take the first two categorical
+// slots — the palette's fixed order is only validated between neighbours, and
+// slots 1↔2 clear the CVD gate with room (ΔE 14 in both themes). The view
+// assigns those slots by seat position (src/RecallView.tsx); these values
+// mirror it so the document and the render agree.
 const SEAT_META = {
-  luna: { label: "luna", color: "teal" },
-  haiku: { label: "haiku", color: "moss" },
+  luna: { label: "luna", color: "rose" },
+  haiku: { label: "haiku", color: "indigo" },
 };
 // Golden categories → short, glanceable axis labels.
 const CATEGORY_LABEL = {
