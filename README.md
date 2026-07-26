@@ -56,6 +56,10 @@ Point it at different datasets with `TELEMETRY_DATASET=/path/to/runs.json`,
 
 ## The page
 
+![Proof of Work, light](docs/screenshots/light-proof-of-work.png)
+![Operations, dark](docs/screenshots/dark-operations.png)
+
+
 A marketing piece, not an info panel: giant count-up hero figures (lines shipped, commits,
 projects, spend, sessions, compute), a full-width commit-velocity timeline as the hero visual, a
 strip of derived cost-per-outcome ratios (first-try rate, $/commit, lines/$, …), then a grid of

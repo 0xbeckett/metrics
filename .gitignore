@@ -8,3 +8,5 @@ data
 .tmp
 
 shots/*.png
+
+.palette-scratch
