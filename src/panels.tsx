@@ -1,20 +1,29 @@
-import { memo, useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ChartCard, Label, Metric, Panel, SectionHeader, StatusDot } from "@/components/ui";
+import { ChartCard, Label, Metric, Panel, StatChip, StatusDot } from "@/components/ui";
 import { BarsPlain, ColumnsPlain, LinePlain, ProportionBar } from "@/components/charts-plain";
 import { AreaViz } from "@/components/charts";
 import { MemoryGraph } from "@/components/memory-graph";
 import { cn } from "@/lib/utils";
-import { compact, days, duration, int, pct, untilFire } from "@/derived";
+import { compact, days, deriveMetrics, duration, int, lastDelta, pct, untilFire } from "@/derived";
 import { metricColor, metricDither } from "@/palette";
-import { shortDate, usd, type ActivityEvent, type Metrics } from "@/metrics";
+import { shortDate, usdPrecise, type ActivityEvent, type Metrics } from "@/metrics";
+import { Reveal } from "@/motion";
 
 /*
- * The Operations view — everything #80.1 emits, laid out as its own information
- * architecture. Dense panels (throughput, worker economics, spend, log volume)
- * use the plain hairline kit; the memory graph and the throughput trend are the
- * showpieces. Each section degrades to nothing when its source was unavailable.
+ * The section bodies for the one-page dashboard. Each of the five narrative
+ * sections — Spend, Work shipped, The loop, Runtime — is one exported view; the
+ * headline strip lives in App. Dense panels use the plain hairline kit; the two
+ * trend showpieces (commit velocity, delivery) keep the dither texture. Every
+ * section degrades to nothing when its source was unavailable, and money is told
+ * in exactly one place (Spend) with one currency format.
  */
+
+// One currency voice for the whole page: whole dollars with grouping for totals
+// and per-entity figures ($1,102 / $871), cents only below a dollar ($0.42).
+const money = usdPrecise;
+// Per-unit ratios are inherently fractional, so they carry two decimals ($2.13).
+const ratio = (n: number) => `$${n.toFixed(2)}`;
 
 const uptime = (s: number | null): string => {
   if (s === null) return "—";
@@ -30,51 +39,166 @@ function Figures({ children }: { children: ReactNode }) {
   return <div className="grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-4">{children}</div>;
 }
 
-// ── System status ───────────────────────────────────────────────────────────
-
-function SystemStrip({ metrics }: { metrics: Metrics }) {
-  const { daemon, logs, routines } = metrics;
-  if (!daemon?.available && !logs?.available && !routines?.available) return null;
-  const activeSvc = daemon?.services.filter((s) => s.active === "active").length ?? 0;
-  const totalSvc = daemon?.services.length ?? 0;
-  const nextRoutine = routines?.items
-    .filter((r) => r.enabled && r.nextFireAt)
-    .sort((a, b) => Date.parse(a.nextFireAt!) - Date.parse(b.nextFireAt!))[0];
-
+/** A horizontally-scrolling strip of derived figures, hairline-divided. */
+function ChipStrip({ children }: { children: ReactNode }) {
   return (
-    <Panel className="flex flex-col gap-4 p-4 sm:p-5">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <Label>System status</Label>
-        {daemon?.version ? (
-          <span className="text-[12px] tabular-nums text-muted-foreground">daemon v{daemon.version}</span>
-        ) : null}
-      </div>
-      <div className="grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-4">
-        {daemon?.available ? (
-          <Metric label="Services up" value={`${activeSvc}/${totalSvc}`} sub="systemd units" />
-        ) : null}
-        {logs?.available ? (
-          <Metric label="Log volume" value={compact(logs.totalLines)} unit="lines" sub={`${pct(logs.errorRate)} errors`} />
-        ) : null}
-        {routines?.available ? (
-          <Metric label="Routines" value={`${routines.enabled}`} sub={`of ${routines.total} enabled`} />
-        ) : null}
-        {nextRoutine ? (
-          <Metric label="Next fire" value={untilFire(nextRoutine.nextFireAt, Date.now())} sub={nextRoutine.name} />
-        ) : null}
-      </div>
-      {daemon?.available ? (
-        <div className="flex flex-wrap gap-x-4 gap-y-1.5 border-t border-border pt-3">
-          {daemon.services.map((s) => (
-            <StatusDot key={s.name} ok={s.active === "active"} label={`${s.name.replace(/^beckett-/, "")} ${s.active === "active" ? uptime(s.uptimeSeconds) : "dead"}`} />
-          ))}
-        </div>
-      ) : null}
+    <Panel className="overflow-x-auto">
+      <div className="flex flex-nowrap divide-x divide-border">{children}</div>
     </Panel>
   );
 }
 
-// ── Tickets ──────────────────────────────────────────────────────────────────
+// ── Spend ─────────────────────────────────────────────────────────────────────
+// Every money figure the dashboard knows, in one section: the running total and
+// its derived ratios, the page-wide daily spend, cost per model, and worker cost
+// per ticket. One currency format, one time window.
+
+export function SpendView({ metrics }: { metrics: Metrics }) {
+  const h = metrics.headline;
+  const d = deriveMetrics(metrics);
+  const spend = metrics.spend;
+  const costDelta = lastDelta(metrics.runsOverTime.map((x) => ({ value: x.cost })));
+  const estimatedModels = metrics.models.filter((m) => m.estimate).map((m) => m.label);
+  const estimateNote = estimatedModels.length ? ` · est: ${estimatedModels.join(", ")}` : "";
+  const runWindow = h.firstRun && h.lastRun ? `${shortDate(h.firstRun)} – ${shortDate(h.lastRun)}` : "—";
+
+  return (
+    <div className="flex flex-col gap-6">
+      <ChipStrip>
+        <StatChip value={h.totalSpend} label="Total spend" format={money} />
+        <StatChip value={d.costPerCommit} label="Per commit" format={ratio} />
+        <StatChip value={d.linesPerDollar} label="Lines / $" format={int} />
+        {spend?.available ? <StatChip value={spend.costPerTicket.mean} label="Per ticket" format={ratio} /> : null}
+      </ChipStrip>
+
+      <Reveal>
+        <ChartCard
+          title="Spend over time"
+          kicker={`USD · daily · ${runWindow}`}
+          hue={metricColor("spend")}
+          action={costDelta ? <Label>{`${costDelta > 0 ? "▲" : "▼"} ${money(Math.abs(costDelta))} vs prior day`}</Label> : undefined}
+          footnote="Every priced session across all harnesses, summed by day — the same running total the headline reports."
+        >
+          <LinePlain
+            data={metrics.runsOverTime as unknown as Record<string, string | number>[]}
+            xKey="date"
+            series={[{ key: "cost", label: "Cost", color: metricColor("spend") }]}
+            xFormat={(s) => shortDate(s)}
+            yFormat={money}
+            tipFormat={money}
+            fill
+            height={240}
+          />
+        </ChartCard>
+      </Reveal>
+
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <Reveal>
+          <ChartCard
+            title="Cost per model"
+            kicker="USD · current rates"
+            hue={metricColor("spend")}
+            footnote={
+              <>
+                Opus does the heavy lifting and the heavy spending. Rates from the harvester's dated table
+                {metrics.rate_table_effective_date ? ` (${metrics.rate_table_effective_date})` : ""}
+                {estimateNote}
+                {metrics.notes.unratedModelSessions > 0
+                  ? ` · ${metrics.notes.unratedModelSessions} sessions excluded pending model rates`
+                  : ""}.
+              </>
+            }
+          >
+            <BarsPlain data={d.costSeries} color={metricColor("spend")} valueFormat={money} labelWidth={72} />
+          </ChartCard>
+        </Reveal>
+
+        {spend?.available ? (
+          <Reveal delay={0.05}>
+            <ChartCard
+              title="Cost per ticket"
+              kicker={`${spend.runsPriced} priced runs`}
+              hue={metricColor("spend")}
+              footnote={`Worker spend ${money(spend.totalSpend)} · per ticket mean ${ratio(spend.costPerTicket.mean)}, median ${ratio(spend.costPerTicket.p50)}, max ${ratio(spend.costPerTicket.max)}.`}
+            >
+              <div className="flex flex-col gap-2">
+                <Label>Spend by stage</Label>
+                <ProportionBar
+                  segments={spend.byStage.map((s) => ({ label: s.stage, value: s.cost }))}
+                  valueFormat={money}
+                />
+              </div>
+              <div className="mt-2 flex flex-col gap-2">
+                <Label>Top tickets</Label>
+                <BarsPlain
+                  data={spend.costPerTicket.top.slice(0, 8).map((r) => ({ label: r.ref, value: r.cost }))}
+                  color={metricColor("spend")}
+                  valueFormat={money}
+                  labelWidth={72}
+                />
+              </div>
+            </ChartCard>
+          </Reveal>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+// ── Work shipped ──────────────────────────────────────────────────────────────
+// Git output: the velocity showpiece, then authorship and per-project lines.
+
+export function WorkView({ metrics }: { metrics: Metrics }) {
+  const cs = metrics.codeStats;
+  const d = deriveMetrics(metrics);
+  const h = metrics.headline;
+  const runWindow = h.firstRun && h.lastRun ? `${shortDate(h.firstRun)} – ${shortDate(h.lastRun)}` : "—";
+
+  return (
+    <div className="flex flex-col gap-6">
+      <Reveal>
+        <ChartCard title="Commit velocity" kicker={`daily · ${runWindow}`} hue={metricColor("commits")}>
+          <AreaViz
+            data={d.velocitySeries}
+            color={metricDither("commits")}
+            seriesLabel="Commits"
+            heightClass="h-[240px] sm:h-[300px]"
+            maxTicks={7}
+            xFormatter={(v) => shortDate(String(v))}
+            yFormatter={(v) => int(v)}
+            valueFormatter={(v) => `${int(v)} commits`}
+          />
+        </ChartCard>
+      </Reveal>
+
+      <ChipStrip>
+        <StatChip value={d.beckettShare} label="By Beckett" format={pct} />
+        <StatChip value={d.commitsPerDay} label="Commits / day" format={(n) => n.toFixed(1)} />
+        <StatChip value={cs.headline.projects} label="Projects" format={int} />
+        <StatChip value={cs.headline.net} label="Net lines" format={int} />
+      </ChipStrip>
+
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <Reveal>
+          <ChartCard title="Lines / project" kicker="added · top 8" hue={metricColor("commits")}>
+            <BarsPlain
+              data={d.projectSeries}
+              color={metricColor("commits")}
+              valueFormat={(n) => (n >= 1000 ? `${(n / 1000).toFixed(1)}k` : int(n))}
+            />
+          </ChartCard>
+        </Reveal>
+        <Reveal delay={0.05}>
+          <ChartCard title="Authorship" kicker="commits · top 7" hue={metricColor("commits")}>
+            <BarsPlain data={d.authorSeries} color={metricColor("commits")} valueFormat={int} />
+          </ChartCard>
+        </Reveal>
+      </div>
+    </div>
+  );
+}
+
+// ── The loop (tickets) ────────────────────────────────────────────────────────
 
 function TicketPanels({ metrics }: { metrics: Metrics }) {
   const t = metrics.tickets;
@@ -116,93 +240,196 @@ function TicketPanels({ metrics }: { metrics: Metrics }) {
         </Figures>
       </ChartCard>
 
-      <ChartCard title="Branches per task" kicker={`mean ${t.branchesPerTask.mean.toFixed(1)} · max ${t.branchesPerTask.max}`} footnote={t.reworkShare !== null ? `Rework share ${pct(t.reworkShare)} — the fraction of tickets that bounced back for another pass.` : undefined}>
+      <ChartCard title="Rework" kicker={`branches per task · mean ${t.branchesPerTask.mean.toFixed(1)} · max ${t.branchesPerTask.max}`} footnote={t.reworkShare !== null ? `Rework share ${pct(t.reworkShare)} — the fraction of tickets that bounced back for another pass.` : undefined}>
         <ColumnsPlain data={branchDist} ramp height={200} yFormat={int} tipFormat={(n) => `${int(n)} tasks`} />
       </ChartCard>
     </div>
   );
 }
 
-// ── Worker economics ─────────────────────────────────────────────────────────
-
-function WorkerPanels({ metrics }: { metrics: Metrics }) {
+function WorkerOutcomes({ metrics }: { metrics: Metrics }) {
   const w = metrics.workers;
-  const spend = metrics.spend;
-  if (!w?.available && !spend?.available) return null;
-  const stage = Object.fromEntries((w?.byStage ?? []).map((s) => [s.stage, s.count]));
+  const d = deriveMetrics(metrics);
+  if (!w?.available) {
+    // No worker journal, but the telemetry review-cycle histogram still tells the
+    // rework story — show it alone rather than nothing.
+    if (!metrics.reviewCycles.length) return null;
+    return (
+      <ChartCard title="Review cycles" kicker="impl → review bounces · ordered">
+        <ColumnsPlain data={d.cycleSeries} ramp height={220} yFormat={int} tipFormat={(n) => `${int(n)} runs`} />
+      </ChartCard>
+    );
+  }
+  const stage = Object.fromEntries((w.byStage ?? []).map((s) => [s.stage, s.count]));
 
   return (
     <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-      {w?.available ? (
-        <ChartCard title="Worker outcomes" kicker={`${int(w.totalRuns)} runs`} footnote="First-try pass rate is the share of implement runs that cleared review without a rework cycle.">
-          <Figures>
-            <Metric label="First-try pass" value={w.firstTryPassRate !== null ? pct(w.firstTryPassRate) : "—"} />
-            <Metric label="Tokens / run" value={compact(w.perRun.tokens.p50)} sub={`p90 ${compact(w.perRun.tokens.p90 ?? 0)}`} />
-            <Metric label="Turns / run" value={int(w.perRun.turns.p50)} sub={`p90 ${int(w.perRun.turns.p90 ?? 0)}`} />
-            <Metric label="Wall / run" value={`${w.perRun.wallMinutes.p50.toFixed(1)}m`} sub={`p90 ${(w.perRun.wallMinutes.p90 ?? 0).toFixed(0)}m`} />
-          </Figures>
-          <div className="mt-1 flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <Label>Outcomes</Label>
-              <ProportionBar
-                segments={w.byOutcome.map((o) => ({ label: o.outcome, value: o.count }))}
-                valueFormat={int}
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label>Implement vs review</Label>
-              <ProportionBar
-                segments={[
-                  { label: "implement", value: stage.implement ?? 0 },
-                  { label: "review", value: stage.review ?? 0 },
-                ]}
-                valueFormat={int}
-              />
-            </div>
-          </div>
-        </ChartCard>
-      ) : null}
-
-      {spend?.available ? (
-        <ChartCard title="Worker spend" kicker={`$${int(spend.totalSpend)} · ${spend.runsPriced} priced runs`} hue={metricColor("spend")} footnote={`Cost per ticket: mean $${spend.costPerTicket.mean.toFixed(2)}, median $${spend.costPerTicket.p50.toFixed(2)}, max $${spend.costPerTicket.max.toFixed(0)}.`}>
+      <ChartCard title="Worker outcomes" kicker={`${int(w.totalRuns)} runs`} footnote="First-try pass rate is the share of implement runs that cleared review without a rework cycle.">
+        <Figures>
+          <Metric label="First-try pass" value={w.firstTryPassRate !== null ? pct(w.firstTryPassRate) : "—"} />
+          <Metric label="Tokens / run" value={compact(w.perRun.tokens.p50)} sub={`p90 ${compact(w.perRun.tokens.p90 ?? 0)}`} />
+          <Metric label="Turns / run" value={int(w.perRun.turns.p50)} sub={`p90 ${int(w.perRun.turns.p90 ?? 0)}`} />
+          <Metric label="Wall / run" value={`${w.perRun.wallMinutes.p50.toFixed(1)}m`} sub={`p90 ${(w.perRun.wallMinutes.p90 ?? 0).toFixed(0)}m`} />
+        </Figures>
+        <div className="mt-1 flex flex-col gap-4">
           <div className="flex flex-col gap-2">
-            <Label>Spend by stage</Label>
+            <Label>Outcomes</Label>
+            <ProportionBar segments={w.byOutcome.map((o) => ({ label: o.outcome, value: o.count }))} valueFormat={int} />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label>Implement vs review</Label>
             <ProportionBar
-              segments={spend.byStage.map((s) => ({ label: s.stage, value: s.cost }))}
-              valueFormat={(n) => `$${int(n)}`}
+              segments={[
+                { label: "implement", value: stage.implement ?? 0 },
+                { label: "review", value: stage.review ?? 0 },
+              ]}
+              valueFormat={int}
             />
           </div>
-          <div className="mt-2 flex flex-col gap-2">
-            <Label>Cost per ticket · top</Label>
-            <BarsPlain
-              data={spend.costPerTicket.top.slice(0, 8).map((r) => ({ label: r.ref, value: r.cost }))}
-              color={metricColor("spend")}
-              valueFormat={(n) => `$${n.toFixed(0)}`}
-              labelWidth={72}
-            />
-          </div>
-        </ChartCard>
-      ) : null}
+        </div>
+      </ChartCard>
 
-      {spend?.available ? (
-        <ChartCard title="Spend over time" kicker="USD · per day" hue={metricColor("spend")} className="lg:col-span-2">
-          <LinePlain
-            data={spend.overTime as unknown as Record<string, string | number>[]}
-            xKey="date"
-            series={[{ key: "cost", label: "Cost", color: metricColor("spend") }]}
-            xFormat={(s) => shortDate(s)}
-            yFormat={(n) => usd(n)}
-            tipFormat={(n) => `$${n.toFixed(2)}`}
-            fill
-            height={220}
-          />
-        </ChartCard>
-      ) : null}
+      <ChartCard title="Review cycles" kicker="impl → review bounces · ordered" footnote="How many review bounces each run took before it landed — the telemetry view of rework.">
+        <ColumnsPlain data={d.cycleSeries} ramp height={220} yFormat={int} tipFormat={(n) => `${int(n)} runs`} />
+      </ChartCard>
     </div>
   );
 }
 
-// ── Browser + quick runs ─────────────────────────────────────────────────────
+export function LoopView({ metrics }: { metrics: Metrics }) {
+  const hasTrend = (metrics.tickets?.openedClosedPerDay.length ?? 0) > 1;
+  return (
+    <div className="flex flex-col gap-6">
+      {hasTrend ? (
+        <Reveal>
+          <ChartCard title="Delivery trend" kicker="tickets closed · per day" hue={metricColor("closed")}>
+            <AreaViz
+              data={(metrics.tickets?.openedClosedPerDay ?? []).map((x) => ({ date: x.date, value: x.closed }))}
+              color={metricDither("closed")}
+              seriesLabel="Closed"
+              xFormatter={(v) => shortDate(String(v))}
+              yFormatter={(v) => int(v)}
+              valueFormatter={(v) => `${int(v)} closed`}
+              heightClass="h-[200px] sm:h-[220px]"
+            />
+          </ChartCard>
+        </Reveal>
+      ) : null}
+      <TicketPanels metrics={metrics} />
+      <WorkerOutcomes metrics={metrics} />
+    </div>
+  );
+}
+
+// ── Runtime ───────────────────────────────────────────────────────────────────
+
+function SystemStrip({ metrics }: { metrics: Metrics }) {
+  const { daemon, logs, routines, headline } = metrics;
+  const activeSvc = daemon?.services.filter((s) => s.active === "active").length ?? 0;
+  const totalSvc = daemon?.services.length ?? 0;
+  const nextRoutine = routines?.items
+    .filter((r) => r.enabled && r.nextFireAt)
+    .sort((a, b) => Date.parse(a.nextFireAt!) - Date.parse(b.nextFireAt!))[0];
+
+  return (
+    <Panel className="flex flex-col gap-4 p-4 sm:p-5">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <Label>System status</Label>
+        {daemon?.version ? (
+          <span className="text-[12px] tabular-nums text-muted-foreground">daemon v{daemon.version}</span>
+        ) : null}
+      </div>
+      <div className="grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-4">
+        {daemon?.available ? (
+          <Metric label="Services up" value={`${activeSvc}/${totalSvc}`} sub="systemd units" />
+        ) : null}
+        <Metric label="Compute" value={`${int(headline.totalWallHours)}h`} sub={`${headline.modelsUsed} models`} />
+        {logs?.available ? (
+          <Metric label="Log volume" value={compact(logs.totalLines)} unit="lines" sub={`${pct(logs.errorRate)} errors`} />
+        ) : null}
+        {routines?.available ? (
+          <Metric label="Routines" value={`${routines.enabled}`} sub={`of ${routines.total} enabled`} />
+        ) : null}
+        {nextRoutine ? (
+          <Metric label="Next fire" value={untilFire(nextRoutine.nextFireAt, Date.now())} sub={nextRoutine.name} />
+        ) : null}
+      </div>
+      {daemon?.available ? (
+        <div className="flex flex-wrap gap-x-4 gap-y-1.5 border-t border-border pt-3">
+          {daemon.services.map((s) => (
+            <StatusDot key={s.name} ok={s.active === "active"} label={`${s.name.replace(/^beckett-/, "")} ${s.active === "active" ? uptime(s.uptimeSeconds) : "dead"}`} />
+          ))}
+        </div>
+      ) : null}
+    </Panel>
+  );
+}
+
+function ClaudeSessionsPanels({ metrics }: { metrics: Metrics }) {
+  const c = metrics.claudeSessions;
+  const d = deriveMetrics(metrics);
+  if (!c?.available) return null;
+  const toolBars = c.toolCallMix.map((t) => ({ label: t.tool, value: t.count }));
+  const modelBars = c.byModel.map((m) => ({ label: m.label, value: m.sessions }));
+
+  return (
+    <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+      <ChartCard
+        title="Sessions over time"
+        kicker={`${int(c.total)} transcripts · worker vs. concierge vs. quick`}
+        hue={metricColor("sessions")}
+        className="lg:col-span-2"
+        footnote="Every Claude Code transcript on the host, split by which project directory it ran in — worker ticket worktrees, the concierge checkout, or a short quick/browser dispatch."
+      >
+        <Figures>
+          <Metric label="Total" value={int(c.total)} sub="sessions" />
+          <Metric label="Errors" value={int(c.errorCount)} />
+          <Metric label="Permission denials" value={int(c.permissionDenials)} />
+          <Metric label="Cost" value={c.totalCost !== null ? money(c.totalCost) : "—"} sub={c.totalCost === null ? "no priced sessions" : undefined} />
+        </Figures>
+        <div className="mt-2">
+          <LinePlain
+            data={c.sessionsOverTime as unknown as Record<string, string | number>[]}
+            xKey="date"
+            series={[{ key: "count", label: "Sessions", color: metricColor("sessions") }]}
+            xFormat={(s) => shortDate(s)}
+            yFormat={int}
+            tipFormat={(n) => `${int(n)} sessions`}
+            fill
+            height={220}
+          />
+        </div>
+        <div className="mt-4 flex flex-col gap-2">
+          <Label>By classification</Label>
+          <ProportionBar
+            segments={c.byClassification.map((b) => ({ label: b.classification, value: b.count }))}
+            valueFormat={int}
+          />
+        </div>
+      </ChartCard>
+
+      <ChartCard title="Tool-call mix" kicker="calls · by tool name, top 12" hue={metricColor("sessions")} footnote="Tool name and a count only — arguments and results are never read past a same-pass error/permission check.">
+        <BarsPlain data={toolBars} color={metricColor("sessions")} valueFormat={int} labelWidth={110} />
+      </ChartCard>
+
+      <ChartCard title="Wall-clock / model" kicker={`${int(metrics.headline.totalWallHours)}h total · hours per model`} hue={metricColor("sessions")}>
+        <BarsPlain data={d.wallSeries} color={metricColor("sessions")} valueFormat={(n) => `${n.toFixed(1)}h`} labelWidth={72} />
+      </ChartCard>
+
+      <ChartCard title="Session duration" kicker={`median ${duration(c.duration.p50)} · p90 ${duration(c.duration.p90 ?? 0)}`}>
+        <ColumnsPlain data={c.durationBuckets.map((x) => ({ label: x.label, value: x.count }))} ramp height={200} yFormat={int} tipFormat={(n) => `${int(n)} sessions`} />
+      </ChartCard>
+
+      <ChartCard title="Turns per session" kicker={`median ${int(c.turns.p50)} · p90 ${int(c.turns.p90 ?? 0)}`}>
+        <ColumnsPlain data={c.turnBuckets.map((t) => ({ label: t.label, value: t.count }))} ramp height={200} yFormat={int} tipFormat={(n) => `${int(n)} sessions`} />
+      </ChartCard>
+
+      <ChartCard title="Model split" kicker="sessions · primary model per transcript" hue={metricColor("sessions")}>
+        <BarsPlain data={modelBars} color={metricColor("sessions")} valueFormat={int} labelWidth={80} />
+      </ChartCard>
+    </div>
+  );
+}
 
 function RunPanels({ metrics }: { metrics: Metrics }) {
   const b = metrics.browserRuns;
@@ -220,7 +447,7 @@ function RunPanels({ metrics }: { metrics: Metrics }) {
           <div className="mt-2">
             <Label>Duration</Label>
             <ColumnsPlain
-              data={b.durationBuckets.map((d) => ({ label: d.label, value: d.count }))}
+              data={b.durationBuckets.map((x) => ({ label: x.label, value: x.count }))}
               ramp
               height={180}
               yFormat={int}
@@ -241,8 +468,6 @@ function RunPanels({ metrics }: { metrics: Metrics }) {
     </div>
   );
 }
-
-// ── Routines ─────────────────────────────────────────────────────────────────
 
 function RoutinesPanel({ metrics }: { metrics: Metrics }) {
   const r = metrics.routines;
@@ -290,8 +515,6 @@ function RoutinesPanel({ metrics }: { metrics: Metrics }) {
   );
 }
 
-// ── Memory ───────────────────────────────────────────────────────────────────
-
 function MemoryPanels({ metrics }: { metrics: Metrics }) {
   const m = metrics.memory;
   if (!m?.available) return null;
@@ -319,69 +542,7 @@ function MemoryPanels({ metrics }: { metrics: Metrics }) {
   );
 }
 
-// ── Claude Code session analytics (#2) ───────────────────────────────────────
-
-function ClaudeSessionsPanels({ metrics }: { metrics: Metrics }) {
-  const c = metrics.claudeSessions;
-  if (!c?.available) return null;
-  const toolBars = c.toolCallMix.map((t) => ({ label: t.tool, value: t.count }));
-  const modelBars = c.byModel.map((m) => ({ label: m.label, value: m.sessions }));
-
-  return (
-    <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-      <ChartCard
-        title="Sessions over time"
-        kicker={`${int(c.total)} transcripts · worker vs. concierge vs. quick`}
-        hue={metricColor("sessions")}
-        footnote="Every Claude Code transcript on the host, split by which project directory it ran in — worker ticket worktrees, the concierge checkout, or a short quick/browser dispatch."
-      >
-        <Figures>
-          <Metric label="Total" value={int(c.total)} sub="sessions" />
-          <Metric label="Errors" value={int(c.errorCount)} />
-          <Metric label="Permission denials" value={int(c.permissionDenials)} />
-          <Metric label="Cost" value={c.totalCost !== null ? usd(c.totalCost) : "—"} sub={c.totalCost === null ? "no priced sessions" : undefined} />
-        </Figures>
-        <div className="mt-2">
-          <LinePlain
-            data={c.sessionsOverTime as unknown as Record<string, string | number>[]}
-            xKey="date"
-            series={[{ key: "count", label: "Sessions", color: metricColor("sessions") }]}
-            xFormat={(s) => shortDate(s)}
-            yFormat={int}
-            tipFormat={(n) => `${int(n)} sessions`}
-            fill
-            height={220}
-          />
-        </div>
-        <div className="mt-4 flex flex-col gap-2">
-          <Label>By classification</Label>
-          <ProportionBar
-            segments={c.byClassification.map((b) => ({ label: b.classification, value: b.count }))}
-            valueFormat={int}
-          />
-        </div>
-      </ChartCard>
-
-      <ChartCard title="Tool-call mix" kicker="calls · by tool name, top 12" hue={metricColor("sessions")} footnote="Tool name and a count only — arguments and results are never read past a same-pass error/permission check.">
-        <BarsPlain data={toolBars} color={metricColor("sessions")} valueFormat={int} labelWidth={110} />
-      </ChartCard>
-
-      <ChartCard title="Session duration" kicker={`median ${duration(c.duration.p50)} · p90 ${duration(c.duration.p90 ?? 0)}`}>
-        <ColumnsPlain data={c.durationBuckets.map((d) => ({ label: d.label, value: d.count }))} ramp height={200} yFormat={int} tipFormat={(n) => `${int(n)} sessions`} />
-      </ChartCard>
-
-      <ChartCard title="Turns per session" kicker={`median ${int(c.turns.p50)} · p90 ${int(c.turns.p90 ?? 0)}`}>
-        <ColumnsPlain data={c.turnBuckets.map((t) => ({ label: t.label, value: t.count }))} ramp height={200} yFormat={int} tipFormat={(n) => `${int(n)} sessions`} />
-      </ChartCard>
-
-      <ChartCard title="Model split" kicker="sessions · primary model per transcript" hue={metricColor("sessions")} className="lg:col-span-2">
-        <BarsPlain data={modelBars} color={metricColor("sessions")} valueFormat={int} labelWidth={80} />
-      </ChartCard>
-    </div>
-  );
-}
-
-// ── Activity stream (live) ───────────────────────────────────────────────────
+// ── Activity stream (live) ────────────────────────────────────────────────────
 
 function ago(ts: string, now: number): string {
   const delta = Math.max(0, Math.floor((now - Date.parse(ts)) / 1000));
@@ -401,7 +562,7 @@ function kindColor(kind: string): string {
   return "var(--ink-soft)";
 }
 
-export function ActivityStream({ activity }: { activity: ActivityEvent[] }) {
+function ActivityStream({ activity }: { activity: ActivityEvent[] }) {
   const reduce = useReducedMotion();
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
@@ -452,56 +613,17 @@ export function ActivityStream({ activity }: { activity: ActivityEvent[] }) {
   );
 }
 
-// ── The view ─────────────────────────────────────────────────────────────────
-
-export const OperationsView = memo(function OperationsView({ metrics }: { metrics: Metrics }) {
-  const hasTrend = (metrics.tickets?.openedClosedPerDay.length ?? 0) > 1;
+export function RuntimeView({ metrics }: { metrics: Metrics }) {
   return (
-    <div className="flex flex-col gap-10">
-      <section className="flex flex-col gap-5">
-        <SectionHeader kicker="Runtime" title="System &amp; throughput" />
-        <SystemStrip metrics={metrics} />
-        {hasTrend ? (
-          <ChartCard title="Delivery trend" kicker="tickets closed · per day" hue={metricColor("closed")}>
-            <AreaViz
-              data={(metrics.tickets?.openedClosedPerDay ?? []).map((d) => ({ date: d.date, value: d.closed }))}
-              color={metricDither("closed")}
-              seriesLabel="Closed"
-              xFormatter={(v) => shortDate(String(v))}
-              yFormatter={(v) => int(v)}
-              valueFormatter={(v) => `${int(v)} closed`}
-              heightClass="h-[200px] sm:h-[220px]"
-            />
-          </ChartCard>
-        ) : null}
-        <TicketPanels metrics={metrics} />
-      </section>
-
-      <section className="flex flex-col gap-5">
-        <SectionHeader kicker="Economics" title="Worker output &amp; spend" />
-        <WorkerPanels metrics={metrics} />
-      </section>
-
-      <section className="flex flex-col gap-5">
-        <SectionHeader kicker="Automation" title="Runs &amp; routines" />
-        <RunPanels metrics={metrics} />
+    <div className="flex flex-col gap-6">
+      <SystemStrip metrics={metrics} />
+      <ClaudeSessionsPanels metrics={metrics} />
+      <RunPanels metrics={metrics} />
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <RoutinesPanel metrics={metrics} />
-      </section>
-
-      <section className="flex flex-col gap-5">
-        <SectionHeader kicker="Knowledge" title="Memory graph" />
-        <MemoryPanels metrics={metrics} />
-      </section>
-
-      <section className="flex flex-col gap-5">
-        <SectionHeader kicker="Sessions" title="Claude Code session analytics" />
-        <ClaudeSessionsPanels metrics={metrics} />
-      </section>
-
-      <section className="flex flex-col gap-5">
-        <SectionHeader kicker="Stream" title="Recent activity" />
         {metrics.recentActivity?.length ? <ActivityStream activity={metrics.recentActivity} /> : null}
-      </section>
+      </div>
+      <MemoryPanels metrics={metrics} />
     </div>
   );
-});
+}
