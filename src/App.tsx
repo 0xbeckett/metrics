@@ -9,6 +9,7 @@ import { useTheme } from "@/theme";
 import { formatAge, useLiveMetrics } from "@/live";
 import { shortDate, usd, usdPrecise, type Metrics } from "@/metrics";
 import { compact, deriveMetrics, int, lastDelta, pct } from "@/derived";
+import { metricColor, metricDither } from "@/palette";
 import { OperationsView } from "@/panels";
 import { RecallView } from "@/RecallView";
 
@@ -64,18 +65,38 @@ const CodeStatsView = memo(function CodeStatsView({ metrics }: { metrics: Metric
     <div className="flex flex-col gap-6">
       <section className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
         <HeroStat label="Lines shipped" value={cs.headline.additions} format={int} sub={`+${int(cs.headline.net)} net`} />
-        <HeroStat label="Commits" value={cs.headline.commits} format={int} spark={<Spark data={dailyCommits} />} />
+        <HeroStat
+          label="Commits"
+          value={cs.headline.commits}
+          format={int}
+          spark={<Spark data={dailyCommits} color={metricDither("commits")} />}
+        />
         <HeroStat label="Projects" value={cs.headline.projects} format={int} sub="repositories" />
-        <HeroStat label="Spent" value={h.totalSpend} format={usdFull} delta={Math.round(costDelta)} deltaFormat={(n) => `$${Math.round(n)}`} spark={<Spark data={dailyCost} />} />
-        <HeroStat label="Sessions" value={h.totalRuns} format={int} delta={runsDelta} spark={<Spark data={dailyRuns} />} />
+        <HeroStat
+          label="Spent"
+          value={h.totalSpend}
+          format={usdFull}
+          delta={Math.round(costDelta)}
+          deltaFormat={(n) => `$${Math.round(n)}`}
+          deltaGoodWhen="down"
+          spark={<Spark data={dailyCost} color={metricDither("spend")} />}
+        />
+        <HeroStat
+          label="Sessions"
+          value={h.totalRuns}
+          format={int}
+          delta={runsDelta}
+          deltaGoodWhen="up"
+          spark={<Spark data={dailyRuns} color={metricDither("sessions")} />}
+        />
         <HeroStat label="Compute" value={h.totalWallHours} format={(n) => `${int(n)}h`} sub={`${h.modelsUsed} models`} />
       </section>
 
       <Reveal>
-        <ChartCard title="Commit velocity" kicker={`daily · ${runWindow}`}>
+        <ChartCard title="Commit velocity" kicker={`daily · ${runWindow}`} hue={metricColor("commits")}>
           <AreaViz
             data={velocitySeries}
-            color="ink"
+            color={metricDither("commits")}
             seriesLabel="Commits"
             heightClass="h-[260px] sm:h-[320px]"
             maxTicks={7}
@@ -99,19 +120,24 @@ const CodeStatsView = memo(function CodeStatsView({ metrics }: { metrics: Metric
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <Reveal>
-          <ChartCard title="Lines / project" kicker="added · top 8">
-            <BarsPlain data={projectSeries} valueFormat={(n) => (n >= 1000 ? `${(n / 1000).toFixed(1)}k` : int(n))} />
+          <ChartCard title="Lines / project" kicker="added · top 8" hue={metricColor("commits")}>
+            <BarsPlain
+              data={projectSeries}
+              color={metricColor("commits")}
+              valueFormat={(n) => (n >= 1000 ? `${(n / 1000).toFixed(1)}k` : int(n))}
+            />
           </ChartCard>
         </Reveal>
         <Reveal delay={0.05}>
-          <ChartCard title="Authorship" kicker="commits · top 7">
-            <BarsPlain data={authorSeries} valueFormat={int} />
+          <ChartCard title="Authorship" kicker="commits · top 7" hue={metricColor("commits")}>
+            <BarsPlain data={authorSeries} color={metricColor("commits")} valueFormat={int} />
           </ChartCard>
         </Reveal>
         <Reveal>
           <ChartCard
             title="API cost / model"
             kicker="USD · current rates"
+            hue={metricColor("spend")}
             footnote={
               <>
                 Opus does the heavy lifting and the heavy spending. Rates from the harvester's dated table
@@ -123,15 +149,15 @@ const CodeStatsView = memo(function CodeStatsView({ metrics }: { metrics: Metric
               </>
             }
           >
-            <BarsPlain data={costSeries} valueFormat={usdPrecise} labelWidth={72} />
+            <BarsPlain data={costSeries} color={metricColor("spend")} valueFormat={usdPrecise} labelWidth={72} />
           </ChartCard>
         </Reveal>
         <Reveal delay={0.05}>
-          <ChartCard title="Runs / day" kicker={`sessions · ${runWindow}`}>
+          <ChartCard title="Runs / day" kicker={`sessions · ${runWindow}`} hue={metricColor("sessions")}>
             <LinePlain
               data={runsSeries as unknown as Record<string, string | number>[]}
               xKey="date"
-              series={[{ key: "value", label: "Runs" }]}
+              series={[{ key: "value", label: "Runs", color: metricColor("sessions") }]}
               xFormat={(s) => shortDate(s)}
               yFormat={int}
               tipFormat={(n) => `${int(n)} runs`}
@@ -140,13 +166,18 @@ const CodeStatsView = memo(function CodeStatsView({ metrics }: { metrics: Metric
           </ChartCard>
         </Reveal>
         <Reveal>
-          <ChartCard title="Wall-clock / model" kicker="hours">
-            <BarsPlain data={wallSeries} valueFormat={(n) => `${n.toFixed(1)}h`} labelWidth={72} />
+          <ChartCard title="Wall-clock / model" kicker="hours" hue={metricColor("sessions")}>
+            <BarsPlain
+              data={wallSeries}
+              color={metricColor("sessions")}
+              valueFormat={(n) => `${n.toFixed(1)}h`}
+              labelWidth={72}
+            />
           </ChartCard>
         </Reveal>
         <Reveal delay={0.05}>
-          <ChartCard title="Review cycles" kicker="impl → review bounces">
-            <ColumnsPlain data={cycleSeries} height={220} yFormat={int} tipFormat={(n) => `${int(n)} runs`} />
+          <ChartCard title="Review cycles" kicker="impl → review bounces · ordered">
+            <ColumnsPlain data={cycleSeries} ramp height={220} yFormat={int} tipFormat={(n) => `${int(n)} runs`} />
           </ChartCard>
         </Reveal>
       </div>
@@ -175,7 +206,7 @@ const CodeStatsView = memo(function CodeStatsView({ metrics }: { metrics: Metric
                 href="https://www.tripwire.sh/dither-kit"
                 target="_blank"
                 rel="noreferrer"
-                className="text-foreground underline decoration-primary decoration-1 underline-offset-2 hover:text-primary"
+                className="rounded-[2px] text-foreground underline decoration-primary decoration-1 underline-offset-2 transition-colors duration-150 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 dither-kit
               </a>
@@ -190,11 +221,18 @@ const CodeStatsView = memo(function CodeStatsView({ metrics }: { metrics: Metric
   );
 });
 
-/** Masthead live indicator: a pulsing dot + honest data age that degrades to stale. */
+/**
+ * Masthead live indicator: a pulsing good-state dot + honest data age, which
+ * degrades to a hollow warn ring and the word "stale". Three channels — glyph
+ * shape, wording, colour — so the state never rides on hue alone.
+ */
 function LiveIndicator({ ageSeconds, stale }: { ageSeconds: number | null; stale: boolean }) {
   return (
     <div
-      className="inline-flex items-center gap-2 rounded-md border border-border px-2.5 py-1.5 text-[12px] tabular-nums text-muted-foreground"
+      className={cn(
+        "inline-flex items-center gap-2 rounded-md border px-2.5 py-1.5 text-[12px] tabular-nums transition-colors duration-200",
+        stale ? "border-warn/40 text-warn" : "border-border text-muted-foreground",
+      )}
       aria-live="polite"
       title={stale ? "Data has not advanced recently" : "Live — polling every 15s"}
     >
@@ -234,7 +272,7 @@ export function App() {
                 type="button"
                 onClick={toggle}
                 aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
-                className="rounded-md border border-border p-2.5 text-foreground transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="rounded-md border border-border p-2.5 text-foreground transition-[color,background-color,border-color,transform] duration-200 ease-out hover:border-border-strong hover:bg-secondary hover:text-primary active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 {dark ? <Sun className="size-4.5" /> : <Moon className="size-4.5" />}
               </button>
@@ -250,8 +288,10 @@ export function App() {
                 onClick={() => setTab(t.id)}
                 aria-current={tab === t.id ? "page" : undefined}
                 className={cn(
-                  "rounded-md px-3 py-1.5 text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:px-4",
-                  tab === t.id ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground",
+                  "rounded-md px-3 py-1.5 text-[13px] font-medium transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:px-4",
+                  tab === t.id
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-secondary hover:text-foreground",
                 )}
               >
                 {t.label}

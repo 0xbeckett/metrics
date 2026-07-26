@@ -5,6 +5,7 @@ import { BarsPlain, ColumnsPlain, LinePlain, ProportionBar } from "@/components/
 import { AreaViz } from "@/components/charts";
 import { MemoryGraph } from "@/components/memory-graph";
 import { compact, days, duration, int, pct, untilFire } from "@/derived";
+import { metricColor, metricDither } from "@/palette";
 import { shortDate, usd, type ActivityEvent, type Metrics } from "@/metrics";
 
 /*
@@ -94,8 +95,10 @@ function TicketPanels({ metrics }: { metrics: Metrics }) {
             data={t.openedClosedPerDay as unknown as Record<string, string | number>[]}
             xKey="date"
             series={[
-              { key: "opened", label: "Opened", shade: 1 },
-              { key: "closed", label: "Closed", shade: 0.42 },
+              // Two series in one chart → adjacent slots, plus a dash on the
+              // opened line so the pair separates without relying on hue.
+              { key: "opened", label: "Opened", color: metricColor("opened"), dashed: true },
+              { key: "closed", label: "Closed", color: metricColor("closed") },
             ]}
             xFormat={(s) => shortDate(s)}
             height={240}
@@ -113,7 +116,7 @@ function TicketPanels({ metrics }: { metrics: Metrics }) {
       </ChartCard>
 
       <ChartCard title="Branches per task" kicker={`mean ${t.branchesPerTask.mean.toFixed(1)} · max ${t.branchesPerTask.max}`} footnote={t.reworkShare !== null ? `Rework share ${pct(t.reworkShare)} — the fraction of tickets that bounced back for another pass.` : undefined}>
-        <ColumnsPlain data={branchDist} height={200} yFormat={int} tipFormat={(n) => `${int(n)} tasks`} />
+        <ColumnsPlain data={branchDist} ramp height={200} yFormat={int} tipFormat={(n) => `${int(n)} tasks`} />
       </ChartCard>
     </div>
   );
@@ -160,7 +163,7 @@ function WorkerPanels({ metrics }: { metrics: Metrics }) {
       ) : null}
 
       {spend?.available ? (
-        <ChartCard title="Worker spend" kicker={`$${int(spend.totalSpend)} · ${spend.runsPriced} priced runs`} footnote={`Cost per ticket: mean $${spend.costPerTicket.mean.toFixed(2)}, median $${spend.costPerTicket.p50.toFixed(2)}, max $${spend.costPerTicket.max.toFixed(0)}.`}>
+        <ChartCard title="Worker spend" kicker={`$${int(spend.totalSpend)} · ${spend.runsPriced} priced runs`} hue={metricColor("spend")} footnote={`Cost per ticket: mean $${spend.costPerTicket.mean.toFixed(2)}, median $${spend.costPerTicket.p50.toFixed(2)}, max $${spend.costPerTicket.max.toFixed(0)}.`}>
           <div className="flex flex-col gap-2">
             <Label>Spend by stage</Label>
             <ProportionBar
@@ -172,6 +175,7 @@ function WorkerPanels({ metrics }: { metrics: Metrics }) {
             <Label>Cost per ticket · top</Label>
             <BarsPlain
               data={spend.costPerTicket.top.slice(0, 8).map((r) => ({ label: r.ref, value: r.cost }))}
+              color={metricColor("spend")}
               valueFormat={(n) => `$${n.toFixed(0)}`}
               labelWidth={72}
             />
@@ -180,11 +184,11 @@ function WorkerPanels({ metrics }: { metrics: Metrics }) {
       ) : null}
 
       {spend?.available ? (
-        <ChartCard title="Spend over time" kicker="USD · per day" className="lg:col-span-2">
+        <ChartCard title="Spend over time" kicker="USD · per day" hue={metricColor("spend")} className="lg:col-span-2">
           <LinePlain
             data={spend.overTime as unknown as Record<string, string | number>[]}
             xKey="date"
-            series={[{ key: "cost", label: "Cost", shade: 1 }]}
+            series={[{ key: "cost", label: "Cost", color: metricColor("spend") }]}
             xFormat={(s) => shortDate(s)}
             yFormat={(n) => usd(n)}
             tipFormat={(n) => `$${n.toFixed(2)}`}
@@ -216,6 +220,7 @@ function RunPanels({ metrics }: { metrics: Metrics }) {
             <Label>Duration</Label>
             <ColumnsPlain
               data={b.durationBuckets.map((d) => ({ label: d.label, value: d.count }))}
+              ramp
               height={180}
               yFormat={int}
               tipFormat={(n) => `${int(n)} runs`}
@@ -277,12 +282,17 @@ function MemoryPanels({ metrics }: { metrics: Metrics }) {
         title="Memory graph"
         kicker={`${m.nodeCount} notes · ${m.edgeCount} links`}
         className="lg:col-span-2"
-        footnote={`${m.orphanCount} orphan notes with no links. Hubs (self · person · project) are filled; hover a node to trace its links.`}
+        footnote={`${m.orphanCount} orphan notes with no links. Node size and depth of fill both read link count — the darkest, largest notes are the hubs; hover one to trace its links.`}
       >
         <MemoryGraph mem={m} />
       </ChartCard>
-      <ChartCard title="Notes by type" kicker={`age p50 ${m.ageDays.p50.toFixed(0)}d`} footnote={`Newest cohort: ${m.ageDays.distribution.find((d) => d.bucket === "<1w")?.count ?? 0} notes under a week old.`}>
-        <BarsPlain data={typeBars} valueFormat={int} labelWidth={84} />
+      <ChartCard
+        title="Notes by type"
+        kicker={`age p50 ${m.ageDays.p50.toFixed(0)}d`}
+        hue={metricColor("memory")}
+        footnote={`Newest cohort: ${m.ageDays.distribution.find((d) => d.bucket === "<1w")?.count ?? 0} notes under a week old.`}
+      >
+        <BarsPlain data={typeBars} color={metricColor("memory")} valueFormat={int} labelWidth={84} />
       </ChartCard>
     </div>
   );
