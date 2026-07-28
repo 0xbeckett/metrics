@@ -88,7 +88,7 @@ export function SectionNav({
         <nav
           ref={navRef}
           aria-label="Dashboard sections"
-          className="scrollbar-none flex min-w-0 flex-1 gap-1 overflow-x-auto [mask-image:linear-gradient(to_right,#000_88%,transparent)] sm:[mask-image:none]"
+          className="scrollbar-none flex min-w-0 flex-1 gap-1 overflow-x-auto mask-r-from-88% mask-r-to-100% sm:mask-none"
         >
           {sections.map((s) => (
             <a

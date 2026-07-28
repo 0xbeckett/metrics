@@ -64,7 +64,7 @@ function Figures({ children }: { children: ReactNode }) {
  *  sm, where the full strip fits. */
 function ChipStrip({ children }: { children: ReactNode }) {
   return (
-    <Panel className="overflow-x-auto scrollbar-none [mask-image:linear-gradient(to_right,#000_90%,transparent)] sm:[mask-image:none]">
+    <Panel className="overflow-x-auto scrollbar-none mask-r-from-90% mask-r-to-100% sm:mask-none">
       <div className="flex flex-nowrap divide-x divide-border">{children}</div>
     </Panel>
   );
