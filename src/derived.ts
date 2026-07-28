@@ -22,11 +22,16 @@ function computeDerived(metrics: Metrics) {
   // attempts are reviewable, never ambient/chat/browser telemetry runs.
   const firstTryRate = metrics.workers?.available ? (metrics.workers.firstTryPassRate ?? 0) : 0;
 
+  const commitsInRunWindow = cs.velocity
+    .filter((v) => (!h.firstRun || v.date >= h.firstRun) && (!h.lastRun || v.date <= h.lastRun))
+    .reduce((sum, v) => sum + v.commits, 0);
+
   return {
     firstTryRate,
     beckettShare: cs.headline.commits > 0 ? beckettCommits / cs.headline.commits : 0,
-    costPerCommit: cs.headline.commits > 0 ? h.totalSpend / cs.headline.commits : 0,
-    linesPerDollar: h.totalSpend > 0 ? cs.headline.additions / h.totalSpend : 0,
+    // Spend is telemetry-windowed, so never divide it by lifetime git output.
+    costPerCommit: commitsInRunWindow > 0 ? h.totalSpend / commitsInRunWindow : 0,
+    commitsInRunWindow,
     commitsPerDay: cs.velocity.length > 0 ? cs.headline.commits / cs.velocity.length : 0,
     velocitySeries: cs.velocity.map((v) => ({ date: v.date, value: v.commits })),
     projectSeries: [...cs.projects].sort((a, b) => b.additions - a.additions).slice(0, 8)

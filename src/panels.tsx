@@ -91,7 +91,7 @@ export const SpendView = memo(function SpendView({ metrics }: { metrics: Metrics
       <ChipStrip>
         <StatChip value={h.totalSpend} label="Total spend" format={money} />
         <StatChip value={d.costPerCommit} label="Per commit" format={ratio} />
-        <StatChip value={d.linesPerDollar} label="Lines / $" format={int} />
+        <StatChip value={d.commitsInRunWindow} label="Commits / run window" format={int} />
         {spend?.available ? <StatChip value={spend.costPerTicket.mean} label="Per ticket" format={ratio} /> : null}
       </ChipStrip>
 
