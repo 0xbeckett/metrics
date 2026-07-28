@@ -314,15 +314,17 @@
   fill: var(--label);
 }
 
-/* dither-kit tick labels: small grotesque, muted. Shrink on phones so a row of
-   axis labels never collides. */
+/* dither-kit tick labels: small grotesque, muted. Nudge down on phones so a row
+   of axis labels never collides, but hold a 10px floor — below that the ticks
+   stop being readable, and both kits already thin their tick count on narrow
+   plots so a legible 10px still fits. */
 .dk-plot text {
   font-family: var(--font-sans);
 }
 @media (max-width: 640px) {
   .dk-plot text,
   .plain-plot text {
-    font-size: 9px;
+    font-size: 10px;
   }
 }
 

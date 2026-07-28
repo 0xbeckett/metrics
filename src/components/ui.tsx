@@ -125,7 +125,7 @@ export function HeroStat({
           {unit ? <span className="text-sm text-muted-foreground">{unit}</span> : null}
           {delta !== undefined ? <Delta value={delta} format={deltaFormat} goodWhen={deltaGoodWhen} /> : null}
         </div>
-        {sub ? <div className="text-[12px] tabular-nums text-muted-foreground">{sub}</div> : null}
+        {sub ? <div className="text-sm tabular-nums text-muted-foreground">{sub}</div> : null}
       </div>
       {spark ? <div className="h-8 w-full sm:h-10">{spark}</div> : null}
     </Panel>
@@ -160,10 +160,10 @@ export function Metric({
         <span className="font-display text-2xl leading-none tabular-nums text-foreground sm:text-[1.75rem]">
           {value}
         </span>
-        {unit ? <span className="text-[12px] text-muted-foreground">{unit}</span> : null}
+        {unit ? <span className="text-[13px] text-muted-foreground">{unit}</span> : null}
         {delta !== undefined ? <Delta value={delta} format={deltaFormat} /> : null}
       </div>
-      {sub ? <div className="text-[12px] tabular-nums text-muted-foreground">{sub}</div> : null}
+      {sub ? <div className="text-sm tabular-nums text-muted-foreground">{sub}</div> : null}
     </div>
   );
 }
@@ -187,7 +187,7 @@ export function Stat({
         <div className="font-display text-[1.9rem] leading-[0.95] tabular-nums text-foreground sm:text-4xl">
           {value}
         </div>
-        {sub ? <div className="text-[12px] tabular-nums text-muted-foreground">{sub}</div> : null}
+        {sub ? <div className="text-sm tabular-nums text-muted-foreground">{sub}</div> : null}
       </div>
     </Panel>
   );
@@ -243,7 +243,7 @@ export function ChartCard({
       as="section"
       className={cn("flex flex-col transition-colors duration-200 hover:border-border-strong", className)}
     >
-      <div className="flex items-baseline justify-between gap-3 border-b border-border px-4 py-3 sm:px-5">
+      <div className="flex flex-col gap-1.5 border-b border-border px-4 py-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3 sm:px-5">
         <div className="flex min-w-0 items-baseline gap-2.5">
           {hue ? (
             <span
@@ -257,11 +257,11 @@ export function ChartCard({
             {kicker ? <Label>{kicker}</Label> : null}
           </div>
         </div>
-        {action ? <div className="shrink-0">{action}</div> : null}
+        {action ? <div className="sm:shrink-0">{action}</div> : null}
       </div>
       <div className="flex flex-1 flex-col gap-3 p-4 sm:p-5">{children}</div>
       {footnote ? (
-        <div className="border-t border-border px-4 py-2 text-[11px] leading-relaxed text-muted-foreground sm:px-5">
+        <div className="border-t border-border px-4 py-2.5 text-sm leading-relaxed text-muted-foreground sm:px-5">
           {footnote}
         </div>
       ) : null}
@@ -294,11 +294,11 @@ export function LiveDot({ live = true }: { live?: boolean }) {
  *  ring = down, and the label spells it out; hue is never the only carrier. */
 export function StatusDot({ ok, label }: { ok: boolean; label: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 text-[12px] tabular-nums text-muted-foreground">
+    <span className="inline-flex min-h-[24px] items-center gap-1.5 text-sm tabular-nums text-muted-foreground">
       <span
         aria-hidden
         className={cn(
-          "size-2 rounded-[1px]",
+          "size-2 shrink-0 rounded-[1px]",
           ok ? "bg-good" : "border-[1.5px] border-critical bg-transparent",
         )}
       />

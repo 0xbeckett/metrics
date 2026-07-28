@@ -96,7 +96,7 @@ const LiveIndicator = memo(function LiveIndicator({
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-2 rounded-md border px-2.5 py-2 text-[12px] tabular-nums transition-colors duration-200",
+        "inline-flex min-h-11 items-center gap-2 rounded-md border px-2.5 text-[13px] tabular-nums transition-colors duration-200 sm:min-h-0 sm:py-2",
         stale ? "border-warn/40 text-warn" : "border-border text-muted-foreground",
       )}
       aria-live="polite"
@@ -203,7 +203,7 @@ export function App() {
                 type="button"
                 onClick={toggle}
                 aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
-                className="rounded-md border border-border p-2.5 text-foreground transition-[color,background-color,border-color,transform] duration-200 ease-out hover:border-border-strong hover:bg-secondary hover:text-primary active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="inline-flex size-11 items-center justify-center rounded-md border border-border text-foreground transition-[color,background-color,border-color,transform] duration-200 ease-out hover:border-border-strong hover:bg-secondary hover:text-primary active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:size-9"
               >
                 {dark ? <Sun className="size-4.5" /> : <Moon className="size-4.5" />}
               </button>

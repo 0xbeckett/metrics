@@ -402,7 +402,7 @@ export function BarsPlain({
               onMouseLeave={() => setHover(null)}
             >
               <div
-                className="shrink-0 truncate pr-2 text-right text-[12px] text-muted-foreground transition-colors duration-150"
+                className="shrink-0 truncate pr-2 text-right text-[13px] text-muted-foreground transition-colors duration-150"
                 style={{ width: labelWidth, color: hover === i ? "var(--foreground)" : undefined }}
                 title={d.hint ?? d.label}
               >
@@ -419,7 +419,7 @@ export function BarsPlain({
                   }}
                 />
                 <span
-                  className="absolute top-1/2 -translate-y-1/2 whitespace-nowrap pl-2 text-[12px] font-medium tabular-nums text-foreground"
+                  className="absolute top-1/2 -translate-y-1/2 whitespace-nowrap pl-2 text-[13px] font-medium tabular-nums text-foreground"
                   style={{ left: Math.max(2, x(d.value)) }}
                 >
                   {valueFormat(d.value)}

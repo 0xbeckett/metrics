@@ -71,20 +71,33 @@ export function SectionNav({
   active: string;
   controls?: ReactNode;
 }) {
+  // The rail is wider than a phone, so it scrolls. Keep the current section's
+  // tab in view as the reader moves down the page — otherwise "The loop" and
+  // "Runtime" sit off the right edge and the active mark is never seen.
+  const navRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    const el = navRef.current?.querySelector<HTMLElement>(`a[data-id="${active}"]`);
+    el?.scrollIntoView({ block: "nearest", inline: "center" });
+  }, [active]);
+
   return (
     <div className="sticky top-0 z-40 -mx-4 mb-8 border-b border-border bg-background/85 px-4 backdrop-blur-md sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-      <div className="flex items-center justify-between gap-3 py-2.5">
+      <div className="flex items-center justify-between gap-3 py-2 sm:py-2.5">
+        {/* A right-edge fade on the phone marks the rail as scrollable; it lifts
+            at sm where every tab fits without scrolling. */}
         <nav
+          ref={navRef}
           aria-label="Dashboard sections"
-          className="scrollbar-none flex min-w-0 flex-1 gap-1 overflow-x-auto"
+          className="scrollbar-none flex min-w-0 flex-1 gap-1 overflow-x-auto [mask-image:linear-gradient(to_right,#000_88%,transparent)] sm:[mask-image:none]"
         >
           {sections.map((s) => (
             <a
               key={s.id}
               href={`#${s.id}`}
+              data-id={s.id}
               aria-current={active === s.id ? "true" : undefined}
               className={cn(
-                "shrink-0 rounded-md px-3 py-2 text-[13px] font-medium tabular-nums transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                "flex min-h-11 shrink-0 items-center rounded-md px-3 text-sm font-medium tabular-nums transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-0 sm:py-2 sm:text-[13px]",
                 active === s.id
                   ? "bg-secondary text-foreground"
                   : "text-muted-foreground hover:text-foreground",
