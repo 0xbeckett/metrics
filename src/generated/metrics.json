@@ -1,71 +1,98 @@
 {
   "schema_version": 2,
-  "refreshed_at": "2026-07-26T07:24:31.821Z",
-  "source_generated_at": "2026-07-26T07:23:53.469Z",
+  "refreshed_at": "2026-07-27T17:00:00Z",
+  "source_generated_at": "2026-07-28T00:04:09.787Z",
   "rate_table_effective_date": "2026-07-16",
   "headline": {
-    "totalRuns": 2593,
-    "totalSpend": 2016.04,
-    "totalWallHours": 1060.9,
-    "modelsUsed": 7,
+    "totalRuns": 3102,
+    "totalSpend": 2664.07,
+    "totalWallHours": 1185.1,
+    "modelsUsed": 18,
     "firstRun": "2026-06-28",
-    "lastRun": "2026-07-26",
-    "tasksTracked": 274
+    "lastRun": "2026-07-28",
+    "tasksTracked": 282
   },
   "models": [
     {
       "model": "claude-opus-4-8",
       "label": "opus-4.8",
       "color": "rose",
-      "runs": 1279,
-      "cost": 1419.31,
-      "wallHours": 1013.51,
+      "runs": 1305,
+      "cost": 1541.66,
+      "wallHours": 1020.21,
       "estimate": true
     },
     {
-      "model": "gpt-5.5",
-      "label": "gpt-5.5",
-      "color": "gold",
-      "runs": 169,
-      "cost": 190.54,
-      "wallHours": 6.84,
-      "estimate": true
-    },
-    {
-      "model": "claude-sonnet-5",
-      "label": "sonnet-5",
-      "color": "indigo",
-      "runs": 256,
-      "cost": 187.19,
-      "wallHours": 14.97,
+      "model": "claude-opus-5",
+      "label": "opus-5",
+      "color": "rose",
+      "runs": 301,
+      "cost": 410.25,
+      "wallHours": 107.21,
       "estimate": true
     },
     {
       "model": "gpt-5.6-terra",
       "label": "terra",
       "color": "gold",
-      "runs": 111,
-      "cost": 153.88,
-      "wallHours": 7.83,
+      "runs": 152,
+      "cost": 220.48,
+      "wallHours": 10.98,
       "estimate": false
+    },
+    {
+      "model": "claude-sonnet-5",
+      "label": "sonnet-5",
+      "color": "indigo",
+      "runs": 303,
+      "cost": 219.59,
+      "wallHours": 18.22,
+      "estimate": true
+    },
+    {
+      "model": "gpt-5.5",
+      "label": "gpt-5.5",
+      "color": "gold",
+      "runs": 170,
+      "cost": 190.54,
+      "wallHours": 6.84,
+      "estimate": true
     },
     {
       "model": "claude-fable-5",
       "label": "fable-5",
       "color": "violet",
-      "runs": 104,
-      "cost": 47.5,
-      "wallHours": 14.84,
+      "runs": 107,
+      "cost": 52.72,
+      "wallHours": 16.54,
       "estimate": true
     },
     {
       "model": "claude-haiku-4-5-20251001",
       "label": "haiku-4.5",
       "color": "moss",
-      "runs": 466,
-      "cost": 16.4,
-      "wallHours": 2.73,
+      "runs": 485,
+      "cost": 17.19,
+      "wallHours": 2.82,
       "estimate": true
+    },
+    {
+      "model": "claude-sonnet-4-6",
+      "label": "sonnet-4-6",
+      "color": "indigo",
+      "runs": 19,
+      "cost": 5.45,
+      "wallHours": 1.23,
+      "estimate": false
+    },
+    {
+      "model": "claude-sonnet-4-5-20250929",
+      "label": "sonnet-4-5-20250929",
+      "color": "indigo",
+      "runs": 16,
+      "cost": 4.95,
+      "wallHours": 0.33,
+      "estimate": false
     },
     {
       "model": "gpt-5.6-luna",
@@ -75,39 +102,111 @@
       "cost": 1.22,
       "wallHours": 0.16,
       "estimate": false
+    },
+    {
+      "model": "<synthetic>",
+      "label": "<synthetic>",
+      "color": "muted",
+      "runs": 28,
+      "cost": null,
+      "wallHours": 0.51,
+      "estimate": false
+    },
+    {
+      "model": "gpt-5.5-codex",
+      "label": "gpt-5.5-codex",
+      "color": "gold",
+      "runs": 1,
+      "cost": null,
+      "wallHours": 0,
+      "estimate": false
+    },
+    {
+      "model": "gpt-5-codex",
+      "label": "gpt-5-codex",
+      "color": "gold",
+      "runs": 1,
+      "cost": null,
+      "wallHours": 0,
+      "estimate": false
+    },
+    {
+      "model": "gpt-5.1-codex-mini",
+      "label": "gpt-5.1-codex-mini",
+      "color": "gold",
+      "runs": 1,
+      "cost": null,
+      "wallHours": 0,
+      "estimate": false
+    },
+    {
+      "model": "gpt-5.4-mini",
+      "label": "gpt-5.4-mini",
+      "color": "gold",
+      "runs": 1,
+      "cost": null,
+      "wallHours": 0,
+      "estimate": false
+    },
+    {
+      "model": "gpt-5.3-codex-spark",
+      "label": "gpt-5.3-codex-spark",
+      "color": "gold",
+      "runs": 1,
+      "cost": null,
+      "wallHours": 0,
+      "estimate": false
+    },
+    {
+      "model": "gpt-5.4",
+      "label": "gpt-5.4",
+      "color": "gold",
+      "runs": 1,
+      "cost": null,
+      "wallHours": 0,
+      "estimate": false
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "label": "gpt-5.6-sol",
+      "color": "gold",
+      "runs": 2,
+      "cost": null,
+      "wallHours": 0.01,
+      "estimate": false
     }
   ],
   "reviewCycles": [
     {
       "cycles": 0,
       "label": "0",
-      "count": 2588
+      "count": 227
     },
     {
       "cycles": 1,
       "label": "1",
-      "count": 5
+      "count": 90
     }
   ],
   "runsOverTime": [
     {
       "date": "2026-06-28",
-      "runs": 73,
-      "cost": 3.65
+      "runs": 93,
+      "cost": 4.52
     },
     {
       "date": "2026-06-29",
-      "runs": 63,
-      "cost": 64.93
+      "runs": 73,
+      "cost": 69.08
     },
     {
       "date": "2026-06-30",
-      "runs": 359,
-      "cost": 146.54
+      "runs": 377,
+      "cost": 151.92
     },
     {
       "date": "2026-07-01",
-      "runs": 171,
+      "runs": 180,
       "cost": 230.23
     },
     {
@@ -117,7 +216,7 @@
     },
     {
       "date": "2026-07-03",
-      "runs": 15,
+      "runs": 21,
       "cost": 23.46
     },
     {
@@ -177,7 +276,7 @@
     },
     {
       "date": "2026-07-15",
-      "runs": 69,
+      "runs": 74,
       "cost": 67.23
     },
     {
@@ -187,7 +286,7 @@
     },
     {
       "date": "2026-07-17",
-      "runs": 32,
+      "runs": 33,
       "cost": 49.41
     },
     {
@@ -222,54 +321,64 @@
     },
     {
       "date": "2026-07-24",
-      "runs": 26,
-      "cost": 19.61
+      "runs": 34,
+      "cost": 68.38
     },
     {
       "date": "2026-07-25",
-      "runs": 81,
-      "cost": 136.97
+      "runs": 214,
+      "cost": 288.96
     },
     {
       "date": "2026-07-26",
-      "runs": 21,
-      "cost": 44.41
+      "runs": 120,
+      "cost": 221.69
+    },
+    {
+      "date": "2026-07-27",
+      "runs": 199,
+      "cost": 259.27
+    },
+    {
+      "date": "2026-07-28",
+      "runs": 1,
+      "cost": 0.31
     }
   ],
   "harnesses": [
     {
       "harness": "claude-code",
-      "count": 2105
+      "count": 2564
     },
     {
       "harness": "pi",
-      "count": 414
+      "count": 463
     },
     {
       "harness": "codex",
-      "count": 74
+      "count": 75
     }
   ],
   "codeStats": {
-    "source_generated_at": "2026-07-26T07:23:54.526Z",
+    "source_generated_at": "2026-07-28T00:04:11.189Z",
     "headline": {
-      "commits": 580,
-      "files": 763,
-      "projects": 39,
-      "additions": 229995,
-      "deletions": 69832,
-      "net": 160163
+      "commits": 1133,
+      "files": 1024,
+      "projects": 41,
+      "additions": 422127,
+      "deletions": 174943,
+      "net": 247184
     },
     "projects": [
       {
         "repo": "beckett",
-        "commits": 329,
-        "files": 345,
-        "additions": 144539,
-        "deletions": 51949,
-        "net": 92590,
+        "commits": 832,
+        "files": 560,
+        "additions": 323736,
+        "deletions": 149818,
+        "net": 173918,
         "first_commit": "2026-06-27T18:22:04-07:00",
-        "last_commit": "2026-07-15T16:33:25-07:00"
+        "last_commit": "2026-07-27T00:25:40-07:00"
       },
       {
         "repo": "second-opinion",
@@ -283,23 +392,23 @@
       },
       {
         "repo": "metrics",
-        "commits": 27,
-        "files": 99,
-        "additions": 21362,
-        "deletions": 6277,
-        "net": 15085,
+        "commits": 50,
+        "files": 101,
+        "additions": 24307,
+        "deletions": 8891,
+        "net": 15416,
         "first_commit": "2026-07-18T06:05:00-07:00",
-        "last_commit": "2026-07-25T23:15:12-07:00"
+        "last_commit": "2026-07-26T00:49:21-07:00"
       },
       {
         "repo": "bored",
-        "commits": 25,
-        "files": 60,
-        "additions": 14534,
-        "deletions": 201,
-        "net": 14333,
+        "commits": 44,
+        "files": 104,
+        "additions": 21056,
+        "deletions": 1692,
+        "net": 19364,
         "first_commit": "2026-07-12T20:32:39-07:00",
-        "last_commit": "2026-07-20T18:11:34-04:00"
+        "last_commit": "2026-07-26T08:42:28-07:00"
       },
       {
         "repo": "v6-vision",
@@ -322,6 +431,16 @@
         "last_commit": "2026-07-12T10:41:14-07:00"
       },
       {
+        "repo": "random",
+        "commits": 10,
+        "files": 4,
+        "additions": 3921,
+        "deletions": 3229,
+        "net": 692,
+        "first_commit": "2026-06-30T12:41:51-07:00",
+        "last_commit": "2026-07-26T23:51:37-07:00"
+      },
+      {
         "repo": "bored-hardening",
         "commits": 6,
         "files": 56,
@@ -340,16 +459,6 @@
         "net": 4725,
         "first_commit": "2026-07-01T12:47:03-07:00",
         "last_commit": "2026-07-01T22:06:19-07:00"
-      },
-      {
-        "repo": "random",
-        "commits": 4,
-        "files": 4,
-        "additions": 453,
-        "deletions": 92,
-        "net": 361,
-        "first_commit": "2026-06-30T12:41:51-07:00",
-        "last_commit": "2026-07-01T01:20:44-07:00"
       },
       {
         "repo": "ssh-codes-audit",
@@ -522,6 +631,16 @@
         "last_commit": "2026-07-06T10:47:46-07:00"
       },
       {
+        "repo": "content-agent",
+        "commits": 1,
+        "files": 0,
+        "additions": 0,
+        "deletions": 0,
+        "net": 0,
+        "first_commit": "2026-07-26T00:50:04-07:00",
+        "last_commit": "2026-07-26T00:50:04-07:00"
+      },
+      {
         "repo": "duel",
         "commits": 1,
         "files": 0,
@@ -622,6 +741,16 @@
         "last_commit": "2026-07-24T17:54:41-07:00"
       },
       {
+        "repo": "terminal-bench",
+        "commits": 1,
+        "files": 0,
+        "additions": 0,
+        "deletions": 0,
+        "net": 0,
+        "first_commit": "2026-07-27T16:59:26-07:00",
+        "last_commit": "2026-07-27T16:59:26-07:00"
+      },
+      {
         "repo": "blackhole",
         "commits": 0,
         "files": 0,
@@ -655,10 +784,10 @@
     "authors": [
       {
         "name": "beckett",
-        "commits": 330,
-        "additions": 128687,
-        "deletions": 39363,
-        "net": 89324
+        "commits": 867,
+        "additions": 320047,
+        "deletions": 130611,
+        "net": 189436
       },
       {
         "name": "frgmt0",
@@ -676,10 +805,10 @@
       },
       {
         "name": "ro_frgmt",
-        "commits": 45,
-        "additions": 9928,
-        "deletions": 17048,
-        "net": -7120
+        "commits": 59,
+        "additions": 10685,
+        "deletions": 30890,
+        "net": -20205
       },
       {
         "name": "ProCreations",
@@ -690,17 +819,17 @@
       },
       {
         "name": "CuriosityOS",
-        "commits": 10,
+        "commits": 11,
         "additions": 21458,
         "deletions": 1371,
         "net": 20087
       },
       {
         "name": "kcodes0",
-        "commits": 5,
-        "additions": 2718,
-        "deletions": 186,
-        "net": 2532
+        "commits": 6,
+        "additions": 2733,
+        "deletions": 207,
+        "net": 2526
       },
       {
         "name": "arathald",
@@ -878,174 +1007,242 @@
       },
       {
         "date": "2026-07-15",
-        "commits": 34
+        "commits": 41
       },
       {
         "date": "2026-07-16",
-        "commits": 3
+        "commits": 71
+      },
+      {
+        "date": "2026-07-17",
+        "commits": 6
       },
       {
         "date": "2026-07-18",
-        "commits": 11
+        "commits": 105
       },
       {
         "date": "2026-07-19",
-        "commits": 10
+        "commits": 26
       },
       {
         "date": "2026-07-20",
-        "commits": 15
+        "commits": 60
       },
       {
         "date": "2026-07-21",
         "commits": 7
       },
       {
+        "date": "2026-07-22",
+        "commits": 10
+      },
+      {
+        "date": "2026-07-23",
+        "commits": 16
+      },
+      {
         "date": "2026-07-24",
-        "commits": 1
+        "commits": 101
       },
       {
         "date": "2026-07-25",
-        "commits": 14
+        "commits": 62
       },
       {
         "date": "2026-07-26",
-        "commits": 1
+        "commits": 142
+      },
+      {
+        "date": "2026-07-27",
+        "commits": 2
       }
     ]
   },
   "notes": {
     "skippedRows": 0,
-    "unratedModelSessions": 225,
+    "unratedModelSessions": 36,
+    "unratedModelModels": [
+      "<synthetic>",
+      "gpt-5-codex",
+      "gpt-5.1-codex-mini",
+      "gpt-5.3-codex-spark",
+      "gpt-5.4",
+      "gpt-5.4-mini",
+      "gpt-5.5-codex",
+      "gpt-5.6-sol"
+    ],
     "anyEstimated": true
   },
   "tickets": {
     "available": true,
-    "total": 3,
+    "total": 36,
     "byStatus": [
       {
-        "status": "active",
-        "count": 2
+        "status": "done",
+        "count": 31
       },
       {
-        "status": "done",
-        "count": 1
+        "status": "active",
+        "count": 3
+      },
+      {
+        "status": "cancelled",
+        "count": 2
       }
     ],
     "openedClosedPerDay": [
       {
         "date": "2026-07-26",
-        "opened": 3,
-        "closed": 1
+        "opened": 12,
+        "closed": 11
+      },
+      {
+        "date": "2026-07-27",
+        "opened": 24,
+        "closed": 22
       }
     ],
     "leadTimeDays": {
-      "count": 1,
+      "count": 31,
       "mean": 0.03,
-      "p50": 0.03,
-      "p90": 0.03,
-      "max": 0.03
+      "p50": 0.02,
+      "p90": 0.07,
+      "max": 0.1
     },
     "branchesPerTask": {
-      "mean": 1.67,
-      "max": 3,
+      "mean": 1.47,
+      "max": 4,
       "distribution": [
         {
           "branches": 1,
-          "count": 2
+          "count": 23
+        },
+        {
+          "branches": 2,
+          "count": 10
         },
         {
           "branches": 3,
+          "count": 2
+        },
+        {
+          "branches": 4,
           "count": 1
         }
       ]
     },
-    "reworkShare": null
+    "reworkShare": 0.167
   },
   "workers": {
     "available": true,
-    "totalRuns": 386,
+    "totalRuns": 487,
     "byStage": [
       {
         "stage": "implement",
-        "count": 253
+        "count": 326
       },
       {
         "stage": "review",
-        "count": 133
+        "count": 161
       }
     ],
     "byOutcome": [
       {
         "outcome": "done",
-        "count": 280
+        "count": 348
       },
       {
         "outcome": "failed",
-        "count": 61
+        "count": 84
       },
       {
         "outcome": "rework",
-        "count": 36
+        "count": 44
       },
       {
         "outcome": "cancelled",
-        "count": 9
+        "count": 11
       }
     ],
-    "firstTryPassRate": 0.732,
+    "firstTryPassRate": 0.716,
+    "reviewCycles": [
+      {
+        "cycles": 0,
+        "label": "0",
+        "count": 227
+      },
+      {
+        "cycles": 1,
+        "label": "1",
+        "count": 90
+      }
+    ],
     "reworkCycles": {
-      "count": 0,
-      "mean": 0,
-      "max": 0,
-      "distribution": []
+      "count": 6,
+      "mean": 1.5,
+      "max": 3,
+      "distribution": [
+        {
+          "cycles": 1,
+          "count": 4
+        },
+        {
+          "cycles": 2,
+          "count": 1
+        },
+        {
+          "cycles": 3,
+          "count": 1
+        }
+      ]
     },
-    "stalls": 0,
+    "stalls": 12,
     "restarts": 1,
     "totals": {
-      "turns": 15626,
-      "toolCalls": 17753,
-      "tokensIn": 1351675524,
-      "tokensOut": 900721,
-      "wallHours": 58.6
+      "turns": 20020,
+      "toolCalls": 22570,
+      "tokensIn": 1746623140,
+      "tokensOut": 1214778,
+      "wallHours": 77.4
     },
     "perRun": {
       "turns": {
-        "count": 386,
-        "mean": 40.5,
+        "count": 487,
+        "mean": 41.1,
         "p50": 32,
-        "p90": 82,
+        "p90": 84,
         "max": 289
       },
       "toolCalls": {
-        "count": 386,
-        "mean": 46,
+        "count": 487,
+        "mean": 46.3,
         "p50": 35,
-        "p90": 97,
+        "p90": 104,
         "max": 393
       },
       "tokens": {
-        "count": 386,
-        "mean": 3504084,
-        "p50": 1521466,
-        "p90": 8706861,
+        "count": 487,
+        "mean": 3588990,
+        "p50": 1594747,
+        "p90": 9309377,
         "max": 61185687
       },
       "wallMinutes": {
-        "count": 386,
-        "mean": 9.1,
-        "p50": 6,
-        "p90": 21.1,
+        "count": 487,
+        "mean": 9.5,
+        "p50": 6.5,
+        "p90": 22.2,
         "max": 60.1
       }
     },
-    "journalFiles": 5,
+    "journalFiles": 48,
     "workerDirs": 9
   },
   "spend": {
     "available": true,
-    "totalSpend": 1420.95,
-    "runsPriced": 386,
+    "totalSpend": 1746.35,
+    "runsPriced": 487,
     "overTime": [
       {
         "date": "2026-07-11",
@@ -1124,8 +1321,13 @@
       },
       {
         "date": "2026-07-26",
-        "cost": 71.31,
-        "runs": 11
+        "cost": 198.24,
+        "runs": 41
+      },
+      {
+        "date": "2026-07-27",
+        "cost": 198.47,
+        "runs": 71
       }
     ],
     "byModel": [
@@ -1133,54 +1335,54 @@
         "model": "claude-opus-4-8",
         "label": "opus-4.8",
         "color": "red",
-        "cost": 498.4,
-        "runs": 117
+        "cost": 640.32,
+        "runs": 141
       },
       {
         "model": "claude-fable-5",
         "label": "fable-5",
         "color": "purple",
-        "cost": 410.73,
-        "runs": 47
-      },
-      {
-        "model": "claude-sonnet-5",
-        "label": "sonnet-5",
-        "color": "blue",
-        "cost": 215.82,
-        "runs": 109
+        "cost": 470.86,
+        "runs": 50
       },
       {
         "model": "claude-opus-5",
         "label": "opus-5",
         "color": "red",
-        "cost": 191.94,
-        "runs": 13
+        "cost": 264.07,
+        "runs": 31
+      },
+      {
+        "model": "claude-sonnet-5",
+        "label": "sonnet-5",
+        "color": "blue",
+        "cost": 244.34,
+        "runs": 126
       },
       {
         "model": "gpt-5.6-terra",
         "label": "terra",
         "color": "orange",
-        "cost": 104.06,
-        "runs": 100
+        "cost": 126.77,
+        "runs": 139
       }
     ],
     "byStage": [
       {
         "stage": "implement",
-        "cost": 1162.95,
-        "runs": 253
+        "cost": 1437.51,
+        "runs": 326
       },
       {
         "stage": "review",
-        "cost": 258,
-        "runs": 133
+        "cost": 308.84,
+        "runs": 161
       }
     ],
     "costPerTicket": {
-      "count": 161,
-      "mean": 8.83,
-      "p50": 5.65,
+      "count": 165,
+      "mean": 10.58,
+      "p50": 7.26,
       "max": 109.3,
       "top": [
         {
@@ -1190,6 +1392,10 @@
         {
           "ref": "OPS-191",
           "cost": 47.25
+        },
+        {
+          "ref": "#36",
+          "cost": 45.7
         },
         {
           "ref": "#85",
@@ -1205,7 +1411,15 @@
         },
         {
           "ref": "#21",
-          "cost": 30.59
+          "cost": 33.36
+        },
+        {
+          "ref": "#8",
+          "cost": 30.43
+        },
+        {
+          "ref": "#38",
+          "cost": 28.85
         },
         {
           "ref": "OPS-180",
@@ -1228,20 +1442,8 @@
           "cost": 24.63
         },
         {
-          "ref": "OPS-141",
-          "cost": 22.87
-        },
-        {
-          "ref": "OPS-183",
-          "cost": 21.1
-        },
-        {
-          "ref": "OPS-144",
-          "cost": 20.63
-        },
-        {
-          "ref": "#20",
-          "cost": 20.13
+          "ref": "#32",
+          "cost": 23.26
         }
       ]
     }
@@ -1252,54 +1454,54 @@
     "byOutcome": [
       {
         "outcome": "done",
-        "count": 42
-      },
-      {
-        "outcome": "error",
-        "count": 4
+        "count": 40
       },
       {
         "outcome": "cancelled",
-        "count": 4
+        "count": 8
+      },
+      {
+        "outcome": "error",
+        "count": 2
       }
     ],
     "durationSeconds": {
       "count": 50,
-      "mean": 101.7,
-      "p50": 75.7,
-      "p90": 212.5,
-      "max": 343.6
+      "mean": 138.7,
+      "p50": 127.6,
+      "p90": 278.2,
+      "max": 585.6
     },
     "durationBuckets": [
       {
         "label": "<15s",
-        "count": 8
+        "count": 6
       },
       {
         "label": "15–60s",
-        "count": 13
-      },
-      {
-        "label": "1–3m",
-        "count": 21
-      },
-      {
-        "label": "3–6m",
         "count": 8
       },
       {
+        "label": "1–3m",
+        "count": 25
+      },
+      {
+        "label": "3–6m",
+        "count": 9
+      },
+      {
         "label": ">6m",
-        "count": 0
+        "count": 2
       }
     ]
   },
   "quickRuns": {
     "available": true,
-    "total": 20,
+    "total": 21,
     "byType": [
       {
         "type": "unknown",
-        "count": 20
+        "count": 21
       }
     ],
     "byOutcome": [
@@ -1309,23 +1511,31 @@
       },
       {
         "outcome": "empty",
-        "count": 7
+        "count": 8
       }
     ]
   },
   "memory": {
     "available": true,
-    "nodeCount": 26,
-    "edgeCount": 28,
-    "orphanCount": 8,
+    "nodeCount": 50,
+    "edgeCount": 39,
+    "orphanCount": 20,
     "byType": [
       {
         "type": "reference",
-        "count": 11
+        "count": 13
       },
       {
         "type": "feedback",
-        "count": 8
+        "count": 13
+      },
+      {
+        "type": "loop",
+        "count": 12
+      },
+      {
+        "type": "project",
+        "count": 4
       },
       {
         "type": "self",
@@ -1336,8 +1546,8 @@
         "count": 2
       },
       {
-        "type": "project",
-        "count": 1
+        "type": "calibration",
+        "count": 2
       },
       {
         "type": "person",
@@ -1349,22 +1559,22 @@
       }
     ],
     "ageDays": {
-      "count": 20,
-      "mean": 7.9,
-      "p50": 0.4,
-      "max": 27.3,
+      "count": 44,
+      "mean": 4.7,
+      "p50": 1,
+      "max": 28.9,
       "distribution": [
         {
           "bucket": "<1w",
-          "count": 14
+          "count": 38
         },
         {
           "bucket": "1–4w",
-          "count": 6
+          "count": 2
         },
         {
           "bucket": "1–3mo",
-          "count": 0
+          "count": 4
         },
         {
           "bucket": ">3mo",
@@ -1381,7 +1591,7 @@
       {
         "name": "operating-principles",
         "type": "self",
-        "degree": 7
+        "degree": 8
       },
       {
         "name": "betterwright-arg-injection",
@@ -1392,6 +1602,11 @@
         "name": "config-is-versioned",
         "type": "reference",
         "degree": 0
+      },
+      {
+        "name": "memory-is-two-stores",
+        "type": "reference",
+        "degree": 1
       },
       {
         "name": "thread-workspaces",
@@ -1421,6 +1636,11 @@
       {
         "name": "how-to-use-memory",
         "type": "reference",
+        "degree": 4
+      },
+      {
+        "name": "open-loops",
+        "type": "reference",
         "degree": 2
       },
       {
@@ -1439,9 +1659,89 @@
         "degree": 2
       },
       {
+        "name": "restart-bunches-x-post-lanes",
+        "type": "project",
+        "degree": 2
+      },
+      {
+        "name": "stall-nudges-are-a-restart-loop",
+        "type": "project",
+        "degree": 0
+      },
+      {
+        "name": "x-post-lane-rotation",
+        "type": "project",
+        "degree": 0
+      },
+      {
         "name": "jason",
         "type": "person",
         "degree": 9
+      },
+      {
+        "name": "21-2-capability-serialization",
+        "type": "loop",
+        "degree": 0
+      },
+      {
+        "name": "betterwright-66-unadopted",
+        "type": "loop",
+        "degree": 2
+      },
+      {
+        "name": "deploy-19-1-release-tag",
+        "type": "loop",
+        "degree": 0
+      },
+      {
+        "name": "deploy-33-2-browser-attach",
+        "type": "loop",
+        "degree": 0
+      },
+      {
+        "name": "deploy-held-for-28-1",
+        "type": "loop",
+        "degree": 0
+      },
+      {
+        "name": "deploy-held-for-2fa-run",
+        "type": "loop",
+        "degree": 0
+      },
+      {
+        "name": "discord-delete-path-missing",
+        "type": "loop",
+        "degree": 2
+      },
+      {
+        "name": "external-pr-has-no-watcher",
+        "type": "loop",
+        "degree": 2
+      },
+      {
+        "name": "github-2fa-enrollment",
+        "type": "loop",
+        "degree": 0
+      },
+      {
+        "name": "mail-surface-ignores-loop-state",
+        "type": "loop",
+        "degree": 0
+      },
+      {
+        "name": "sol-cast-block-untested",
+        "type": "loop",
+        "degree": 1
+      },
+      {
+        "name": "wire-self-sweep-routines",
+        "type": "loop",
+        "degree": 0
+      },
+      {
+        "name": "calibration-from-vetoes",
+        "type": "feedback",
+        "degree": 0
       },
       {
         "name": "commits-no-claude-trailer",
@@ -1449,9 +1749,24 @@
         "degree": 1
       },
       {
-        "name": "filing-etiquette",
+        "name": "demo-video-format",
+        "type": "feedback",
+        "degree": 0
+      },
+      {
+        "name": "deploy-kills-browser-runs",
         "type": "feedback",
         "degree": 2
+      },
+      {
+        "name": "discord-reply-quote-backticks",
+        "type": "feedback",
+        "degree": 1
+      },
+      {
+        "name": "filing-etiquette",
+        "type": "feedback",
+        "degree": 3
       },
       {
         "name": "jason-design-taste",
@@ -1465,6 +1780,11 @@
       },
       {
         "name": "upstream-pr-no-permission",
+        "type": "feedback",
+        "degree": 1
+      },
+      {
+        "name": "video-ads-show-beckett-whole",
         "type": "feedback",
         "degree": 0
       },
@@ -1489,6 +1809,16 @@
         "degree": 3
       },
       {
+        "name": "cal-localhost-links-in-channel-veto-ms2m7zt6",
+        "type": "calibration",
+        "degree": 0
+      },
+      {
+        "name": "cal-replay-killed-routine-run-veto-ms2m7w94",
+        "type": "calibration",
+        "degree": 1
+      },
+      {
         "name": "ops80-deploy-doc-as-site",
         "type": "decision",
         "degree": 0
@@ -1496,7 +1826,7 @@
       {
         "name": "pi-login-expired",
         "type": "reference",
-        "degree": 0
+        "degree": 1
       },
       {
         "name": "ticket-freeze-pending-big-change",
@@ -1550,6 +1880,10 @@
         "to": "jason"
       },
       {
+        "from": "memory-is-two-stores",
+        "to": "how-to-use-memory"
+      },
+      {
         "from": "thread-workspaces",
         "to": "discord"
       },
@@ -1582,6 +1916,14 @@
         "to": "projects"
       },
       {
+        "from": "how-to-use-memory",
+        "to": "open-loops"
+      },
+      {
+        "from": "open-loops",
+        "to": "operating-principles"
+      },
+      {
         "from": "projects",
         "to": "loom-desk"
       },
@@ -1596,6 +1938,14 @@
       {
         "from": "beta-access-gate",
         "to": "jason-design-taste"
+      },
+      {
+        "from": "restart-bunches-x-post-lanes",
+        "to": "cal-replay-killed-routine-run-veto-ms2m7w94"
+      },
+      {
+        "from": "restart-bunches-x-post-lanes",
+        "to": "deploy-kills-browser-runs"
       },
       {
         "from": "jason",
@@ -1614,6 +1964,30 @@
         "to": "owner-lockout-guard"
       },
       {
+        "from": "betterwright-66-unadopted",
+        "to": "deploy-kills-browser-runs"
+      },
+      {
+        "from": "betterwright-66-unadopted",
+        "to": "external-pr-has-no-watcher"
+      },
+      {
+        "from": "discord-delete-path-missing",
+        "to": "filing-etiquette"
+      },
+      {
+        "from": "discord-delete-path-missing",
+        "to": "discord-reply-quote-backticks"
+      },
+      {
+        "from": "external-pr-has-no-watcher",
+        "to": "upstream-pr-no-permission"
+      },
+      {
+        "from": "sol-cast-block-untested",
+        "to": "pi-login-expired"
+      },
+      {
         "from": "filing-etiquette",
         "to": "board-reset-2026-07-26"
       }
@@ -1621,13 +1995,17 @@
   },
   "routines": {
     "available": true,
-    "total": 15,
-    "enabled": 15,
-    "disabled": 0,
+    "total": 13,
+    "enabled": 12,
+    "disabled": 1,
     "byKind": [
       {
         "kind": "browser",
-        "count": 12
+        "count": 6
+      },
+      {
+        "kind": "self",
+        "count": 3
       },
       {
         "kind": "x-shitpost",
@@ -1639,6 +2017,10 @@
       },
       {
         "kind": "watch",
+        "count": 1
+      },
+      {
+        "kind": "dream",
         "count": 1
       }
     ],
@@ -1647,113 +2029,41 @@
         "id": "daily-x-shitpost",
         "name": "daily X shitpost",
         "kind": "x-shitpost",
-        "enabled": true,
-        "nextFireAt": "2026-07-26T19:35:00.000Z",
-        "lastFiredAt": "2026-07-25T19:14:18.748Z"
-      },
-      {
-        "id": "x-post-evening",
-        "name": "X post (evening)",
-        "kind": "browser",
-        "enabled": true,
-        "nextFireAt": "2026-07-27T01:06:00.000Z",
-        "lastFiredAt": "2026-07-26T00:43:29.358Z"
+        "enabled": false,
+        "nextFireAt": "2026-07-27T19:54:00.000Z",
+        "lastFiredAt": "2026-07-27T19:54:21.031Z"
       },
       {
         "id": "x-mentions-morning",
         "name": "X mentions (morning)",
         "kind": "browser",
         "enabled": true,
-        "nextFireAt": "2026-07-26T16:47:00.000Z",
-        "lastFiredAt": "2026-07-25T16:49:00.690Z"
+        "nextFireAt": "2026-07-27T17:09:00.000Z",
+        "lastFiredAt": "2026-07-27T17:09:06.038Z"
       },
       {
         "id": "x-mentions-midday",
         "name": "X mentions (midday)",
         "kind": "browser",
         "enabled": true,
-        "nextFireAt": "2026-07-26T21:05:00.000Z",
-        "lastFiredAt": "2026-07-25T21:06:17.103Z"
+        "nextFireAt": "2026-07-27T21:29:00.000Z",
+        "lastFiredAt": "2026-07-27T21:29:13.625Z"
       },
       {
         "id": "x-mentions-evening",
         "name": "X mentions (evening)",
         "kind": "browser",
         "enabled": true,
-        "nextFireAt": "2026-07-27T02:20:00.000Z",
-        "lastFiredAt": "2026-07-26T05:18:53.676Z"
-      },
-      {
-        "id": "x-post-early",
-        "name": "X post (early)",
-        "kind": "browser",
-        "enabled": true,
-        "nextFireAt": "2026-07-26T15:34:00.000Z",
-        "lastFiredAt": "2026-07-25T15:41:00.472Z"
-      },
-      {
-        "id": "x-post-morning",
-        "name": "X post (morning)",
-        "kind": "browser",
-        "enabled": true,
-        "nextFireAt": "2026-07-26T17:32:00.000Z",
-        "lastFiredAt": "2026-07-25T17:21:18.582Z"
-      },
-      {
-        "id": "x-post-midday",
-        "name": "X post (midday)",
-        "kind": "browser",
-        "enabled": true,
-        "nextFireAt": "2026-07-26T21:10:00.000Z",
-        "lastFiredAt": "2026-07-25T20:40:18.986Z"
-      },
-      {
-        "id": "x-post-afternoon",
-        "name": "X post (afternoon)",
-        "kind": "browser",
-        "enabled": true,
-        "nextFireAt": "2026-07-26T22:28:00.000Z",
-        "lastFiredAt": "2026-07-25T22:48:29.068Z"
-      },
-      {
-        "id": "x-post-night",
-        "name": "X post (night)",
-        "kind": "browser",
-        "enabled": true,
-        "nextFireAt": "2026-07-27T02:36:00.000Z",
-        "lastFiredAt": "2026-07-26T05:18:55.449Z"
-      },
-      {
-        "id": "x-post-latenight",
-        "name": "X post (late night)",
-        "kind": "browser",
-        "enabled": true,
-        "nextFireAt": "2026-07-27T04:23:00.000Z",
-        "lastFiredAt": "2026-07-26T05:18:55.434Z"
-      },
-      {
-        "id": "x-post-midnight",
-        "name": "X post (midnight)",
-        "kind": "browser",
-        "enabled": true,
-        "nextFireAt": "2026-07-27T05:46:00.000Z",
-        "lastFiredAt": "2026-07-26T06:18:29.851Z"
-      },
-      {
-        "id": "x-post-witching",
-        "name": "X post (witching)",
-        "kind": "browser",
-        "enabled": true,
-        "nextFireAt": "2026-07-27T06:43:00.000Z",
-        "lastFiredAt": "2026-07-26T06:56:10.398Z"
+        "nextFireAt": "2026-07-28T02:45:00.000Z",
+        "lastFiredAt": "2026-07-27T02:21:52.244Z"
       },
       {
         "id": "weekly-deps-update",
         "name": "weekly dependency update",
         "kind": "deps-update",
         "enabled": true,
-        "nextFireAt": "2026-07-26T15:26:00.000Z",
-        "lastFiredAt": null
+        "nextFireAt": "2026-08-02T16:05:00.000Z",
+        "lastFiredAt": "2026-07-26T15:26:23.685Z"
       },
       {
         "id": "model-news-watch",
@@ -1762,26 +2072,82 @@
         "enabled": true,
         "nextFireAt": null,
         "lastFiredAt": null
+      },
+      {
+        "id": "morning-sweep",
+        "name": "morning-sweep",
+        "kind": "self",
+        "enabled": true,
+        "nextFireAt": "2026-07-27T15:28:00.000Z",
+        "lastFiredAt": "2026-07-27T15:28:11.370Z"
+      },
+      {
+        "id": "loops-sweep",
+        "name": "loops-sweep",
+        "kind": "self",
+        "enabled": true,
+        "nextFireAt": "2026-07-27T20:31:00.000Z",
+        "lastFiredAt": "2026-07-27T20:31:16.299Z"
+      },
+      {
+        "id": "evening-sweep",
+        "name": "evening-sweep",
+        "kind": "self",
+        "enabled": true,
+        "nextFireAt": "2026-07-28T04:24:00.000Z",
+        "lastFiredAt": "2026-07-27T04:22:14.366Z"
+      },
+      {
+        "id": "nightly-dream",
+        "name": "nightly dream pass",
+        "kind": "dream",
+        "enabled": true,
+        "nextFireAt": "2026-07-27T11:07:00.000Z",
+        "lastFiredAt": "2026-07-27T11:07:10.573Z"
+      },
+      {
+        "id": "x-post-morning",
+        "name": "X post (morning)",
+        "kind": "browser",
+        "enabled": true,
+        "nextFireAt": "2026-07-27T17:08:00.000Z",
+        "lastFiredAt": "2026-07-27T23:13:14.272Z"
+      },
+      {
+        "id": "x-post-afternoon",
+        "name": "X post (afternoon)",
+        "kind": "browser",
+        "enabled": true,
+        "nextFireAt": "2026-07-27T22:56:00.000Z",
+        "lastFiredAt": "2026-07-27T23:13:14.041Z"
+      },
+      {
+        "id": "x-post-night",
+        "name": "X post (night)",
+        "kind": "browser",
+        "enabled": true,
+        "nextFireAt": "2026-07-28T02:48:00.000Z",
+        "lastFiredAt": null
       }
     ]
   },
   "logs": {
     "available": true,
     "files": 1,
-    "totalLines": 150979,
+    "totalLines": 160735,
     "errorLines": 0,
     "errorRate": 0,
     "perDay": [
       {
-        "date": "2026-07-26",
-        "lines": 150979,
+        "date": "2026-07-28",
+        "lines": 160735,
         "errors": 0
       }
     ]
   },
   "daemon": {
     "available": true,
-    "version": "6.3.0",
+    "version": "6.9.3",
     "services": [
       {
         "name": "beckett-alert@beckett-rpc",
@@ -1811,271 +2177,349 @@
         "name": "beckett-metrics",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 2457336
+        "uptimeSeconds": 2598494
       },
       {
         "name": "beckett-rpc",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 4204775
+        "uptimeSeconds": 4351155
       },
       {
         "name": "beckett-secret",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 2947075
+        "uptimeSeconds": 3093455
       },
       {
         "name": "beckett-v4",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 2457160
+        "uptimeSeconds": 2465207
       }
     ]
   },
   "recentActivity": [
     {
-      "ts": "2026-07-26T07:04:52.358Z",
-      "kind": "worker",
-      "ref": "#3.1",
-      "title": "BetterWright named profiles (upstream PR)"
-    },
-    {
-      "ts": "2026-07-26T07:04:45.463Z",
+      "ts": "2026-07-27T23:59:26.226Z",
       "kind": "started",
-      "ref": "#3.1",
-      "title": "BetterWright named profiles (upstream PR)"
+      "ref": "#35.1",
+      "title": "Terminal-Bench 2.1: run Beckett as an agent and report a score"
     },
     {
-      "ts": "2026-07-26T07:02:51.666Z",
+      "ts": "2026-07-27T23:57:46.404Z",
+      "kind": "done",
+      "ref": "#33.2",
+      "title": "Let the browser agent attach images to X posts"
+    },
+    {
+      "ts": "2026-07-27T23:57:46.374Z",
+      "kind": "done",
+      "ref": "#33.2",
+      "title": "Let the browser agent attach images to X posts"
+    },
+    {
+      "ts": "2026-07-27T23:57:46.363Z",
+      "kind": "done",
+      "ref": "#33.2",
+      "title": "Let the browser agent attach images to X posts"
+    },
+    {
+      "ts": "2026-07-27T23:57:40.867Z",
+      "kind": "done",
+      "ref": "#33.2",
+      "title": "Let the browser agent attach images to X posts"
+    },
+    {
+      "ts": "2026-07-27T23:57:34.534Z",
+      "kind": "deploy",
+      "ref": "#33.2",
+      "title": "Let the browser agent attach images to X posts"
+    },
+    {
+      "ts": "2026-07-27T23:57:34.038Z",
+      "kind": "worker",
+      "ref": "#33.2",
+      "title": "Let the browser agent attach images to X posts"
+    },
+    {
+      "ts": "2026-07-27T23:57:02.519Z",
+      "kind": "worker",
+      "ref": "#34.1",
+      "title": "Metrics site: correct the data, fix mobile"
+    },
+    {
+      "ts": "2026-07-27T23:46:36.276Z",
+      "kind": "started",
+      "ref": "#34.1",
+      "title": "Metrics site: correct the data, fix mobile"
+    },
+    {
+      "ts": "2026-07-27T23:43:35.622Z",
+      "kind": "in-review",
+      "ref": "#33.2",
+      "title": "Let the browser agent attach images to X posts"
+    },
+    {
+      "ts": "2026-07-27T23:43:35.320Z",
+      "kind": "in-review",
+      "ref": "#33.2",
+      "title": "Let the browser agent attach images to X posts"
+    },
+    {
+      "ts": "2026-07-27T23:43:35.263Z",
+      "kind": "worker",
+      "ref": "#33.2",
+      "title": "Let the browser agent attach images to X posts"
+    },
+    {
+      "ts": "2026-07-27T23:14:20.107Z",
+      "kind": "started",
+      "ref": "#33.2",
+      "title": "Let the browser agent attach images to X posts"
+    },
+    {
+      "ts": "2026-07-27T23:14:17.385Z",
+      "kind": "cancelled",
+      "ref": "#33.1",
+      "title": "Let the browser agent attach images to X posts"
+    },
+    {
+      "ts": "2026-07-27T23:13:47.361Z",
+      "kind": "started",
+      "ref": "#33.1",
+      "title": "Let the browser agent attach images to X posts"
+    },
+    {
+      "ts": "2026-07-27T20:46:01.916Z",
+      "kind": "done",
+      "ref": "#32.1",
+      "title": "beckett loops silently swallows unknown flags"
+    },
+    {
+      "ts": "2026-07-27T20:45:59.169Z",
+      "kind": "done",
+      "ref": "#32.1",
+      "title": "beckett loops silently swallows unknown flags"
+    },
+    {
+      "ts": "2026-07-27T20:45:59.155Z",
+      "kind": "done",
+      "ref": "#32.1",
+      "title": "beckett loops silently swallows unknown flags"
+    },
+    {
+      "ts": "2026-07-27T20:45:58.677Z",
+      "kind": "done",
+      "ref": "#32.1",
+      "title": "beckett loops silently swallows unknown flags"
+    },
+    {
+      "ts": "2026-07-27T20:45:56.868Z",
+      "kind": "done",
+      "ref": "#31.1",
+      "title": "Inbound-mail turns are blind to my own loop ledger"
+    },
+    {
+      "ts": "2026-07-27T20:45:55.178Z",
+      "kind": "deploy",
+      "ref": "#32.1",
+      "title": "beckett loops silently swallows unknown flags"
+    },
+    {
+      "ts": "2026-07-27T20:45:55.029Z",
+      "kind": "worker",
+      "ref": "#32.1",
+      "title": "beckett loops silently swallows unknown flags"
+    },
+    {
+      "ts": "2026-07-27T20:45:53.810Z",
+      "kind": "done",
+      "ref": "#31.1",
+      "title": "Inbound-mail turns are blind to my own loop ledger"
+    },
+    {
+      "ts": "2026-07-27T20:45:53.803Z",
+      "kind": "done",
+      "ref": "#31.1",
+      "title": "Inbound-mail turns are blind to my own loop ledger"
+    },
+    {
+      "ts": "2026-07-27T20:45:53.443Z",
+      "kind": "done",
+      "ref": "#31.1",
+      "title": "Inbound-mail turns are blind to my own loop ledger"
+    },
+    {
+      "ts": "2026-07-27T20:45:49.738Z",
+      "kind": "deploy",
+      "ref": "#31.1",
+      "title": "Inbound-mail turns are blind to my own loop ledger"
+    },
+    {
+      "ts": "2026-07-27T20:45:49.525Z",
+      "kind": "worker",
+      "ref": "#31.1",
+      "title": "Inbound-mail turns are blind to my own loop ledger"
+    },
+    {
+      "ts": "2026-07-27T20:37:58.824Z",
+      "kind": "started",
+      "ref": "#32.1",
+      "title": "beckett loops silently swallows unknown flags"
+    },
+    {
+      "ts": "2026-07-27T20:36:38.271Z",
+      "kind": "started",
+      "ref": "#31.1",
+      "title": "Inbound-mail turns are blind to my own loop ledger"
+    },
+    {
+      "ts": "2026-07-27T19:45:04.136Z",
+      "kind": "done",
+      "ref": "#30.1",
+      "title": "beckett browser dispatches a real run when you typo a subcommand"
+    },
+    {
+      "ts": "2026-07-27T19:45:02.591Z",
+      "kind": "done",
+      "ref": "#30.1",
+      "title": "beckett browser dispatches a real run when you typo a subcommand"
+    },
+    {
+      "ts": "2026-07-27T19:45:02.583Z",
+      "kind": "done",
+      "ref": "#30.1",
+      "title": "beckett browser dispatches a real run when you typo a subcommand"
+    },
+    {
+      "ts": "2026-07-27T19:45:02.262Z",
+      "kind": "done",
+      "ref": "#30.1",
+      "title": "beckett browser dispatches a real run when you typo a subcommand"
+    },
+    {
+      "ts": "2026-07-27T19:44:58.462Z",
+      "kind": "deploy",
+      "ref": "#30.1",
+      "title": "beckett browser dispatches a real run when you typo a subcommand"
+    },
+    {
+      "ts": "2026-07-27T19:44:58.342Z",
+      "kind": "worker",
+      "ref": "#30.1",
+      "title": "beckett browser dispatches a real run when you typo a subcommand"
+    },
+    {
+      "ts": "2026-07-27T19:38:29.300Z",
+      "kind": "started",
+      "ref": "#30.1",
+      "title": "beckett browser dispatches a real run when you typo a subcommand"
+    },
+    {
+      "ts": "2026-07-27T16:41:35.147Z",
+      "kind": "done",
+      "ref": "#28.1",
+      "title": "Browser profile wedges the whole browser lane at the 512MB ceiling"
+    },
+    {
+      "ts": "2026-07-27T16:41:35.135Z",
       "kind": "opened",
-      "ref": "#2.3",
-      "title": "Metrics site: session analytics + a real colour pass"
+      "ref": "#28.1",
+      "title": "Browser profile wedges the whole browser lane at the 512MB ceiling"
     },
     {
-      "ts": "2026-07-26T07:02:51.541Z",
-      "kind": "started",
-      "ref": "#2.3",
-      "title": "Metrics site: session analytics + a real colour pass"
-    },
-    {
-      "ts": "2026-07-26T07:02:51.390Z",
-      "kind": "started",
-      "ref": "#2.3",
-      "title": "Metrics site: session analytics + a real colour pass"
-    },
-    {
-      "ts": "2026-07-26T07:02:51.388Z",
+      "ts": "2026-07-27T16:41:32.503Z",
       "kind": "done",
-      "ref": "#2.2",
-      "title": "Metrics site: session analytics + a real colour pass"
+      "ref": "#28.1",
+      "title": "Browser profile wedges the whole browser lane at the 512MB ceiling"
     },
     {
-      "ts": "2026-07-26T07:02:48.750Z",
+      "ts": "2026-07-27T16:41:32.497Z",
       "kind": "done",
-      "ref": "#2.2",
-      "title": "Metrics site: session analytics + a real colour pass"
+      "ref": "#28.1",
+      "title": "Browser profile wedges the whole browser lane at the 512MB ceiling"
     },
     {
-      "ts": "2026-07-26T07:02:48.746Z",
+      "ts": "2026-07-27T16:41:32.222Z",
       "kind": "done",
-      "ref": "#2.2",
-      "title": "Metrics site: session analytics + a real colour pass"
+      "ref": "#28.1",
+      "title": "Browser profile wedges the whole browser lane at the 512MB ceiling"
     },
     {
-      "ts": "2026-07-26T07:02:48.620Z",
-      "kind": "done",
-      "ref": "#2.2",
-      "title": "Metrics site: session analytics + a real colour pass"
-    },
-    {
-      "ts": "2026-07-26T07:02:43.344Z",
+      "ts": "2026-07-27T16:41:28.853Z",
       "kind": "deploy",
-      "ref": "#2.2",
-      "title": "Metrics site: session analytics + a real colour pass"
+      "ref": "#28.1",
+      "title": "Browser profile wedges the whole browser lane at the 512MB ceiling"
     },
     {
-      "ts": "2026-07-26T07:02:43.092Z",
+      "ts": "2026-07-27T16:41:28.654Z",
       "kind": "worker",
-      "ref": "#2.2",
-      "title": "Metrics site: session analytics + a real colour pass"
+      "ref": "#28.1",
+      "title": "Browser profile wedges the whole browser lane at the 512MB ceiling"
     },
     {
-      "ts": "2026-07-26T06:26:40.120Z",
-      "kind": "started",
-      "ref": "#2.2",
-      "title": "Metrics site: session analytics + a real colour pass"
-    },
-    {
-      "ts": "2026-07-26T06:23:51.003Z",
+      "ts": "2026-07-27T16:30:50.010Z",
       "kind": "done",
-      "ref": "#1.1",
-      "title": "Model-release watcher: post when a genuinely new model ships"
+      "ref": "#29.1",
+      "title": "Stall watchdog restarts workers into the same deterministic failure forever"
     },
     {
-      "ts": "2026-07-26T06:23:50.265Z",
+      "ts": "2026-07-27T16:30:49.335Z",
       "kind": "done",
-      "ref": "#1.1",
-      "title": "Model-release watcher: post when a genuinely new model ships"
+      "ref": "#29.1",
+      "title": "Stall watchdog restarts workers into the same deterministic failure forever"
     },
     {
-      "ts": "2026-07-26T06:23:50.263Z",
+      "ts": "2026-07-27T16:30:49.330Z",
       "kind": "done",
-      "ref": "#1.1",
-      "title": "Model-release watcher: post when a genuinely new model ships"
+      "ref": "#29.1",
+      "title": "Stall watchdog restarts workers into the same deterministic failure forever"
     },
     {
-      "ts": "2026-07-26T06:23:50.002Z",
+      "ts": "2026-07-27T16:30:48.930Z",
       "kind": "done",
-      "ref": "#1.1",
-      "title": "Model-release watcher: post when a genuinely new model ships"
+      "ref": "#29.1",
+      "title": "Stall watchdog restarts workers into the same deterministic failure forever"
     },
     {
-      "ts": "2026-07-26T06:23:45.995Z",
+      "ts": "2026-07-27T16:30:45.439Z",
       "kind": "deploy",
-      "ref": "#1.1",
-      "title": "Model-release watcher: post when a genuinely new model ships"
+      "ref": "#29.1",
+      "title": "Stall watchdog restarts workers into the same deterministic failure forever"
     },
     {
-      "ts": "2026-07-26T06:23:45.614Z",
+      "ts": "2026-07-27T16:30:45.110Z",
       "kind": "worker",
-      "ref": "#1.1",
-      "title": "Model-release watcher: post when a genuinely new model ships"
+      "ref": "#29.1",
+      "title": "Stall watchdog restarts workers into the same deterministic failure forever"
     },
     {
-      "ts": "2026-07-26T06:22:41.336Z",
-      "kind": "opened",
-      "ref": "#2.2",
-      "title": "Metrics site: session analytics + a real colour pass"
-    },
-    {
-      "ts": "2026-07-26T06:22:41.128Z",
-      "kind": "started",
-      "ref": "#2.2",
-      "title": "Metrics site: session analytics + a real colour pass"
-    },
-    {
-      "ts": "2026-07-26T06:22:40.791Z",
-      "kind": "started",
-      "ref": "#2.2",
-      "title": "Metrics site: session analytics + a real colour pass"
-    },
-    {
-      "ts": "2026-07-26T06:22:40.788Z",
-      "kind": "done",
-      "ref": "#2.1",
-      "title": "Metrics site: session analytics + a real colour pass"
-    },
-    {
-      "ts": "2026-07-26T06:22:36.651Z",
-      "kind": "done",
-      "ref": "#2.1",
-      "title": "Metrics site: session analytics + a real colour pass"
-    },
-    {
-      "ts": "2026-07-26T06:22:36.648Z",
-      "kind": "done",
-      "ref": "#2.1",
-      "title": "Metrics site: session analytics + a real colour pass"
-    },
-    {
-      "ts": "2026-07-26T06:22:35.987Z",
-      "kind": "done",
-      "ref": "#2.1",
-      "title": "Metrics site: session analytics + a real colour pass"
-    },
-    {
-      "ts": "2026-07-26T06:22:32.525Z",
-      "kind": "deploy",
-      "ref": "#2.1",
-      "title": "Metrics site: session analytics + a real colour pass"
-    },
-    {
-      "ts": "2026-07-26T06:22:31.774Z",
-      "kind": "worker",
-      "ref": "#2.1",
-      "title": "Metrics site: session analytics + a real colour pass"
-    },
-    {
-      "ts": "2026-07-26T06:16:50.967Z",
+      "ts": "2026-07-27T16:23:39.694Z",
       "kind": "in-review",
-      "ref": "#2.1",
-      "title": "Metrics site: session analytics + a real colour pass"
-    },
-    {
-      "ts": "2026-07-26T06:16:50.261Z",
-      "kind": "in-review",
-      "ref": "#2.1",
-      "title": "Metrics site: session analytics + a real colour pass"
-    },
-    {
-      "ts": "2026-07-26T06:16:50.214Z",
-      "kind": "worker",
-      "ref": "#2.1",
-      "title": "Metrics site: session analytics + a real colour pass"
-    },
-    {
-      "ts": "2026-07-26T06:16:07.336Z",
-      "kind": "in-review",
-      "ref": "#1.1",
-      "title": "Model-release watcher: post when a genuinely new model ships"
-    },
-    {
-      "ts": "2026-07-26T06:16:07.013Z",
-      "kind": "in-review",
-      "ref": "#1.1",
-      "title": "Model-release watcher: post when a genuinely new model ships"
-    },
-    {
-      "ts": "2026-07-26T06:16:06.963Z",
-      "kind": "worker",
-      "ref": "#1.1",
-      "title": "Model-release watcher: post when a genuinely new model ships"
-    },
-    {
-      "ts": "2026-07-26T05:54:19.184Z",
-      "kind": "started",
-      "ref": "#2.1",
-      "title": "Metrics site: session analytics + a real colour pass"
-    },
-    {
-      "ts": "2026-07-26T05:45:29.602Z",
-      "kind": "started",
-      "ref": "#1.1",
-      "title": "Model-release watcher: post when a genuinely new model ships"
-    },
-    {
-      "ts": "2026-07-26T05:45:05.822Z",
-      "kind": "worker",
-      "ref": "#1.1",
-      "title": "Model-release watcher: post when a genuinely new model ships"
-    },
-    {
-      "ts": "2026-07-26T05:44:40.695Z",
-      "kind": "started",
-      "ref": "#1.1",
-      "title": "Model-release watcher: post when a genuinely new model ships"
+      "ref": "#29.1",
+      "title": "Stall watchdog restarts workers into the same deterministic failure forever"
     }
   ],
   "claudeSessions": {
     "available": true,
-    "total": 2339,
+    "total": 2582,
     "byClassification": [
       {
         "classification": "concierge",
-        "count": 1331
+        "count": 1475
       },
       {
         "classification": "worker",
-        "count": 801
+        "count": 868
+      },
+      {
+        "classification": "quick",
+        "count": 128
       },
       {
         "classification": "other",
         "count": 111
-      },
-      {
-        "classification": "quick",
-        "count": 96
       }
     ],
     "sessionsOverTime": [
@@ -2193,53 +2637,61 @@
       },
       {
         "date": "2026-07-26",
-        "count": 37
+        "count": 112
+      },
+      {
+        "date": "2026-07-27",
+        "count": 167
+      },
+      {
+        "date": "2026-07-28",
+        "count": 1
       }
     ],
     "toolCallMix": [
       {
         "tool": "Bash",
-        "count": 20258
+        "count": 24191
       },
       {
         "tool": "Read",
-        "count": 4762
+        "count": 5406
       },
       {
         "tool": "Edit",
-        "count": 2550
+        "count": 3049
       },
       {
         "tool": "StructuredOutput",
-        "count": 2145
+        "count": 2529
       },
       {
         "tool": "mcp__browser__betterwright_browser",
-        "count": 1072
-      },
-      {
-        "tool": "WebFetch",
-        "count": 1048
+        "count": 1473
       },
       {
         "tool": "Write",
-        "count": 1004
+        "count": 1144
+      },
+      {
+        "tool": "WebFetch",
+        "count": 1099
       },
       {
         "tool": "WebSearch",
-        "count": 739
+        "count": 761
       },
       {
         "tool": "ToolSearch",
-        "count": 559
+        "count": 584
       },
       {
         "tool": "Agent",
-        "count": 173
+        "count": 182
       },
       {
         "tool": "Skill",
-        "count": 157
+        "count": 175
       },
       {
         "tool": "TaskUpdate",
@@ -2249,45 +2701,45 @@
     "durationBuckets": [
       {
         "label": "<1m",
-        "count": 1009
+        "count": 1071
       },
       {
         "label": "1-5m",
-        "count": 642
+        "count": 715
       },
       {
         "label": "5-15m",
-        "count": 343
+        "count": 403
       },
       {
         "label": "15-30m",
-        "count": 151
+        "count": 172
       },
       {
         "label": "30-60m",
-        "count": 66
+        "count": 83
       },
       {
         "label": "1-3h",
-        "count": 65
+        "count": 70
       },
       {
         "label": "3h+",
-        "count": 63
+        "count": 68
       }
     ],
     "turnBuckets": [
       {
         "label": "1",
-        "count": 1552
+        "count": 1708
       },
       {
         "label": "2-5",
-        "count": 527
+        "count": 593
       },
       {
         "label": "6-15",
-        "count": 217
+        "count": 238
       },
       {
         "label": "16-40",
@@ -2303,14 +2755,14 @@
       }
     ],
     "duration": {
-      "count": 2339,
-      "mean": 1679.1,
-      "p50": 90.5,
-      "p90": 1457.1,
+      "count": 2582,
+      "mean": 1627.3,
+      "p50": 102.1,
+      "p90": 1527.4,
       "max": 295409.4
     },
     "turns": {
-      "count": 2339,
+      "count": 2582,
       "mean": 2.6,
       "p50": 1,
       "p90": 6,
@@ -2321,36 +2773,36 @@
         "model": "claude-opus-4-8",
         "label": "opus-4.8",
         "color": "rose",
-        "sessions": 1279,
-        "tokens": 3178986374
+        "sessions": 1305,
+        "tokens": 3530451781
       },
       {
         "model": "claude-haiku-4-5-20251001",
         "label": "haiku-4.5",
         "color": "moss",
-        "sessions": 466,
-        "tokens": 101047409
+        "sessions": 485,
+        "tokens": 102850397
       },
       {
         "model": "claude-sonnet-5",
         "label": "sonnet-5",
         "color": "indigo",
-        "sessions": 256,
-        "tokens": 676270552
+        "sessions": 303,
+        "tokens": 793493671
       },
       {
         "model": "claude-opus-5",
         "label": "opus-5",
         "color": "rose",
-        "sessions": 156,
-        "tokens": 557945150
+        "sessions": 301,
+        "tokens": 931997531
       },
       {
         "model": "claude-fable-5",
         "label": "fable-5",
         "color": "violet",
-        "sessions": 104,
-        "tokens": 604571035
+        "sessions": 107,
+        "tokens": 682959504
       },
       {
         "model": "<synthetic>",
@@ -2374,8 +2826,8 @@
         "tokens": 15331094
       }
     ],
-    "totalCost": 3843.15,
-    "errorCount": 1777,
-    "permissionDenials": 41
+    "totalCost": 5089.2,
+    "errorCount": 2056,
+    "permissionDenials": 53
   }
 }

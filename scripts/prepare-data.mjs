@@ -277,6 +277,9 @@ function main() {
   // Unpriced sessions remain in runs; carry their count into the public rollup so every
   // partial cost total is explicit rather than looking complete by default.
   const unratedModelSessions = nonNegative(raw.unrated_model_sessions?.count);
+  const unratedModelModels = raw.unrated_model_sessions?.models && typeof raw.unrated_model_sessions.models === "object"
+    ? Object.keys(raw.unrated_model_sessions.models).filter((model) => model)
+    : [];
   if (runs.length === 0) {
     console.error("[prepare-data] dataset has no runs — emitting empty aggregates");
   }
@@ -412,6 +415,7 @@ function main() {
     notes: {
       skippedRows,
       unratedModelSessions,
+      unratedModelModels,
       anyEstimated: models.some((m) => m.estimate),
     },
   };

@@ -45,7 +45,7 @@ export type Metrics = {
     authors: { name: string; commits: number; additions: number; deletions: number; net: number }[];
     velocity: { date: string; commits: number }[];
   };
-  notes: { skippedRows: number; unratedModelSessions: number; anyEstimated: boolean };
+  notes: { skippedRows: number; unratedModelSessions: number; unratedModelModels: string[]; anyEstimated: boolean };
 
   // ── Widened data layer (#100, schema_version 2) ───────────────────────────
   // Every section below is optional: a stale v1 document fetched mid-rollout, or a section whose

@@ -16,10 +16,11 @@
  * A first publish (no served document yet) is allowed. A genuine dataset reset can be forced
  * through with METRICS_ALLOW_COLLAPSE=1.
  *
- * Usage: verify-plausible-metrics.mjs CANDIDATE_PATH [SERVED_PATH]
+ * Usage: verify-plausible-metrics.mjs CANDIDATE_PATH [SERVED_PATH] [RATE_TABLE_PATH]
  */
 import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { assertSourceModelsHaveRates, DEFAULT_RATE_TABLE } from "./lib/model-rates.mjs";
 
 // A totalRuns drop of more than this fraction below the served document fails the gate.
 export const COLLAPSE_THRESHOLD = 0.2;
@@ -77,10 +78,14 @@ export function checkPlausible(candidate, served, allowCollapse = false) {
 
 function main(argv, env) {
   const candidatePath = argv[2];
-  if (!candidatePath) throw new Error("usage: verify-plausible-metrics.mjs CANDIDATE_PATH [SERVED_PATH]");
+  if (!candidatePath) throw new Error("usage: verify-plausible-metrics.mjs CANDIDATE_PATH [SERVED_PATH] [RATE_TABLE_PATH]");
   const servedPath = argv[3];
+  const ratePath = argv[4] ?? DEFAULT_RATE_TABLE;
 
   const candidate = JSON.parse(readFileSync(candidatePath, "utf8"));
+  // Fail before plausibility comparisons: a source model without a rate is a
+  // configuration defect, not a reason to omit real usage from the rollup.
+  assertSourceModelsHaveRates(candidate, ratePath);
   let served = null;
   if (servedPath && existsSync(servedPath)) {
     served = JSON.parse(readFileSync(servedPath, "utf8"));

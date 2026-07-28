@@ -135,3 +135,19 @@ test("verify-public-metrics.mjs exits non-zero on a leaky document", () => {
   assert.equal(run(good), 0, "clean file should pass");
   assert.notEqual(run(bad), 0, "leaky file should fail");
 });
+
+test("verify-public-metrics.mjs rejects a source model with no configured rate", () => {
+  const candidate = join(tmpdir(), `mx-unpriced-model-${process.pid}.json`);
+  writeFileSync(candidate, JSON.stringify({
+    models: [{ model: "claude-unpriced-future", label: "unpriced", cost: null }],
+    notes: { unratedModelModels: ["claude-unpriced-future"] },
+  }));
+  try {
+    assert.throws(
+      () => execFileSync(process.execPath, [join(HERE, "verify-public-metrics.mjs"), candidate], { stdio: "pipe" }),
+      /source model\(s\) missing from rate table/,
+    );
+  } finally {
+    rmSync(candidate, { force: true });
+  }
+});

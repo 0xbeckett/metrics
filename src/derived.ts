@@ -32,7 +32,7 @@ function computeDerived(metrics: Metrics) {
     projectSeries: [...cs.projects].sort((a, b) => b.additions - a.additions).slice(0, 8)
       .map((p) => ({ label: short(p.repo), value: p.additions })),
     authorSeries: authors.slice(0, 7).map((a) => ({ label: short(a.name), value: a.commits })),
-    costSeries: metrics.models.filter((m) => m.cost !== null).map((m) => ({ label: m.label, value: m.cost })),
+    costSeries: metrics.models.filter((m) => m.cost !== null).map((m) => ({ label: m.label, value: m.cost! })),
     uncostedModels: metrics.models.filter((m) => m.cost === null),
     wallSeries: metrics.models.map((m) => ({ label: m.label, value: m.wallHours })),
     cycleSeries: metrics.reviewCycles.map((c) => ({ label: c.label, value: c.count })),

@@ -9,10 +9,15 @@
  */
 import { readFileSync } from "node:fs";
 import { assertPublicText } from "./lib/privacy-scan.mjs";
+import { assertSourceModelsHaveRates, DEFAULT_RATE_TABLE } from "./lib/model-rates.mjs";
 
 const path = process.argv[2];
-if (!path) throw new Error("usage: verify-public-metrics.mjs PATH");
+const ratePath = process.argv[3] ?? DEFAULT_RATE_TABLE;
+if (!path) throw new Error("usage: verify-public-metrics.mjs PATH [RATE_TABLE_PATH]");
 const json = readFileSync(path, "utf8");
-JSON.parse(json); // also catches a truncated/partial copy before it can be installed
+const doc = JSON.parse(json); // also catches a truncated/partial copy before it can be installed
 assertPublicText(json, path);
-console.error(`[verify-public-metrics] safe public JSON: ${path}`);
+// This is intentionally a hard publish gate: a new source model must add a price
+// (or an explicit estimate) instead of silently falling out of the dashboard.
+assertSourceModelsHaveRates(doc, ratePath);
+console.error(`[verify-public-metrics] safe public JSON with priced source models: ${path}`);
