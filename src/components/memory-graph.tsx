@@ -131,8 +131,11 @@ export function MemoryGraph({ mem }: { mem: MemorySection }) {
     return () => ro.disconnect();
   }, []);
   const scale = rendered > 0 ? VW / rendered : 1; // >1 when the viewBox is shrunk
-  const labelPx = Math.min(22, Math.max(10, Math.round(11 * scale)));
-  const labelFloor = scale > 1.35 ? 5 : 3; // narrower plane → hubs only
+  const labelPx = Math.min(20, Math.max(10, Math.round(11 * scale)));
+  // On a phone the whole plane is half-size, so a readable label is large
+  // relative to the node spacing and adjacent hub labels collide. Name only the
+  // few biggest hubs there; the rest light up their labels on tap/hover.
+  const labelFloor = scale > 1.35 ? 8 : 3;
 
   const neighbors = useMemo(() => {
     const s = new Set<number>();
