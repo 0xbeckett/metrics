@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "refreshed_at": "2026-07-27T00:00:00Z",
+  "refreshed_at": "2026-07-28T00:26:41.351Z",
   "source_generated_at": "2026-07-28T00:04:09.787Z",
   "rate_table_effective_date": "2026-07-16",
   "headline": {
@@ -2153,13 +2153,13 @@
   "logs": {
     "available": true,
     "files": 1,
-    "totalLines": 160816,
+    "totalLines": 160825,
     "errorLines": 0,
     "errorRate": 0,
     "perDay": [
       {
         "date": "2026-07-28",
-        "lines": 160816,
+        "lines": 160825,
         "errors": 0
       }
     ]
@@ -2196,25 +2196,25 @@
         "name": "beckett-metrics",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 2599713
+        "uptimeSeconds": 2599844
       },
       {
         "name": "beckett-rpc",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 4352374
+        "uptimeSeconds": 4352505
       },
       {
         "name": "beckett-secret",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 3094674
+        "uptimeSeconds": 3094805
       },
       {
         "name": "beckett-v4",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 2466426
+        "uptimeSeconds": 2466557
       }
     ]
   },
