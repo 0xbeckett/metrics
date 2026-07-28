@@ -36,6 +36,16 @@
       "estimate": true,
       "source": "Codex CLI logs identify this generic model only. Conservatively mapped to Terra until its SKU is known."
     },
+    "claude-opus-5": {
+      "input": 5,
+      "output": 25,
+      "cache_read": 0.5,
+      "cache_write": 6.25,
+      "cache_read_multiplier": 0.1,
+      "cache_creation_multiplier": 1.25,
+      "estimate": true,
+      "source": "Estimate: no public Anthropic API SKU exists for the claude-opus-5 runtime label; mapped to Anthropic's published current Opus $5/$25 per Mtok tier. Anthropic cache read is 0.1× input and 5m cache creation is 1.25× input."
+    },
     "claude-opus-4-8": {
       "input": 5,
       "output": 25,
@@ -45,6 +55,26 @@
       "cache_creation_multiplier": 1.25,
       "estimate": true,
       "source": "Estimate: no public price sheet exists for the 4.8 label; based on the current Opus $5/$25 tier. Anthropic cache read is 0.1× input and 5m cache creation is 1.25× input."
+    },
+    "claude-sonnet-4-6": {
+      "input": 3,
+      "output": 15,
+      "cache_read": 0.3,
+      "cache_write": 3.75,
+      "cache_read_multiplier": 0.1,
+      "cache_creation_multiplier": 1.25,
+      "estimate": false,
+      "source": "Anthropic API pricing for Claude Sonnet 4.6: $3 input / $15 output per Mtok. Anthropic cache read is 0.1× input and 5m cache creation is 1.25× input."
+    },
+    "claude-sonnet-4-5-20250929": {
+      "input": 3,
+      "output": 15,
+      "cache_read": 0.3,
+      "cache_write": 3.75,
+      "cache_read_multiplier": 0.1,
+      "cache_creation_multiplier": 1.25,
+      "estimate": false,
+      "source": "Anthropic API pricing for Claude Sonnet 4.5 (2025-09-29 SKU): $3 input / $15 output per Mtok. Anthropic cache read is 0.1× input and 5m cache creation is 1.25× input."
     },
     "claude-sonnet-5": {
       "input": 3,

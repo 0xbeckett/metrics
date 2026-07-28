@@ -32,14 +32,15 @@ export interface TelemetryRun {
   model: string;
   timestamp: string;
   wall_clock_seconds: number;
-  cost_usd: number;
+  /** null means the run is real but its model has no configured price. */
+  cost_usd: number | null;
   review_cycles: number;
   tokens: TokenUsage;
   rate_estimate: boolean;
 }
 
 export interface UnratedModelSessions {
-  /** Sessions excluded from cost totals because their model has no configured rate. */
+  /** Sessions with unknown cost because their model has no configured rate. */
   count: number;
   /** Per-model session counts, retained so missing rate-table entries are auditable. */
   models: Record<string, number>;
@@ -49,7 +50,7 @@ export interface TelemetryDataset {
   schema_version: 1;
   generated_at: string;
   rate_table_effective_date: string;
-  /** Explicit accounting for sessions omitted from `runs` due to missing rates. */
+  /** Explicit accounting for runs whose model price is unknown. All still appear in `runs`. */
   unrated_model_sessions: UnratedModelSessions;
   runs: TelemetryRun[];
 }
@@ -325,13 +326,12 @@ function runFromSession(
   cycles: Map<string, number>,
   unratedModels: Map<string, number>,
   note: (message: string) => void,
-): TelemetryRun | null {
+): TelemetryRun {
   const rate = rateForModel(session.model, rates);
   if (!rate) {
     const model = session.model.toLowerCase();
     unratedModels.set(model, (unratedModels.get(model) ?? 0) + 1);
-    note(`${harness}: skipped ${session.sessionId}; model ${session.model} has no rate in table`);
-    return null;
+    note(`${harness}: unpriced ${session.sessionId}; model ${session.model} has no rate in table`);
   }
   const wall = Math.max(0, (Date.parse(session.endTimestamp) - Date.parse(session.timestamp)) / 1000);
   return {
@@ -342,10 +342,12 @@ function runFromSession(
     model: session.model,
     timestamp: session.timestamp,
     wall_clock_seconds: Number(wall.toFixed(3)),
-    cost_usd: calculateCost(session.tokens, rate),
+    // A missing price must never erase a run: null preserves the distinction between
+    // unknown cost and a genuinely free/zero-cost run all the way to the dashboard.
+    cost_usd: rate ? calculateCost(session.tokens, rate) : null,
     review_cycles: session.taskId ? cycles.get(session.taskId.toUpperCase()) ?? 0 : 0,
     tokens: session.tokens,
-    rate_estimate: rate.estimate,
+    rate_estimate: rate?.estimate ?? false,
   };
 }
 
@@ -365,7 +367,7 @@ export async function harvest(options: HarvestOptions): Promise<TelemetryDataset
     ...claude.map((s) => runFromSession(s, "claude-code", rates, cycles, unratedModels, note)),
     ...pi.map((s) => runFromSession(s, "pi", rates, cycles, unratedModels, note)),
     ...codex.map((s) => runFromSession(s, "codex", rates, cycles, unratedModels, note)),
-  ].filter((run): run is TelemetryRun => run !== null).sort((a, b) => a.timestamp.localeCompare(b.timestamp) || a.run_id.localeCompare(b.run_id));
+  ].sort((a, b) => a.timestamp.localeCompare(b.timestamp) || a.run_id.localeCompare(b.run_id));
   const unrated_model_sessions: UnratedModelSessions = {
     count: [...unratedModels.values()].reduce((total, count) => total + count, 0),
     models: Object.fromEntries([...unratedModels.entries()].sort(([a], [b]) => a.localeCompare(b))),

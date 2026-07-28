@@ -18,10 +18,12 @@ function computeDerived(metrics: Metrics) {
   })();
   const beckettCommits = authors.find((a) => /^beckett$/i.test(a.name.trim()))?.commits ?? 0;
   const short = (s: string, n = 9) => (s.length > n ? `${s.slice(0, n - 1)}…` : s);
-  const firstTry = metrics.reviewCycles.find((c) => c.cycles === 0)?.count ?? 0;
+  // Workers own both the numerator and denominator: only terminal implement
+  // attempts are reviewable, never ambient/chat/browser telemetry runs.
+  const firstTryRate = metrics.workers?.available ? (metrics.workers.firstTryPassRate ?? 0) : 0;
 
   return {
-    firstTryRate: h.totalRuns > 0 ? firstTry / h.totalRuns : 0,
+    firstTryRate,
     beckettShare: cs.headline.commits > 0 ? beckettCommits / cs.headline.commits : 0,
     costPerCommit: cs.headline.commits > 0 ? h.totalSpend / cs.headline.commits : 0,
     linesPerDollar: h.totalSpend > 0 ? cs.headline.additions / h.totalSpend : 0,
@@ -30,7 +32,8 @@ function computeDerived(metrics: Metrics) {
     projectSeries: [...cs.projects].sort((a, b) => b.additions - a.additions).slice(0, 8)
       .map((p) => ({ label: short(p.repo), value: p.additions })),
     authorSeries: authors.slice(0, 7).map((a) => ({ label: short(a.name), value: a.commits })),
-    costSeries: metrics.models.map((m) => ({ label: m.label, value: m.cost })),
+    costSeries: metrics.models.filter((m) => m.cost !== null).map((m) => ({ label: m.label, value: m.cost })),
+    uncostedModels: metrics.models.filter((m) => m.cost === null),
     wallSeries: metrics.models.map((m) => ({ label: m.label, value: m.wallHours })),
     cycleSeries: metrics.reviewCycles.map((c) => ({ label: c.label, value: c.count })),
     runsSeries: metrics.runsOverTime.map((d) => ({ date: d.date, value: d.runs })),

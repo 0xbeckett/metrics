@@ -274,8 +274,8 @@ function main() {
   catch (err) { console.error(`[prepare-data] claude-sessions dataset unavailable at ${CLAUDE_SESSIONS_SRC}: ${err.message}; emitting empty claude sessions`); }
 
   const runs = Array.isArray(raw.runs) ? raw.runs : [];
-  // The harvester excludes sessions it cannot price, but makes that exclusion explicit.
-  // Carry the count into the public rollup so cost totals can never look complete by default.
+  // Unpriced sessions remain in runs; carry their count into the public rollup so every
+  // partial cost total is explicit rather than looking complete by default.
   const unratedModelSessions = nonNegative(raw.unrated_model_sessions?.count);
   if (runs.length === 0) {
     console.error("[prepare-data] dataset has no runs — emitting empty aggregates");
@@ -299,22 +299,27 @@ function main() {
       skippedRows++;
       continue;
     }
-    const cost = num(r.cost_usd) ?? 0;
+    // null is meaningful: it is an unknown price, not a zero-dollar run.
+    const cost = num(r.cost_usd);
     const wall = num(r.wall_clock_seconds) ?? 0;
 
     const pm = perModel.get(model) ?? {
       runs: 0,
       cost: 0,
+      hasUnknownCost: false,
       wallSeconds: 0,
       estimate: false,
     };
     pm.runs += 1;
-    pm.cost += cost;
+    if (cost === null) pm.hasUnknownCost = true;
+    else pm.cost += cost;
     pm.wallSeconds += wall;
     if (r.rate_estimate === true) pm.estimate = true;
     perModel.set(model, pm);
 
-    totalCost += cost;
+    // Headline spend is the sum of known prices. Models with any unpriced run are
+    // represented as cost:null below, never quietly coerced to $0.
+    if (cost !== null) totalCost += cost;
     totalWall += wall;
 
     // Review-cycle histogram (integer bounces). Non-numeric → skip that axis only.
@@ -329,7 +334,7 @@ function main() {
       const day = r.timestamp.slice(0, 10);
       const pd = perDay.get(day) ?? { runs: 0, cost: 0 };
       pd.runs += 1;
-      pd.cost += cost;
+      if (cost !== null) pd.cost += cost;
       perDay.set(day, pd);
     }
 
@@ -338,8 +343,11 @@ function main() {
     }
   }
 
-  // Models sorted by spend (most expensive first) — the story leads with cost.
-  const modelsByCost = [...perModel.entries()].sort((a, b) => b[1].cost - a[1].cost);
+  // Models with known prices lead by spend; unpriced models remain visible after them.
+  const modelsByCost = [...perModel.entries()].sort((a, b) => {
+    if (a[1].hasUnknownCost !== b[1].hasUnknownCost) return a[1].hasUnknownCost ? 1 : -1;
+    return b[1].cost - a[1].cost;
+  });
   const models = modelsByCost.map(([model, agg]) => {
     const meta = metaFor(model);
     return {
@@ -347,7 +355,7 @@ function main() {
       label: meta.label,
       color: meta.color,
       runs: agg.runs,
-      cost: round(agg.cost, 2),
+      cost: agg.hasUnknownCost ? null : round(agg.cost, 2),
       wallHours: round(agg.wallSeconds / 3600, 2),
       estimate: agg.estimate,
     };
@@ -427,6 +435,12 @@ function main() {
   };
   out.tickets = section("tickets", harvestTasks, { available: false });
   out.workers = section("workers", harvestWorkers, { available: false });
+  // The worker harvester owns the first-try definition. Its cycle histogram is
+  // built from the same terminal implement population, so the hero rate and this
+  // chart cannot drift onto different denominators.
+  if (out.workers.available && Array.isArray(out.workers.reviewCycles)) {
+    out.reviewCycles = out.workers.reviewCycles;
+  }
   out.spend = section("spend", harvestSpend, { available: false });
   out.browserRuns = section("browserRuns", harvestBrowser, { available: false });
   out.quickRuns = section("quickRuns", harvestQuick, { available: false });

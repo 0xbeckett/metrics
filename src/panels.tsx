@@ -81,6 +81,9 @@ export const SpendView = memo(function SpendView({ metrics }: { metrics: Metrics
   const costDelta = lastDelta(metrics.runsOverTime.map((x) => ({ value: x.cost })));
   const estimatedModels = metrics.models.filter((m) => m.estimate).map((m) => m.label);
   const estimateNote = estimatedModels.length ? ` · est: ${estimatedModels.join(", ")}` : "";
+  const uncostedNote = d.uncostedModels.length
+    ? ` Cost unknown: ${d.uncostedModels.map((m) => `${m.label} (${int(m.runs)} runs)`).join(", ")}.`
+    : "";
   const runWindow = h.firstRun && h.lastRun ? `${shortDate(h.firstRun)} – ${shortDate(h.lastRun)}` : "—";
 
   return (
@@ -100,8 +103,8 @@ export const SpendView = memo(function SpendView({ metrics }: { metrics: Metrics
           action={costDelta ? <Label>{`${costDelta > 0 ? "▲" : "▼"} ${money(Math.abs(costDelta))} vs prior day`}</Label> : undefined}
           footnote={
             <>
-              Every priced session across all harnesses, summed by day — the same running total the
-              headline reports.
+              Known-priced sessions across all harnesses, summed by day — the same running total the
+              headline reports. Unpriced sessions remain included in session and wall-time totals.
               {sessionsCost !== null
                 ? ` Across every Claude Code transcript on the host — a wider lens — priced usage totals ${money(sessionsCost)}.`
                 : ""}
@@ -133,8 +136,9 @@ export const SpendView = memo(function SpendView({ metrics }: { metrics: Metrics
                 {metrics.rate_table_effective_date ? ` (${metrics.rate_table_effective_date})` : ""}
                 {estimateNote}
                 {metrics.notes.unratedModelSessions > 0
-                  ? ` · ${metrics.notes.unratedModelSessions} sessions excluded pending model rates`
+                  ? ` · ${metrics.notes.unratedModelSessions} sessions have unknown cost; their runs and wall time are included`
                   : ""}.
+                {uncostedNote}
               </>
             }
           >
@@ -284,7 +288,7 @@ function WorkerOutcomes({ metrics }: { metrics: Metrics }) {
     // rework story — show it alone rather than nothing.
     if (!metrics.reviewCycles.length) return null;
     return (
-      <ChartCard title="Review cycles" kicker="impl → review bounces · ordered">
+      <ChartCard title="Review cycles" kicker="reviewable worker outcomes · ordered" footnote="The same terminal implement population used for First-try pass: 0 is first-pass done; 1 is a rework or failed terminal outcome.">
         <ColumnsPlain data={d.cycleSeries} ramp height={220} yFormat={int} tipFormat={(n) => `${int(n)} runs`} />
       </ChartCard>
     );
@@ -318,7 +322,7 @@ function WorkerOutcomes({ metrics }: { metrics: Metrics }) {
         </div>
       </ChartCard>
 
-      <ChartCard title="Review cycles" kicker="impl → review bounces · ordered" footnote="How many review bounces each run took before it landed — the telemetry view of rework.">
+      <ChartCard title="Review cycles" kicker="reviewable worker outcomes · ordered" footnote="The same terminal implement population used for First-try pass: 0 is first-pass done; 1 is a rework or failed terminal outcome.">
         <ColumnsPlain data={d.cycleSeries} ramp height={220} yFormat={int} tipFormat={(n) => `${int(n)} runs`} />
       </ChartCard>
     </div>

@@ -13,7 +13,8 @@ export type ModelRow = {
   label: string;
   color: DitherColor;
   runs: number;
-  cost: number;
+  /** null means this model has real usage but no configured price. */
+  cost: number | null;
   wallHours: number;
   estimate: boolean;
 };
@@ -81,6 +82,8 @@ export type WorkersSection = {
   byStage: { stage: string; count: number }[];
   byOutcome: { outcome: string; count: number }[];
   firstTryPassRate: number | null;
+  /** Same terminal implement population used by firstTryPassRate. */
+  reviewCycles: { cycles: number; label: string; count: number }[];
   reworkCycles: { count: number; mean: number; max: number; distribution: { cycles: number; count: number }[] };
   stalls: number;
   restarts: number;

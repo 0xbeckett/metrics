@@ -43,6 +43,7 @@ const Overview = memo(function Overview({ metrics }: { metrics: Metrics }) {
           label="Total spend"
           value={h.totalSpend}
           format={usdPrecise}
+          sub={metrics.notes.unratedModelSessions > 0 ? `${int(metrics.notes.unratedModelSessions)} sessions uncosted` : undefined}
           delta={Math.round(costDelta)}
           deltaFormat={(n) => usdPrecise(Math.round(n))}
           deltaGoodWhen="down"
@@ -69,7 +70,7 @@ const Overview = memo(function Overview({ metrics }: { metrics: Metrics }) {
         ) : (
           <HeroStat label="Compute" value={h.totalWallHours} format={(n) => `${int(n)}h`} sub={`${h.modelsUsed} models`} />
         )}
-        <HeroStat label="First-try rate" value={d.firstTryRate} format={(n) => `${Math.round(n * 100)}%`} sub="cleared review first pass" />
+        <HeroStat label="First-try pass" value={d.firstTryRate} format={(n) => `${Math.round(n * 100)}%`} sub="reviewable worker runs only" />
       </div>
     </section>
   );

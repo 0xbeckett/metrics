@@ -20,6 +20,9 @@ const empty = () => ({
   byStage: [],
   byOutcome: [],
   firstTryPassRate: null,
+  // Terminal implement outcomes, binned exactly as firstTryPassRate is calculated:
+  // 0 = done first pass; 1 = rework/failed terminal outcome.
+  reviewCycles: [],
   reworkCycles: { count: 0, mean: 0, max: 0, distribution: [] },
   stalls: 0,
   restarts: 0,
@@ -67,6 +70,7 @@ export function harvestWorkers(dir = beckettDir()) {
   const totals = { turns: 0, toolCalls: 0, tokensIn: 0, tokensOut: 0, wallHours: 0 };
   let implDone = 0;
   let implTerminal = 0; // done + rework + failed (implement attempts that reached a verdict)
+  const reviewCycleHist = new Map();
 
   for (const r of rows) {
     if (!r || typeof r !== "object") continue;
@@ -89,6 +93,9 @@ export function harvestWorkers(dir = beckettDir()) {
 
     if (stage === "implement" && (outcome === "done" || outcome === "rework" || outcome === "failed")) {
       implTerminal += 1;
+      // This is deliberately the same classification as the first-try rate:
+      // no rework cycle for done, one or more for every other terminal outcome.
+      bump(reviewCycleHist, outcome === "done" ? 0 : 1);
       if (outcome === "done") implDone += 1;
     }
   }
@@ -120,6 +127,9 @@ export function harvestWorkers(dir = beckettDir()) {
     byStage: countRows(byStage, "stage"),
     byOutcome: countRows(byOutcome, "outcome"),
     firstTryPassRate: implTerminal ? round(implDone / implTerminal, 3) : null,
+    reviewCycles: [...reviewCycleHist.entries()].sort((a, b) => a[0] - b[0]).map(([cycles, count]) => ({
+      cycles, label: String(cycles), count,
+    })),
     reworkCycles: {
       count: bounceCounts.length,
       mean: bounceCounts.length ? round(bounceCounts.reduce((a, b) => a + b, 0) / bounceCounts.length, 2) : 0,
