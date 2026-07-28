@@ -115,3 +115,20 @@ test("CLI exits non-zero on a collapsed candidate and zero when plausible", () =
     rmSync(servedPath, { force: true });
   }
 });
+
+test("CLI rejects a source model missing from the rate table", () => {
+  const candidate = join(tmpdir(), `mp-unpriced-model-${process.pid}.json`);
+  writeFileSync(candidate, JSON.stringify({
+    ...doc(2600, 2000, 7),
+    models: [{ model: "claude-unpriced-future", label: "unpriced", cost: null }],
+    notes: { unratedModelModels: ["claude-unpriced-future"] },
+  }));
+  try {
+    assert.throws(
+      () => execFileSync(process.execPath, [CLI, candidate], { stdio: "pipe" }),
+      /source model\(s\) missing from rate table/,
+    );
+  } finally {
+    rmSync(candidate, { force: true });
+  }
+});
