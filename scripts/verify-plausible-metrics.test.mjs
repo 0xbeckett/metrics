@@ -116,18 +116,32 @@ test("CLI exits non-zero on a collapsed candidate and zero when plausible", () =
   }
 });
 
-test("CLI rejects a source model missing from the rate table", () => {
-  const candidate = join(tmpdir(), `mp-unpriced-model-${process.pid}.json`);
+test("CLI rejects an unpriced source model dropped from the rollup", () => {
+  const candidate = join(tmpdir(), `mp-dropped-model-${process.pid}.json`);
   writeFileSync(candidate, JSON.stringify({
     ...doc(2600, 2000, 7),
-    models: [{ model: "claude-unpriced-future", label: "unpriced", cost: null }],
+    models: [{ model: "claude-opus-4-8", label: "opus-4.8", cost: 12.3 }],
     notes: { unratedModelModels: ["claude-unpriced-future"] },
   }));
   try {
     assert.throws(
       () => execFileSync(process.execPath, [CLI, candidate], { stdio: "pipe" }),
-      /source model\(s\) missing from rate table/,
+      /missing from the rollup/,
     );
+  } finally {
+    rmSync(candidate, { force: true });
+  }
+});
+
+test("CLI allows an unpriced source model kept visible as a cost:null row", () => {
+  const candidate = join(tmpdir(), `mp-visible-uncosted-${process.pid}.json`);
+  writeFileSync(candidate, JSON.stringify({
+    ...doc(2600, 2000, 7),
+    models: [{ model: "claude-unpriced-future", label: "unpriced", runs: 3, cost: null, wallHours: 1 }],
+    notes: { unratedModelModels: ["claude-unpriced-future"] },
+  }));
+  try {
+    assert.doesNotThrow(() => execFileSync(process.execPath, [CLI, candidate], { stdio: "pipe" }));
   } finally {
     rmSync(candidate, { force: true });
   }

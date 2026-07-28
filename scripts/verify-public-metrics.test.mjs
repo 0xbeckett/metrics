@@ -136,16 +136,34 @@ test("verify-public-metrics.mjs exits non-zero on a leaky document", () => {
   assert.notEqual(run(bad), 0, "leaky file should fail");
 });
 
-test("verify-public-metrics.mjs rejects a source model with no configured rate", () => {
-  const candidate = join(tmpdir(), `mx-unpriced-model-${process.pid}.json`);
+test("verify-public-metrics.mjs rejects an unpriced source model dropped from the rollup", () => {
+  // The Opus-5 defect: an unrated model is flagged in notes but its runs never became a row,
+  // so the totals were silently shrunk. That must fail loudly.
+  const candidate = join(tmpdir(), `mx-dropped-model-${process.pid}.json`);
   writeFileSync(candidate, JSON.stringify({
-    models: [{ model: "claude-unpriced-future", label: "unpriced", cost: null }],
+    models: [{ model: "claude-opus-4-8", label: "opus-4.8", cost: 12.3 }],
     notes: { unratedModelModels: ["claude-unpriced-future"] },
   }));
   try {
     assert.throws(
       () => execFileSync(process.execPath, [join(HERE, "verify-public-metrics.mjs"), candidate], { stdio: "pipe" }),
-      /source model\(s\) missing from rate table/,
+      /missing from the rollup/,
+    );
+  } finally {
+    rmSync(candidate, { force: true });
+  }
+});
+
+test("verify-public-metrics.mjs allows an unpriced source model kept visible as a cost:null row", () => {
+  // A missing price is not a missing model: it stays counted with cost:null and must publish.
+  const candidate = join(tmpdir(), `mx-visible-uncosted-${process.pid}.json`);
+  writeFileSync(candidate, JSON.stringify({
+    models: [{ model: "claude-unpriced-future", label: "unpriced", runs: 3, cost: null, wallHours: 1 }],
+    notes: { unratedModelModels: ["claude-unpriced-future"] },
+  }));
+  try {
+    assert.doesNotThrow(
+      () => execFileSync(process.execPath, [join(HERE, "verify-public-metrics.mjs"), candidate], { stdio: "pipe" }),
     );
   } finally {
     rmSync(candidate, { force: true });
