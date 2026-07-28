@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "refreshed_at": "2026-07-28T00:07:42.334Z",
+  "refreshed_at": "2026-07-27T00:00:00Z",
   "source_generated_at": "2026-07-28T00:04:09.787Z",
   "rate_table_effective_date": "2026-07-16",
   "headline": {
@@ -180,12 +180,12 @@
     {
       "cycles": 0,
       "label": "0",
-      "count": 227
+      "count": 228
     },
     {
       "cycles": 1,
       "label": "1",
-      "count": 90
+      "count": 91
     }
   ],
   "runsOverTime": [
@@ -1076,7 +1076,7 @@
   },
   "tickets": {
     "available": true,
-    "total": 36,
+    "total": 37,
     "byStatus": [
       {
         "status": "done",
@@ -1084,7 +1084,7 @@
       },
       {
         "status": "active",
-        "count": 3
+        "count": 4
       },
       {
         "status": "cancelled",
@@ -1101,6 +1101,11 @@
         "date": "2026-07-27",
         "opened": 24,
         "closed": 22
+      },
+      {
+        "date": "2026-07-28",
+        "opened": 1,
+        "closed": 0
       }
     ],
     "leadTimeDays": {
@@ -1111,12 +1116,12 @@
       "max": 0.1
     },
     "branchesPerTask": {
-      "mean": 1.47,
+      "mean": 1.46,
       "max": 4,
       "distribution": [
         {
           "branches": 1,
-          "count": 23
+          "count": 24
         },
         {
           "branches": 2,
@@ -1132,60 +1137,60 @@
         }
       ]
     },
-    "reworkShare": 0.167
+    "reworkShare": 0.189
   },
   "workers": {
     "available": true,
-    "totalRuns": 487,
+    "totalRuns": 490,
     "byStage": [
       {
         "stage": "implement",
-        "count": 326
+        "count": 328
       },
       {
         "stage": "review",
-        "count": 161
+        "count": 162
       }
     ],
     "byOutcome": [
       {
         "outcome": "done",
-        "count": 348
+        "count": 349
       },
       {
         "outcome": "failed",
-        "count": 84
+        "count": 85
       },
       {
         "outcome": "rework",
-        "count": 44
+        "count": 45
       },
       {
         "outcome": "cancelled",
         "count": 11
       }
     ],
-    "firstTryPassRate": 0.716,
+    "firstTryPassRate": 0.715,
     "reviewCycles": [
       {
         "cycles": 0,
         "label": "0",
-        "count": 227
+        "count": 228
       },
       {
         "cycles": 1,
         "label": "1",
-        "count": 90
+        "count": 91
       }
     ],
     "reworkCycles": {
-      "count": 6,
-      "mean": 1.5,
+      "count": 7,
+      "mean": 1.43,
       "max": 3,
       "distribution": [
         {
           "cycles": 1,
-          "count": 4
+          "count": 5
         },
         {
           "cycles": 2,
@@ -1198,41 +1203,41 @@
       ]
     },
     "stalls": 12,
-    "restarts": 1,
+    "restarts": 2,
     "totals": {
-      "turns": 20020,
-      "toolCalls": 22570,
-      "tokensIn": 1746623140,
-      "tokensOut": 1214778,
-      "wallHours": 77.4
+      "turns": 20182,
+      "toolCalls": 22803,
+      "tokensIn": 1769828992,
+      "tokensOut": 1262595,
+      "wallHours": 78.1
     },
     "perRun": {
       "turns": {
-        "count": 487,
-        "mean": 41.1,
+        "count": 490,
+        "mean": 41.2,
         "p50": 32,
         "p90": 84,
         "max": 289
       },
       "toolCalls": {
-        "count": 487,
-        "mean": 46.3,
+        "count": 490,
+        "mean": 46.5,
         "p50": 35,
-        "p90": 104,
+        "p90": 104.1,
         "max": 393
       },
       "tokens": {
-        "count": 487,
-        "mean": 3588990,
-        "p50": 1594747,
-        "p90": 9309377,
+        "count": 490,
+        "mean": 3614473,
+        "p50": 1612373,
+        "p90": 9335999,
         "max": 61185687
       },
       "wallMinutes": {
-        "count": 487,
-        "mean": 9.5,
+        "count": 490,
+        "mean": 9.6,
         "p50": 6.5,
-        "p90": 22.2,
+        "p90": 22.5,
         "max": 60.1
       }
     },
@@ -1241,8 +1246,8 @@
   },
   "spend": {
     "available": true,
-    "totalSpend": 1746.35,
-    "runsPriced": 487,
+    "totalSpend": 1756.2,
+    "runsPriced": 490,
     "overTime": [
       {
         "date": "2026-07-11",
@@ -1328,6 +1333,11 @@
         "date": "2026-07-27",
         "cost": 198.47,
         "runs": 71
+      },
+      {
+        "date": "2026-07-28",
+        "cost": 9.84,
+        "runs": 3
       }
     ],
     "byModel": [
@@ -1356,33 +1366,33 @@
         "model": "claude-sonnet-5",
         "label": "sonnet-5",
         "color": "blue",
-        "cost": 244.34,
-        "runs": 126
+        "cost": 249.38,
+        "runs": 127
       },
       {
         "model": "gpt-5.6-terra",
         "label": "terra",
         "color": "orange",
-        "cost": 126.77,
-        "runs": 139
+        "cost": 131.57,
+        "runs": 141
       }
     ],
     "byStage": [
       {
         "stage": "implement",
-        "cost": 1437.51,
-        "runs": 326
+        "cost": 1442.31,
+        "runs": 328
       },
       {
         "stage": "review",
-        "cost": 308.84,
-        "runs": 161
+        "cost": 313.88,
+        "runs": 162
       }
     ],
     "costPerTicket": {
       "count": 165,
-      "mean": 10.58,
-      "p50": 7.26,
+      "mean": 10.64,
+      "p50": 7.3,
       "max": 109.3,
       "top": [
         {
@@ -1517,13 +1527,13 @@
   },
   "memory": {
     "available": true,
-    "nodeCount": 50,
-    "edgeCount": 39,
+    "nodeCount": 51,
+    "edgeCount": 40,
     "orphanCount": 20,
     "byType": [
       {
         "type": "reference",
-        "count": 13
+        "count": 14
       },
       {
         "type": "feedback",
@@ -1559,14 +1569,14 @@
       }
     ],
     "ageDays": {
-      "count": 44,
-      "mean": 4.8,
+      "count": 45,
+      "mean": 4.7,
       "p50": 1,
-      "max": 28.9,
+      "max": 29,
       "distribution": [
         {
           "bucket": "<1w",
-          "count": 38
+          "count": 39
         },
         {
           "bucket": "1–4w",
@@ -1605,6 +1615,11 @@
       },
       {
         "name": "memory-is-two-stores",
+        "type": "reference",
+        "degree": 1
+      },
+      {
+        "name": "pi-probe-timeout-false-negative",
         "type": "reference",
         "degree": 1
       },
@@ -1826,7 +1841,7 @@
       {
         "name": "pi-login-expired",
         "type": "reference",
-        "degree": 1
+        "degree": 2
       },
       {
         "name": "ticket-freeze-pending-big-change",
@@ -1882,6 +1897,10 @@
       {
         "from": "memory-is-two-stores",
         "to": "how-to-use-memory"
+      },
+      {
+        "from": "pi-probe-timeout-false-negative",
+        "to": "pi-login-expired"
       },
       {
         "from": "thread-workspaces",
@@ -2134,13 +2153,13 @@
   "logs": {
     "available": true,
     "files": 1,
-    "totalLines": 160749,
+    "totalLines": 160816,
     "errorLines": 0,
     "errorRate": 0,
     "perDay": [
       {
         "date": "2026-07-28",
-        "lines": 160749,
+        "lines": 160816,
         "errors": 0
       }
     ]
@@ -2177,29 +2196,77 @@
         "name": "beckett-metrics",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 2598705
+        "uptimeSeconds": 2599713
       },
       {
         "name": "beckett-rpc",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 4351366
+        "uptimeSeconds": 4352374
       },
       {
         "name": "beckett-secret",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 3093666
+        "uptimeSeconds": 3094674
       },
       {
         "name": "beckett-v4",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 2465418
+        "uptimeSeconds": 2466426
       }
     ]
   },
   "recentActivity": [
+    {
+      "ts": "2026-07-28T00:23:43.298Z",
+      "kind": "worker",
+      "ref": "#35.1",
+      "title": "Terminal-Bench 2.1: run Beckett as an agent and report a score"
+    },
+    {
+      "ts": "2026-07-28T00:15:30.050Z",
+      "kind": "started",
+      "ref": "#37.1",
+      "title": "pi preflight timeout silently downgrades a cast to claude"
+    },
+    {
+      "ts": "2026-07-28T00:14:03.528Z",
+      "kind": "started",
+      "ref": "#34.1",
+      "title": "Metrics site: correct the data, fix mobile"
+    },
+    {
+      "ts": "2026-07-28T00:14:03.192Z",
+      "kind": "started",
+      "ref": "#34.1",
+      "title": "Metrics site: correct the data, fix mobile"
+    },
+    {
+      "ts": "2026-07-28T00:14:03.152Z",
+      "kind": "worker",
+      "ref": "#34.1",
+      "title": "Metrics site: correct the data, fix mobile"
+    },
+    {
+      "ts": "2026-07-28T00:07:58.813Z",
+      "kind": "in-review",
+      "ref": "#34.1",
+      "title": "Metrics site: correct the data, fix mobile"
+    },
+    {
+      "ts": "2026-07-28T00:07:58.520Z",
+      "kind": "in-review",
+      "ref": "#34.1",
+      "title": "Metrics site: correct the data, fix mobile"
+    },
+    {
+      "ts": "2026-07-28T00:07:58.432Z",
+      "kind": "worker",
+      "ref": "#34.1",
+      "title": "Metrics site: correct the data, fix mobile"
+    },
     {
       "ts": "2026-07-27T23:59:26.226Z",
       "kind": "started",
@@ -2451,54 +2518,6 @@
       "kind": "deploy",
       "ref": "#28.1",
       "title": "Browser profile wedges the whole browser lane at the 512MB ceiling"
-    },
-    {
-      "ts": "2026-07-27T16:41:28.654Z",
-      "kind": "worker",
-      "ref": "#28.1",
-      "title": "Browser profile wedges the whole browser lane at the 512MB ceiling"
-    },
-    {
-      "ts": "2026-07-27T16:30:50.010Z",
-      "kind": "done",
-      "ref": "#29.1",
-      "title": "Stall watchdog restarts workers into the same deterministic failure forever"
-    },
-    {
-      "ts": "2026-07-27T16:30:49.335Z",
-      "kind": "done",
-      "ref": "#29.1",
-      "title": "Stall watchdog restarts workers into the same deterministic failure forever"
-    },
-    {
-      "ts": "2026-07-27T16:30:49.330Z",
-      "kind": "done",
-      "ref": "#29.1",
-      "title": "Stall watchdog restarts workers into the same deterministic failure forever"
-    },
-    {
-      "ts": "2026-07-27T16:30:48.930Z",
-      "kind": "done",
-      "ref": "#29.1",
-      "title": "Stall watchdog restarts workers into the same deterministic failure forever"
-    },
-    {
-      "ts": "2026-07-27T16:30:45.439Z",
-      "kind": "deploy",
-      "ref": "#29.1",
-      "title": "Stall watchdog restarts workers into the same deterministic failure forever"
-    },
-    {
-      "ts": "2026-07-27T16:30:45.110Z",
-      "kind": "worker",
-      "ref": "#29.1",
-      "title": "Stall watchdog restarts workers into the same deterministic failure forever"
-    },
-    {
-      "ts": "2026-07-27T16:23:39.694Z",
-      "kind": "in-review",
-      "ref": "#29.1",
-      "title": "Stall watchdog restarts workers into the same deterministic failure forever"
     }
   ],
   "claudeSessions": {
