@@ -284,14 +284,16 @@
   letter-spacing: -0.04em;
 }
 
-/* Small uppercase grotesque label — the quiet caption voice. */
+/* Small uppercase grotesque label — the quiet caption voice. A tracked, all-caps
+   eyebrow reads as a label rather than prose; 12px keeps it legible on a phone
+   without letting it compete with the body copy it sits over. */
 @utility label-caps {
   font-family: var(--font-sans);
-  font-size: 11px;
-  line-height: 1.2;
+  font-size: 12px;
+  line-height: 1.25;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.11em;
+  letter-spacing: 0.10em;
   color: var(--label);
 }
 
