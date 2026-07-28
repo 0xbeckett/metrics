@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "refreshed_at": "2026-07-28T00:26:41.351Z",
+  "refreshed_at": "2026-07-28T00:35:54.076Z",
   "source_generated_at": "2026-07-28T00:04:09.787Z",
   "rate_table_effective_date": "2026-07-16",
   "headline": {
@@ -180,12 +180,12 @@
     {
       "cycles": 0,
       "label": "0",
-      "count": 228
+      "count": 229
     },
     {
       "cycles": 1,
       "label": "1",
-      "count": 91
+      "count": 92
     }
   ],
   "runsOverTime": [
@@ -1141,60 +1141,60 @@
   },
   "workers": {
     "available": true,
-    "totalRuns": 490,
+    "totalRuns": 493,
     "byStage": [
       {
         "stage": "implement",
-        "count": 328
+        "count": 330
       },
       {
         "stage": "review",
-        "count": 162
+        "count": 163
       }
     ],
     "byOutcome": [
       {
         "outcome": "done",
-        "count": 349
+        "count": 350
       },
       {
         "outcome": "failed",
-        "count": 85
+        "count": 86
       },
       {
         "outcome": "rework",
-        "count": 45
+        "count": 46
       },
       {
         "outcome": "cancelled",
         "count": 11
       }
     ],
-    "firstTryPassRate": 0.715,
+    "firstTryPassRate": 0.713,
     "reviewCycles": [
       {
         "cycles": 0,
         "label": "0",
-        "count": 228
+        "count": 229
       },
       {
         "cycles": 1,
         "label": "1",
-        "count": 91
+        "count": 92
       }
     ],
     "reworkCycles": {
       "count": 7,
-      "mean": 1.43,
+      "mean": 1.57,
       "max": 3,
       "distribution": [
         {
           "cycles": 1,
-          "count": 5
+          "count": 4
         },
         {
           "cycles": 2,
-          "count": 1
+          "count": 2
         },
         {
           "cycles": 3,
@@ -1203,41 +1203,41 @@
       ]
     },
     "stalls": 12,
-    "restarts": 2,
+    "restarts": 3,
     "totals": {
-      "turns": 20182,
-      "toolCalls": 22803,
-      "tokensIn": 1769828992,
-      "tokensOut": 1262595,
-      "wallHours": 78.1
+      "turns": 20255,
+      "toolCalls": 22871,
+      "tokensIn": 1784065306,
+      "tokensOut": 1263062,
+      "wallHours": 78.5
     },
     "perRun": {
       "turns": {
-        "count": 490,
-        "mean": 41.2,
+        "count": 493,
+        "mean": 41.1,
         "p50": 32,
         "p90": 84,
         "max": 289
       },
       "toolCalls": {
-        "count": 490,
-        "mean": 46.5,
+        "count": 493,
+        "mean": 46.4,
         "p50": 35,
-        "p90": 104.1,
+        "p90": 104,
         "max": 393
       },
       "tokens": {
-        "count": 490,
-        "mean": 3614473,
-        "p50": 1612373,
-        "p90": 9335999,
+        "count": 493,
+        "mean": 3621356,
+        "p50": 1624499,
+        "p90": 9323736,
         "max": 61185687
       },
       "wallMinutes": {
-        "count": 490,
-        "mean": 9.6,
+        "count": 493,
+        "mean": 9.5,
         "p50": 6.5,
-        "p90": 22.5,
+        "p90": 22.4,
         "max": 60.1
       }
     },
@@ -1246,8 +1246,8 @@
   },
   "spend": {
     "available": true,
-    "totalSpend": 1756.2,
-    "runsPriced": 490,
+    "totalSpend": 1768.44,
+    "runsPriced": 493,
     "overTime": [
       {
         "date": "2026-07-11",
@@ -1336,8 +1336,8 @@
       },
       {
         "date": "2026-07-28",
-        "cost": 9.84,
-        "runs": 3
+        "cost": 22.08,
+        "runs": 6
       }
     ],
     "byModel": [
@@ -1345,8 +1345,8 @@
         "model": "claude-opus-4-8",
         "label": "opus-4.8",
         "color": "red",
-        "cost": 640.32,
-        "runs": 141
+        "cost": 648.27,
+        "runs": 142
       },
       {
         "model": "claude-fable-5",
@@ -1366,32 +1366,32 @@
         "model": "claude-sonnet-5",
         "label": "sonnet-5",
         "color": "blue",
-        "cost": 249.38,
-        "runs": 127
+        "cost": 253.67,
+        "runs": 128
       },
       {
         "model": "gpt-5.6-terra",
         "label": "terra",
         "color": "orange",
         "cost": 131.57,
-        "runs": 141
+        "runs": 142
       }
     ],
     "byStage": [
       {
         "stage": "implement",
-        "cost": 1442.31,
-        "runs": 328
+        "cost": 1450.26,
+        "runs": 330
       },
       {
         "stage": "review",
-        "cost": 313.88,
-        "runs": 162
+        "cost": 318.17,
+        "runs": 163
       }
     ],
     "costPerTicket": {
       "count": 165,
-      "mean": 10.64,
+      "mean": 10.72,
       "p50": 7.3,
       "max": 109.3,
       "top": [
@@ -1452,8 +1452,8 @@
           "cost": 24.63
         },
         {
-          "ref": "#32",
-          "cost": 23.26
+          "ref": "#50",
+          "cost": 24.52
         }
       ]
     }
@@ -2153,13 +2153,13 @@
   "logs": {
     "available": true,
     "files": 1,
-    "totalLines": 160825,
+    "totalLines": 160861,
     "errorLines": 0,
     "errorRate": 0,
     "perDay": [
       {
         "date": "2026-07-28",
-        "lines": 160825,
+        "lines": 160861,
         "errors": 0
       }
     ]
@@ -2196,29 +2196,71 @@
         "name": "beckett-metrics",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 2599844
+        "uptimeSeconds": 2600397
       },
       {
         "name": "beckett-rpc",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 4352505
+        "uptimeSeconds": 4353058
       },
       {
         "name": "beckett-secret",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 3094805
+        "uptimeSeconds": 3095357
       },
       {
         "name": "beckett-v4",
         "active": "active",
         "subState": "running",
-        "uptimeSeconds": 2466557
+        "uptimeSeconds": 2467110
       }
     ]
   },
   "recentActivity": [
+    {
+      "ts": "2026-07-28T00:34:39.956Z",
+      "kind": "worker",
+      "ref": "#34.1",
+      "title": "Metrics site: correct the data, fix mobile"
+    },
+    {
+      "ts": "2026-07-28T00:34:33.080Z",
+      "kind": "started",
+      "ref": "#34.1",
+      "title": "Metrics site: correct the data, fix mobile"
+    },
+    {
+      "ts": "2026-07-28T00:34:32.759Z",
+      "kind": "started",
+      "ref": "#34.1",
+      "title": "Metrics site: correct the data, fix mobile"
+    },
+    {
+      "ts": "2026-07-28T00:34:32.663Z",
+      "kind": "worker",
+      "ref": "#34.1",
+      "title": "Metrics site: correct the data, fix mobile"
+    },
+    {
+      "ts": "2026-07-28T00:30:00.751Z",
+      "kind": "in-review",
+      "ref": "#34.1",
+      "title": "Metrics site: correct the data, fix mobile"
+    },
+    {
+      "ts": "2026-07-28T00:30:00.196Z",
+      "kind": "in-review",
+      "ref": "#34.1",
+      "title": "Metrics site: correct the data, fix mobile"
+    },
+    {
+      "ts": "2026-07-28T00:30:00.024Z",
+      "kind": "worker",
+      "ref": "#34.1",
+      "title": "Metrics site: correct the data, fix mobile"
+    },
     {
       "ts": "2026-07-28T00:23:43.298Z",
       "kind": "worker",
@@ -2476,48 +2518,6 @@
       "kind": "worker",
       "ref": "#30.1",
       "title": "beckett browser dispatches a real run when you typo a subcommand"
-    },
-    {
-      "ts": "2026-07-27T19:38:29.300Z",
-      "kind": "started",
-      "ref": "#30.1",
-      "title": "beckett browser dispatches a real run when you typo a subcommand"
-    },
-    {
-      "ts": "2026-07-27T16:41:35.147Z",
-      "kind": "done",
-      "ref": "#28.1",
-      "title": "Browser profile wedges the whole browser lane at the 512MB ceiling"
-    },
-    {
-      "ts": "2026-07-27T16:41:35.135Z",
-      "kind": "opened",
-      "ref": "#28.1",
-      "title": "Browser profile wedges the whole browser lane at the 512MB ceiling"
-    },
-    {
-      "ts": "2026-07-27T16:41:32.503Z",
-      "kind": "done",
-      "ref": "#28.1",
-      "title": "Browser profile wedges the whole browser lane at the 512MB ceiling"
-    },
-    {
-      "ts": "2026-07-27T16:41:32.497Z",
-      "kind": "done",
-      "ref": "#28.1",
-      "title": "Browser profile wedges the whole browser lane at the 512MB ceiling"
-    },
-    {
-      "ts": "2026-07-27T16:41:32.222Z",
-      "kind": "done",
-      "ref": "#28.1",
-      "title": "Browser profile wedges the whole browser lane at the 512MB ceiling"
-    },
-    {
-      "ts": "2026-07-27T16:41:28.853Z",
-      "kind": "deploy",
-      "ref": "#28.1",
-      "title": "Browser profile wedges the whole browser lane at the 512MB ceiling"
     }
   ],
   "claudeSessions": {
