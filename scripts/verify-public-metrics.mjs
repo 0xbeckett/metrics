@@ -9,15 +9,14 @@
  */
 import { readFileSync } from "node:fs";
 import { assertPublicText } from "./lib/privacy-scan.mjs";
-import { assertSourceModelsHaveRates, DEFAULT_RATE_TABLE } from "./lib/model-rates.mjs";
+import { assertSourceModelsAccountedFor } from "./lib/model-rates.mjs";
 
 const path = process.argv[2];
-const ratePath = process.argv[3] ?? DEFAULT_RATE_TABLE;
-if (!path) throw new Error("usage: verify-public-metrics.mjs PATH [RATE_TABLE_PATH]");
+if (!path) throw new Error("usage: verify-public-metrics.mjs PATH");
 const json = readFileSync(path, "utf8");
 const doc = JSON.parse(json); // also catches a truncated/partial copy before it can be installed
 assertPublicText(json, path);
-// This is intentionally a hard publish gate: a new source model must add a price
-// (or an explicit estimate) instead of silently falling out of the dashboard.
-assertSourceModelsHaveRates(doc, ratePath);
-console.error(`[verify-public-metrics] safe public JSON with priced source models: ${path}`);
+// Hard publish gate: an unpriced source model must remain visible as a cost:null row with its
+// runs counted. Fail loudly if one was dropped — a missing price must not shrink the totals.
+assertSourceModelsAccountedFor(doc);
+console.error(`[verify-public-metrics] safe public JSON with every source model accounted for: ${path}`);
