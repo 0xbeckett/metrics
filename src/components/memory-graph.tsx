@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { rampValue } from "@/palette";
 import type { MemorySection } from "@/metrics";
 
@@ -112,6 +112,28 @@ export function MemoryGraph({ mem }: { mem: MemorySection }) {
   const radius = (deg: number) => 4 + Math.sqrt(deg) * 3.2;
   const maxDegree = Math.max(1, ...nodes.map((n) => n.degree));
 
+  // The graph draws in a fixed 640-unit viewBox scaled to fit its column, so on a
+  // phone the whole coordinate space — labels included — shrinks to ~half size and
+  // a 10px label lands near 5px. Measure the rendered width and counter-scale the
+  // label so it holds ~11px on screen at every width, and on a narrow plane show
+  // labels only for the hubs so the smaller canvas doesn't turn to overlap.
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const [rendered, setRendered] = useState(VW);
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      const cw = entries[0]?.contentRect.width ?? 0;
+      if (cw > 0) setRendered(cw);
+    });
+    ro.observe(el);
+    setRendered(el.getBoundingClientRect().width || VW);
+    return () => ro.disconnect();
+  }, []);
+  const scale = rendered > 0 ? VW / rendered : 1; // >1 when the viewBox is shrunk
+  const labelPx = Math.min(22, Math.max(10, Math.round(11 * scale)));
+  const labelFloor = scale > 1.35 ? 5 : 3; // narrower plane → hubs only
+
   const neighbors = useMemo(() => {
     const s = new Set<number>();
     if (active === null) return s;
@@ -123,7 +145,7 @@ export function MemoryGraph({ mem }: { mem: MemorySection }) {
   }, [active, edges]);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3" ref={wrapRef}>
     <svg
       viewBox={`0 0 ${VW} ${VH}`}
       className="block h-auto w-full"
@@ -150,7 +172,7 @@ export function MemoryGraph({ mem }: { mem: MemorySection }) {
       <g>
         {nodes.map((node, i) => {
           const lit = active === null || i === active || neighbors.has(i);
-          const showLabel = node.degree >= 3 || i === active || neighbors.has(i);
+          const showLabel = node.degree >= labelFloor || i === active || neighbors.has(i);
           const r = radius(node.degree);
           return (
             <g
@@ -173,7 +195,7 @@ export function MemoryGraph({ mem }: { mem: MemorySection }) {
                   x={node.x}
                   y={node.y - r - 4}
                   textAnchor="middle"
-                  fontSize={10}
+                  fontSize={labelPx}
                   fill="var(--foreground)"
                   className="pointer-events-none"
                 >
@@ -185,7 +207,7 @@ export function MemoryGraph({ mem }: { mem: MemorySection }) {
         })}
       </g>
     </svg>
-      <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+      <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
         <span className="label-caps">Links</span>
         <span className="tabular-nums">0</span>
         <span className="flex" style={{ gap: 2 }}>

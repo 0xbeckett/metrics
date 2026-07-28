@@ -59,10 +59,12 @@ function Figures({ children }: { children: ReactNode }) {
   return <div className="grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-4">{children}</div>;
 }
 
-/** A horizontally-scrolling strip of derived figures, hairline-divided. */
+/** A horizontally-scrolling strip of derived figures, hairline-divided. A
+ *  right-edge fade on the phone signals there is more to scroll to; it lifts at
+ *  sm, where the full strip fits. */
 function ChipStrip({ children }: { children: ReactNode }) {
   return (
-    <Panel className="overflow-x-auto">
+    <Panel className="overflow-x-auto scrollbar-none [mask-image:linear-gradient(to_right,#000_90%,transparent)] sm:[mask-image:none]">
       <div className="flex flex-nowrap divide-x divide-border">{children}</div>
     </Panel>
   );
@@ -370,7 +372,7 @@ function SystemStrip({ metrics }: { metrics: Metrics }) {
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <Label>System status</Label>
         {daemon?.version ? (
-          <span className="text-[12px] tabular-nums text-muted-foreground">daemon v{daemon.version}</span>
+          <span className="text-[13px] tabular-nums text-muted-foreground">daemon v{daemon.version}</span>
         ) : null}
       </div>
       <div className="grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-4">
@@ -522,7 +524,7 @@ function RoutinesPanel({ metrics }: { metrics: Metrics }) {
           return (
             <li
               key={item.id ?? item.name}
-              className="flex items-center justify-between gap-3 py-2 text-[13px] transition-colors duration-150 hover:bg-secondary/60"
+              className="flex min-h-[40px] items-center justify-between gap-3 py-2 text-sm transition-colors duration-150 hover:bg-secondary/60"
             >
               <span className="flex min-w-0 flex-1 items-center gap-2">
                 <span
@@ -534,7 +536,7 @@ function RoutinesPanel({ metrics }: { metrics: Metrics }) {
                 />
                 <span className="truncate text-foreground">{item.name}</span>
               </span>
-              <span className="shrink-0 label-caps">{item.kind}</span>
+              <span className="shrink-0 whitespace-nowrap label-caps">{item.kind}</span>
               <span
                 className={cn(
                   "w-16 shrink-0 text-right tabular-nums",
@@ -610,9 +612,9 @@ function ActivityStream({ activity }: { activity: ActivityEvent[] }) {
           {rows.map((e, i) => {
             const key = `${e.ts}-${e.ref ?? ""}-${e.kind}-${i}`;
             const body = (
-              <div className="flex items-baseline gap-3 py-2 text-[13px]">
-                <span className="w-10 shrink-0 text-right tabular-nums text-label">{ago(e.ts, now)}</span>
-                <span className="flex w-16 shrink-0 items-center gap-1.5 label-caps">
+              <div className="flex min-h-[36px] items-baseline gap-2.5 py-2 text-sm">
+                <span className="w-9 shrink-0 text-right tabular-nums text-label">{ago(e.ts, now)}</span>
+                <span className="flex w-[82px] shrink-0 items-center gap-1.5 whitespace-nowrap label-caps">
                   <span
                     aria-hidden
                     className="size-1.5 shrink-0 rounded-full"

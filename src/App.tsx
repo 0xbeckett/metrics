@@ -139,7 +139,7 @@ function Section({
 function Colophon({ metrics }: { metrics: Metrics }) {
   const cs = metrics.codeStats;
   return (
-    <Panel className="mt-12 flex flex-col gap-3 p-4 text-[11px] leading-relaxed text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:p-5">
+    <Panel className="mt-12 flex flex-col gap-3 p-4 text-[13px] leading-relaxed text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:p-5">
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
         <span className="label-caps text-foreground">Sources</span>
         {metrics.harnesses.map((hn) => (

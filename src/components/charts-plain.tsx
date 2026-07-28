@@ -385,7 +385,7 @@ export function BarsPlain({
   // still lands inside the panel — at 375px it is the difference between a
   // clean column and a page that scrolls sideways.
   const longest = Math.max(...data.map((d) => valueFormat(d.value).length), 1);
-  const gutter = Math.min(track * 0.45, longest * 7 + 10);
+  const gutter = Math.min(track * 0.5, longest * 8 + 10);
   const x = scaleLinear().domain([0, max]).range([0, Math.max(2, track - gutter)]);
   const bh = Math.min(16, rowHeight - 8);
 
@@ -476,7 +476,7 @@ export function ProportionBar({
         {segments.map((s, i) => (
           <span
             key={s.label}
-            className="flex items-center gap-1.5 text-[12px] text-muted-foreground"
+            className="flex items-center gap-1.5 text-[13px] text-muted-foreground"
             onMouseEnter={() => setHover(i)}
             onMouseLeave={() => setHover(null)}
           >
