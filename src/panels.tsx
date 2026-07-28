@@ -288,7 +288,7 @@ function WorkerOutcomes({ metrics }: { metrics: Metrics }) {
     // rework story — show it alone rather than nothing.
     if (!metrics.reviewCycles.length) return null;
     return (
-      <ChartCard title="Review cycles" kicker="reviewable worker outcomes · ordered" footnote="The same terminal implement population used for First-try pass: 0 is first-pass done; 1 is a rework or failed terminal outcome.">
+      <ChartCard title="Review cycles" kicker="telemetry runs · unscoped" footnote="Worker outcome data is unavailable, so this fallback is not comparable to the First-try pass rate.">
         <ColumnsPlain data={d.cycleSeries} ramp height={220} yFormat={int} tipFormat={(n) => `${int(n)} runs`} />
       </ChartCard>
     );
