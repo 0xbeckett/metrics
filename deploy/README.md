@@ -24,6 +24,38 @@ The publish is unchanged and stays atomic: `refresh-metrics.sh` harvests into a 
 runs the privacy check, then `mv -f` into place. A failed harvest exits non-zero **before** the
 `mv`, so the last-good `metrics.json` stays live.
 
+## Failure alerting (#143)
+
+Because a failed refresh leaves the last-good document serving, a wedged harvest is *silent* — it
+once failed 7180 times over three days unnoticed. So the refresh keeps a two-line streak counter
+next to the served dir (`refresh-state`, override with `METRICS_REFRESH_STATE`) that survives every
+oneshot invocation:
+
+- Every failure increments the counter and names the failing step; any success resets it to zero.
+- On the **Nth consecutive** failure (`METRICS_FAIL_THRESHOLD`, default **10**) it posts **one**
+  line to the beckett channel (`METRICS_ALERT_CHANNEL`, default `1520986792373911622`) via
+  `beckett discord reply` — naming the step and a **sanitised** last-error line (quoted samples,
+  parenthesised detail, absolute paths and stack frames are stripped, so a privacy-scan failure can
+  never echo the value it caught). It does not alert again until the streak resets.
+- The **first success after an alerted streak** posts one recovery line.
+
+The served `metrics.json` carries `refreshed_at`, stamped at the start of each run and committed
+**only** on a fully successful publish — so it is always the timestamp of the last *good* harvest,
+which the dashboard can trust as an age signal.
+
+**Manual smoke test** (mirrors `scripts/refresh-alert.test.mjs`): point the refresh at a scratch
+serve dir and state file, force a failing step, and watch the streak/alert with a low threshold:
+
+```bash
+export METRICS_SERVE_DIR=/tmp/m/dist METRICS_REFRESH_STATE=/tmp/m/state
+export METRICS_FAIL_THRESHOLD=2 METRICS_ALERT_CHANNEL=<your-test-channel>
+# break a step, run twice → the 2nd run posts one alert; fix it, run once → one recovery line.
+scripts/refresh-metrics.sh; cat "$METRICS_REFRESH_STATE"
+```
+
+The automated version of this (streak persists, alerts once, never repeats, recovers once, and
+`refreshed_at` only advances on success) runs under `npm test`.
+
 ## Install (one command)
 
 ```bash

@@ -10,6 +10,7 @@
 # transitions, redaction, reason extraction) are unit-testable without running a real harvest.
 
 # Read the persisted streak into RA_FAILURES / RA_ALERTED. Missing/garbled file => a clean slate.
+# shellcheck disable=SC2034  # RA_FAILURES/RA_ALERTED are read by the sourcing script, not here.
 ra_read_state() {
   RA_FAILURES=0
   RA_ALERTED=0
