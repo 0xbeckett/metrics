@@ -66,6 +66,41 @@ test("memory graph emits nodes/edges/degree and no memory body", () => {
   }
 });
 
+test("memory graph relabels discord-id node names and survives the public gate", () => {
+  const dir = mkdtempSync(join(tmpdir(), "mx-mem-id-"));
+  const memDir = join(dir, "memory", "people");
+  mkdirSync(memDir, { recursive: true });
+  const SNOWFLAKE = "1151230208783945818";
+  // A person memory whose frontmatter name IS the raw discord id, linked to a normal node.
+  writeFileSync(
+    join(memDir, `${SNOWFLAKE}.md`),
+    `---\nname: ${SNOWFLAKE}\nmetadata:\n  type: person\n  created: 2026-07-01T00:00:00.000Z\n---\n\nWorks with [[loom-desk]].\n`
+  );
+  writeFileSync(
+    join(dir, "memory", "loom-desk.md"),
+    `---\nname: loom-desk\nmetadata:\n  type: env\n  created: 2026-07-10T00:00:00.000Z\n---\n\nHost box, owned by [[${SNOWFLAKE}]].\n`
+  );
+  try {
+    const mem = harvestMemory(dir, Date.parse("2026-07-25T00:00:00.000Z"));
+    assert.equal(mem.available, true);
+    assert.equal(mem.nodeCount, 2);
+    assert.equal(mem.edgeCount, 1); // person<->loom-desk, both link directions de-duplicated
+
+    const serialized = JSON.stringify(mem);
+    assert.ok(!serialized.includes(SNOWFLAKE), "bare discord snowflake must not appear anywhere");
+    // The person node is still present under a stable, non-identifying label.
+    const person = mem.nodes.find((n) => n.type === "person");
+    assert.match(person.name, /^person-[0-9a-f]{8}$/, "id-shaped name becomes a person-<hash> label");
+    assert.equal(person.degree, 1, "topology preserved: the relabelled node keeps its edge");
+    // Same id → same label on both the node and the edge endpoint.
+    assert.ok(mem.edges.some((e) => e.from === person.name || e.to === person.name));
+    // And it survives the public gate.
+    assert.doesNotThrow(() => assertPublicText(serialized, "memory"));
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("activity events are {ts,kind,ref,title} newest-first, capped at the limit", () => {
   const dir = mkdtempSync(join(tmpdir(), "mx-act-"));
   mkdirSync(join(dir, "events"), { recursive: true });
